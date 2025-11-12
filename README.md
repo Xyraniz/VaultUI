@@ -16,7 +16,7 @@ Source changes made by their original developers
 The removal or deprecation of public repositories
 
 
-If you encounter broken links, missing libraries, or functionality issues, feel free to reach out on Discord: xyraniz, or open an issue in this repository.
+If you encounter broken links, missing libraries, or functionality issues, feel free to reach out on Discord: xyraniz., or open an issue in this repository.
 
 
 ---
@@ -25,9 +25,7 @@ If you encounter broken links, missing libraries, or functionality issues, feel 
 
 Added: 2 new UI Libraries
 
-Added: ESP Section (15+ libraries, more to come)
-
-Removed: Utilities Section (deprecated and unnecessary)
+(15+ libraries, more to come)
 
 
 📅 Last Updated: 11/11/25
@@ -43,7 +41,7 @@ To review or test a library, copy the URL from the provided loadstring or from t
 ---
 
 Maintained by: xyraniz
-Contact: Discord – xyraniz
+Contact: Discord – xyraniz.
 
 
 ---
