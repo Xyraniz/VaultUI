@@ -20,6 +20,11 @@ local Mouse = LocalPlayer:GetMouse()
 
 local Nexus = Instance.new("ScreenGui")
 Nexus.Name = "NexusLib"
+
+-- Fix: Define Destroying as an event to prevent nil index errors
+local DestroyingEvent = Instance.new("BindableEvent")
+Nexus.Destroying = DestroyingEvent.Event
+
 pcall(function()
     if syn and syn.protect_gui then
         syn.protect_gui(Nexus)
@@ -100,18 +105,19 @@ local function AddConnection(Signal, Function)
     end)
     if success and connection then
         table.insert(NexusLib.Connections, connection)
-        local destroyConnection = Nexus.Destroying:Connect(function()
-            pcall(function()
-                if connection.Connected then
-                    connection:Disconnect()
-                end
-            end)
-            pcall(function()
-                if destroyConnection.Connected then
-                    destroyConnection:Disconnect()
-                end
+        -- Fix: Wrap in pcall to handle any potential errors if event is invalid
+        local successDestroy, destroyConnection = pcall(function()
+            return Nexus.Destroying:Connect(function()
+                pcall(function()
+                    if connection.Connected then
+                        connection:Disconnect()
+                    end
+                end)
             end)
         end)
+        if successDestroy and destroyConnection then
+            table.insert(NexusLib.Connections, destroyConnection)
+        end
         return connection
     end
     return nil
@@ -1650,6 +1656,7 @@ function NexusLib:CreateWindow(WindowConfig)
 end
 
 function NexusLib:Destroy()
+    DestroyingEvent:Fire()  -- Fix: Fire the event to trigger cleanups
     pcall(function() Nexus:Destroy() end)
 end
 
