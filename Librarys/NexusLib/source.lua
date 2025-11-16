@@ -20,33 +20,48 @@ local Mouse = LocalPlayer:GetMouse()
 
 local Nexus = Instance.new("ScreenGui")
 Nexus.Name = "NexusLib"
-pcall(function()
-    if syn and syn.protect_gui then
-        syn.protect_gui(Nexus)
-    end
-    Nexus.Parent = gethui and gethui() or game:GetService("CoreGui")
-end)
 
-if typeof(gethui) == "function" then
-    for _, Interface in ipairs(gethui():GetChildren()) do
-        if Interface.Name == Nexus.Name and Interface ~= Nexus then
-            pcall(function() Interface:Destroy() end)
+local function getHiddenUI()
+    local hui = nil
+    local success, result = pcall(function()
+        if typeof(gethui) == "function" then
+            hui = gethui()
         end
+    end)
+    if not success then
+        warn("Error getting hidden UI: " .. tostring(result))
     end
-else
-    for _, Interface in ipairs(game:GetService("CoreGui"):GetChildren()) do
-        if Interface.Name == Nexus.Name and Interface ~= Nexus then
-            pcall(function() Interface:Destroy() end)
+    return hui
+end
+
+local function protectGui(gui)
+    local success, err = pcall(function()
+        if syn and typeof(syn.protect_gui) == "function" then
+            syn.protect_gui(gui)
         end
+    end)
+    if not success then
+        warn("Error protecting GUI: " .. tostring(err))
+    end
+end
+
+protectGui(Nexus)
+
+local hiddenUI = getHiddenUI()
+Nexus.Parent = hiddenUI or game:GetService("CoreGui")
+
+-- Clean up duplicates
+local coreParent = hiddenUI or game:GetService("CoreGui")
+for _, Interface in ipairs(coreParent:GetChildren()) do
+    if Interface.Name == Nexus.Name and Interface ~= Nexus then
+        pcall(function() Interface:Destroy() end)
     end
 end
 
 function NexusLib:IsRunning()
-    if typeof(gethui) == "function" then
-        return Nexus.Parent == gethui()
-    else
-        return Nexus.Parent == game:GetService("CoreGui")
-    end
+    local hiddenUI = getHiddenUI()
+    local coreGui = game:GetService("CoreGui")
+    return Nexus.Parent == (hiddenUI or coreGui)
 end
 
 NexusLib.Themes = {
