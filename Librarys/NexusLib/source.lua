@@ -427,7 +427,8 @@ CreateElement("Button", function()
         Text = "",
         AutoButtonColor = false,
         BackgroundTransparency = 1,
-        BorderSizePixel = 0
+        BorderSizePixel = 0,
+        Active = true
     })
     return Button
 end)
@@ -624,7 +625,8 @@ function NexusLib:CreateWindow(WindowConfig)
     local CloseBtn = SetChildren(SetProps(MakeElement("Button"), {
         Size = UDim2.new(0.5, 0, 1, 0),
         Position = UDim2.new(0.5, 0, 0, 0),
-        BackgroundTransparency = 1
+        BackgroundTransparency = 1,
+        Active = true
     }), {
         AddThemeObject(SetProps(MakeElement("Image", "rbxassetid://7072725342"), {
             Position = UDim2.new(0, 9, 0, 6),
@@ -634,7 +636,8 @@ function NexusLib:CreateWindow(WindowConfig)
 
     local MinimizeBtn = SetChildren(SetProps(MakeElement("Button"), {
         Size = UDim2.new(0.5, 0, 1, 0),
-        BackgroundTransparency = 1
+        BackgroundTransparency = 1,
+        Active = true
     }), {
         AddThemeObject(SetProps(MakeElement("Image", "rbxassetid://7072719338"), {
             Position = UDim2.new(0, 9, 0, 6),
@@ -795,7 +798,8 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
 
         local TabFrame = SetChildren(SetProps(MakeElement("Button"), {
             Size = UDim2.new(1, 0, 0, 30),
-            Parent = TabHolder
+            Parent = TabHolder,
+            Active = true
         }), {
             AddThemeObject(SetProps(MakeElement("Image", TabConfig.Icon), {
                 AnchorPoint = Vector2.new(0, 0.5),
@@ -887,7 +891,8 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
                 local Button = {}
 
                 local Click = SetProps(MakeElement("Button"), {
-                    Size = UDim2.new(1, 0, 1, 0)
+                    Size = UDim2.new(1, 0, 1, 0),
+                    Active = true
                 })
 
                 local ButtonFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
@@ -930,7 +935,7 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
                 return Button
             end
 
-            function ElementFunction:AddToggle(ToggleConfig)
+                                function ElementFunction:AddToggle(ToggleConfig)
                 ToggleConfig = ToggleConfig or {}
                 ToggleConfig.Name = ToggleConfig.Name or "Toggle"
                 ToggleConfig.Default = ToggleConfig.Default or false
@@ -941,10 +946,10 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
                 local Toggle = {Value = ToggleConfig.Default, Type = "Toggle", Save = ToggleConfig.Save}
 
                 local Click = SetProps(MakeElement("Button"), {
-                    Size = UDim2.new(1, 0, 1, 0)
+                    Size = UDim2.new(1, 0, 1, 0),
+                    Active = true
                 })
 
-                
                 local ToggleBox = SetChildren(SetProps(MakeElement("RoundFrame", NexusLib.Themes[NexusLib.SelectedTheme].Accent, 0, 4), {
                     Size = UDim2.new(0, 24, 0, 24),
                     Position = UDim2.new(1, -24, 0.5, 0),
@@ -967,7 +972,6 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
                     stroke.Parent = ToggleBox  
                 end)
 
-                
                 local ToggleFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
                     Size = UDim2.new(1, 0, 0, 38),
                     Parent = ItemParent
@@ -983,23 +987,19 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
                     Click
                 }), "Second")
 
-                
                 local function GetStroke()
                     return ToggleBox:FindFirstChildWhichIsA("UIStroke", true)
                 end
 
-                
                 function Toggle:Set(Value)
                     Toggle.Value = Value
 
-                    
                     pcall(function()
                         TweenService:Create(ToggleBox, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {
                             BackgroundColor3 = Toggle.Value and NexusLib.Themes[NexusLib.SelectedTheme].Accent or NexusLib.Themes[NexusLib.SelectedTheme].Divider
                         }):Play()
                     end)
 
-                    
                     local stroke = GetStroke()
                     if stroke then
                         pcall(function()
@@ -1009,7 +1009,6 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
                         end)
                     end
 
-                    
                     pcall(function()
                         TweenService:Create(ToggleBox.Ico, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {
                             ImageTransparency = Toggle.Value and 0 or 1,
@@ -1020,10 +1019,8 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
                     ToggleConfig.Callback(Toggle.Value)
                 end
 
-                
                 Toggle:Set(Toggle.Value)
 
-                
                 AddConnection(Click.MouseEnter, function()
                     TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 3)}):Play()
                 end)
@@ -1032,7 +1029,6 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
                     TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = NexusLib.Themes[NexusLib.SelectedTheme].Second}):Play()
                 end)
 
-                
                 AddConnection(Click.Activated, function()
                     TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 3)}):Play()
                     SaveCfg(game.GameId)
@@ -1043,7 +1039,6 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
                     TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 6, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 6, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 6)}):Play()
                 end)
 
-                
                 if ToggleConfig.Flag then
                     NexusLib.Flags[ToggleConfig.Flag] = Toggle
                 end
@@ -1063,7 +1058,6 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
                 SliderConfig.Save = SliderConfig.Save or false
                 
                 if SliderConfig.Min > SliderConfig.Max then
-                    warn("Min > Max in slider")
                     local temp = SliderConfig.Min
                     SliderConfig.Min = SliderConfig.Max
                     SliderConfig.Max = temp
@@ -1183,7 +1177,8 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
                 }), "Divider")
 
                 local Click = SetProps(MakeElement("Button"), {
-                    Size = UDim2.new(1, 0, 1, 0)
+                    Size = UDim2.new(1, 0, 1, 0),
+                    Active = true
                 })
 
                 local DropdownFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
@@ -1245,7 +1240,8 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
                             Parent = DropdownContainer,
                             Size = UDim2.new(1, 0, 0, 28),
                             BackgroundTransparency = 1,
-                            ClipsDescendants = true
+                            ClipsDescendants = true,
+                            Active = true
                         }), "Divider")
 
                         AddConnection(OptionBtn.Activated, function()
@@ -1344,7 +1340,8 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
                 local Holding = false
                 
                 local Click = SetProps(MakeElement("Button"), {
-                    Size = UDim2.new(1, 0, 1, 0)
+                    Size = UDim2.new(1, 0, 1, 0),
+                    Active = true
                 })
 
                 local BindBox = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
@@ -1460,7 +1457,8 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
                 local Textbox = {Value = TextboxConfig.Default, Type = "Textbox", Save = TextboxConfig.Save}
 
                 local Click = SetProps(MakeElement("Button"), {
-                    Size = UDim2.new(1, 0, 1, 0)
+                    Size = UDim2.new(1, 0, 1, 0),
+                    Active = true
                 })
 
                 local TextboxActual = AddThemeObject(Create("TextBox", {
@@ -1550,7 +1548,7 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
                 ColorpickerConfig.Default = ColorpickerConfig.Default or Color3.fromRGB(255,255,255)
                 ColorpickerConfig.Callback = ColorpickerConfig.Callback or function() end
                 ColorpickerConfig.Flag = ColorpickerConfig.Flag or nil
-                ColorpickerConfig.Save = ColorpickerConfig.Save or false
+                ColorpickerConfig.Save = ColorpickerConfig.Save == nil and true or ColorpickerConfig.Save
                 
                 local selectionImg = "rbxassetid://4805639000"
                 local colorImg = "rbxassetid://4155801252"
@@ -1626,7 +1624,8 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
                 })
                 
                 local Click = SetProps(MakeElement("Button"), {
-                    Size = UDim2.new(1, 0, 1, 0)
+                    Size = UDim2.new(1, 0, 1, 0),
+                    Active = true
                 })
 
                 local ColorpickerBox = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
@@ -1734,7 +1733,6 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
                     end
                 end)
 
-                            
                 function Colorpicker:Set(Value)
                     Colorpicker.Value = Value
                     ColorH, ColorS, ColorV = Color3.toHSV(Value)
