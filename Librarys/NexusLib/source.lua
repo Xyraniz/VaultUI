@@ -643,10 +643,6 @@ function NexusLib:CreateWindow(WindowConfig)
         }), "Text")
     })
 
-    local DragPoint = SetProps(MakeElement("TFrame"), {
-        Size = UDim2.new(1, 0, 0, 50)
-    })
-
 local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 10), {
         Size = UDim2.new(0, 150, 1, -50),
         Position = UDim2.new(0, 0, 0, 50)
@@ -737,9 +733,12 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
                 MinimizeBtn
             }), "Second"), 
         }),
-        DragPoint,
         WindowStuff
     }), "Main")
+    
+    MainWindow.TopBar.Active = true
+
+    local DragPoint = MainWindow.TopBar
 
     if WindowConfig.ShowIcon then
         WindowName.Position = UDim2.new(0, 50, 0, -24)
