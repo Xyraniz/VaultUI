@@ -750,7 +750,7 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
         WindowIcon.Parent = MainWindow.TopBar
     end
   
-    AddConnection(CloseBtn.MouseButton1Up, function()
+    AddConnection(CloseBtn.Activated, function()
         MainWindow.Visible = false
         UIHidden = true
         NexusLib:MakeNotification({
@@ -767,7 +767,7 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
         end
     end)
 
-    AddConnection(MinimizeBtn.MouseButton1Up, function()
+    AddConnection(MinimizeBtn.Activated, function()
         if Minimized then
             TweenService:Create(MainWindow, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(0, 615, 0, 344)}):Play()
             MinimizeBtn.Ico.Image = "rbxassetid://7072719338"
@@ -837,7 +837,7 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
             Container.Visible = true
         end
 
-        AddConnection(TabFrame.MouseButton1Click, function()
+        AddConnection(TabFrame.Activated, function()
             for _, Tab in next, TabHolder:GetChildren() do
                 if Tab:IsA("TextButton") then
                     Tab.Title.Font = Enum.Font.GothamSemibold
@@ -913,15 +913,15 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
                     TweenService:Create(ButtonFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = NexusLib.Themes[NexusLib.SelectedTheme].Second}):Play()
                 end)
 
-                AddConnection(Click.MouseButton1Up, function()
+                AddConnection(Click.MouseButton1Down, function()
+                    TweenService:Create(ButtonFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 6, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 6, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 6)}):Play()
+                end)
+
+                AddConnection(Click.Activated, function()
                     TweenService:Create(ButtonFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 3)}):Play()
                     spawn(function()
                         ButtonConfig.Callback()
                     end)
-                end)
-
-                AddConnection(Click.MouseButton1Down, function()
-                    TweenService:Create(ButtonFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 6, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 6, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 6)}):Play()
                 end)
 
                 function Button:Set(ButtonText)
@@ -1034,7 +1034,7 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
                 end)
 
                 
-                AddConnection(Click.MouseButton1Up, function()
+                AddConnection(Click.Activated, function()
                     TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 3)}):Play()
                     SaveCfg(game.GameId)
                     Toggle:Set(not Toggle.Value)
@@ -1249,7 +1249,7 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
                             ClipsDescendants = true
                         }), "Divider")
 
-                        AddConnection(OptionBtn.MouseButton1Click, function()
+                        AddConnection(OptionBtn.Activated, function()
                             Dropdown:Set(Option)
                             SaveCfg(game.GameId)
                         end)
@@ -1306,7 +1306,7 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
                     return DropdownConfig.Callback(Dropdown.Value)
                 end
 
-                AddConnection(Click.MouseButton1Click, function()
+                AddConnection(Click.Activated, function()
                     Dropdown.Toggled = not Dropdown.Toggled
                     DropdownFrame.F.Line.Visible = Dropdown.Toggled
                     pcall(function()
@@ -1381,12 +1381,10 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
                     TweenService:Create(BindBox, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(0, BindBox.Value.TextBounds.X + 16, 0, 24)}):Play()
                 end)
 
-                AddConnection(Click.InputEnded, function(Input)
-                    if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                        if Bind.Binding then return end
-                        Bind.Binding = true
-                        BindBox.Value.Text = "..."
-                    end
+                AddConnection(Click.Activated, function()
+                    if Bind.Binding then return end
+                    Bind.Binding = true
+                    BindBox.Value.Text = "..."
                 end)
                 
                 AddConnection(UserInputService.InputBegan, function(Input)
@@ -1431,10 +1429,6 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
                 
                 AddConnection(Click.MouseLeave, function()
                     TweenService:Create(BindFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = NexusLib.Themes[NexusLib.SelectedTheme].Second}):Play()
-                end)
-
-                AddConnection(Click.MouseButton1Up, function()
-                    TweenService:Create(BindFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 3)}):Play()
                 end)
 
                 AddConnection(Click.MouseButton1Down, function()
@@ -1531,7 +1525,7 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
                     TweenService:Create(TextboxFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = NexusLib.Themes[NexusLib.SelectedTheme].Second}):Play()
                 end)
 
-                AddConnection(Click.MouseButton1Up, function()
+                AddConnection(Click.Activated, function()
                     TweenService:Create(TextboxFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 3)}):Play()
                     TextboxActual:CaptureFocus()
                 end)
@@ -1682,7 +1676,7 @@ local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame"
                 
                 UpdateColorPicker()
 
-                AddConnection(Click.MouseButton1Click, function()
+                AddConnection(Click.Activated, function()
                     Colorpicker.Toggled = not Colorpicker.Toggled
                     pcall(function()
                         TweenService:Create(ColorpickerFrame,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Size = Colorpicker.Toggled and UDim2.new(1, 0, 0, 148) or UDim2.new(1, 0, 0, 38)}):Play()
