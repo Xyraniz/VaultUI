@@ -295,7 +295,7 @@ local function AddDraggingFunctionality(DragPoint, Main)
         local newY = StartPos.Y.Offset + delta.Y
         
         newX = math.clamp(newX, 0, viewport.X - Main.AbsoluteSize.X)
-        newY = math.clamp(newY, -Main.AbsoluteSize.Y + 20, viewport.Y - 20)
+        newY = math.clamp(newY, 0, viewport.Y - Main.AbsoluteSize.Y)
         
         Main.Position = UDim2.new(0, newX, 0, newY)
     end
@@ -1821,6 +1821,3 @@ function NexusLib:SetTheme(ThemeName)
 end
 
 return NexusLib
-
-
-
