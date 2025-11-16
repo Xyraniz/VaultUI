@@ -285,8 +285,6 @@ local function AddDraggingFunctionality(DragPoint, Main)
     
     local function Update(input)
         if not Dragging or not DragStart or not StartPos then return end
-        if not workspace.CurrentCamera then return end
-        if CurrentInput and input ~= CurrentInput then return end
         
         local delta = input.Position - DragStart
         local viewport = workspace.CurrentCamera.ViewportSize
@@ -327,11 +325,9 @@ local function AddDraggingFunctionality(DragPoint, Main)
 
     DragPoint.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or 
-           input.UserInputType == Enum.UserInputType.Touch then
-            if CurrentInput == input then
-                Dragging = false
-                CurrentInput = nil
-            end
+           (input.UserInputType == Enum.UserInputType.Touch and CurrentInput == input) then
+            Dragging = false
+            CurrentInput = nil
         end
     end)
 
