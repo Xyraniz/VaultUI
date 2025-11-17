@@ -399,18 +399,20 @@ local function CreateElementFunctions(Container)
         local Click = SetProps(MakeElement("Button"), {
             Size = UDim2.new(1, 0, 1, 0)
         })
+        local Checkmark = AddThemeObject(SetProps(MakeElement("Image", "rbxassetid://7072721685"), {
+            Name = "Checkmark",
+            Size = UDim2.new(0, 20, 0, 20),
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            Position = UDim2.new(0.5, 0, 0.5, 0),
+            ImageTransparency = Toggle.Value and 0 or 1
+        }), "TextDark")
         local ToggleBox = SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
             Size = UDim2.new(0, 24, 0, 24),
             Position = UDim2.new(1, -12, 0.5, 0),
             AnchorPoint = Vector2.new(1, 0.5)
         }), {
             AddThemeObject(MakeElement("Stroke"), "Stroke"),
-            AddThemeObject(SetProps(MakeElement("Image", "rbxassetid://7072721685"), {
-                Size = UDim2.new(0, 20, 0, 20),
-                AnchorPoint = Vector2.new(0.5, 0.5),
-                Position = UDim2.new(0.5, 0, 0.5, 0),
-                ImageTransparency = Toggle.Value and 0 or 1
-            }), "TextDark")
+            Checkmark
         })
         local ToggleFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
             Size = UDim2.new(1, 0, 0, 38),
@@ -440,7 +442,7 @@ local function CreateElementFunctions(Container)
         end)
         AddConnection(Click.MouseButton1Click, function()
             Toggle.Value = not Toggle.Value
-            TweenService:Create(ToggleBox.ImageLabel, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = Toggle.Value and 0 or 1}):Play()
+            TweenService:Create(Checkmark, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = Toggle.Value and 0 or 1}):Play()
             ToggleConfig.Callback(Toggle.Value)
             SaveCfg(game.GameId)
         end)
@@ -449,7 +451,7 @@ local function CreateElementFunctions(Container)
         end
         function Toggle:Set(Value)
             Toggle.Value = Value
-            TweenService:Create(ToggleBox.ImageLabel, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = Toggle.Value and 0 or 1}):Play()
+            TweenService:Create(Checkmark, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = Value and 0 or 1}):Play()
             ToggleConfig.Callback(Toggle.Value)
         end
         Toggle:Set(Toggle.Value)
@@ -479,6 +481,10 @@ local function CreateElementFunctions(Container)
             Font = Enum.Font.GothamBold,
             TextTransparency = 0.4
         }), "Text")
+        local SliderButton = SetProps(MakeElement("Button"), {
+            Size = UDim2.new(1, 0, 1, 0),
+            BackgroundTransparency = 1
+        })
         local SliderFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
             Size = UDim2.new(1, 0, 0, 38),
             Parent = Container
@@ -492,9 +498,7 @@ local function CreateElementFunctions(Container)
             AddThemeObject(MakeElement("Stroke"), "Stroke"),
             SliderDrag,
             SliderLabel,
-            SetProps(MakeElement("Button"), {
-                Size = UDim2.new(1, 0, 1, 0)
-            })
+            SliderButton
         }), "Second")
         SliderLabel.Text = SliderConfig.Name .. ": " .. Slider.Value
         local function UpdateSlider()
@@ -502,12 +506,12 @@ local function CreateElementFunctions(Container)
             TweenService:Create(SliderDrag, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(Percentage, 0, 1, 0)}):Play()
             SliderLabel.Text = SliderConfig.Name .. ": " .. Slider.Value
         end
-        AddConnection(SliderFrame.Button.InputBegan, function(Input)
+        AddConnection(SliderButton.InputBegan, function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseButton1 then
                 Dragging = true
             end
         end)
-        AddConnection(SliderFrame.Button.InputEnded, function(Input)
+        AddConnection(SliderButton.InputEnded, function(Input)
             if Input.UserInputType == Enum.UserInputType.MouseButton1 then
                 Dragging = false
             end
@@ -697,7 +701,7 @@ local function CreateElementFunctions(Container)
         }), {
             AddThemeObject(MakeElement("Stroke"), "Stroke"),
             AddThemeObject(SetProps(MakeElement("Label", "NONE", 14), {
-                Size = UDim2.new(1, 0, 1, 0),
+                Size = UDim2.new(1, 0,1,0),
                 Font = Enum.Font.GothamBold,
                 TextXAlignment = Enum.TextXAlignment.Center,
                 Name = "Value"
