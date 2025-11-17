@@ -553,11 +553,11 @@ Size = UDim2.new(0, 24, 0, 24),
 
 }), {
 
-Instance.new("UIGradient", {
+Create("UIGradient", {
 
 Color = gradientColor,
 
-Rotation = 45,
+Rotation = 45
 
 })
 
@@ -603,11 +603,17 @@ Size = UDim2.new(1, 0, 0, 8),
 
 shadow1.Parent = border
 
-Instance.new("UIGradient", shadow1).Color = shadowGradient
+local grad1 = Create("UIGradient", {
 
-Instance.new("UIGradient", shadow1).Rotation = 270
+Color = shadowGradient,
 
-Instance.new("UIGradient", shadow1).Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(1, 1)}
+Rotation = 270,
+
+Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(1, 1)}
+
+})
+
+grad1.Parent = shadow1
 
 local shadow2 = SetProps(MakeElement("Frame"), {
 
@@ -625,11 +631,17 @@ Size = UDim2.new(1, 0, 0, 8),
 
 shadow2.Parent = border
 
-Instance.new("UIGradient", shadow2).Color = shadowGradient
+local grad2 = Create("UIGradient", {
 
-Instance.new("UIGradient", shadow2).Rotation = 90
+Color = shadowGradient,
 
-Instance.new("UIGradient", shadow2).Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(1, 1)}
+Rotation = 90,
+
+Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(1, 1)}
+
+})
+
+grad2.Parent = shadow2
 
 local bar = SetProps(MakeElement("Frame"), {
 
@@ -647,7 +659,13 @@ Position = UDim2.new(0, 0, 0, 0),
 
 bar.Parent = main
 
-Instance.new("UIGradient", bar).Color = gradientColor
+local grad3 = Create("UIGradient", {
+
+Color = gradientColor
+
+})
+
+grad3.Parent = bar
 
 local bottom = SetProps(MakeElement("Frame"), {
 
@@ -699,7 +717,13 @@ TextColor3 = Color3.fromRGB(255, 255, 255),
 
 title.Parent = bottom
 
-Instance.new("UIGradient", title).Color = gradientColor
+local grad4 = Create("UIGradient", {
+
+Color = gradientColor
+
+})
+
+grad4.Parent = title
 
 local topcontainer = SetProps(MakeElement("TFrame"), {
 
@@ -1823,9 +1847,15 @@ Name = "label"
 
 RainbowFrame.Parent = ColorpickerContainer
 
-Instance.new("UIGradient", RainbowFrame).Rotation = -90
+local grad5 = Create("UIGradient", {
 
-Instance.new("UIGradient", RainbowFrame).Color = gradientSection
+Rotation = -90,
+
+Color = gradientSection
+
+})
+
+grad5.Parent = RainbowFrame
 
 local function UpdateColorPicker()
 
@@ -2023,9 +2053,11 @@ SliceScale = 1,
 
 })
 
-local grad = Instance.new("UIGradient")
+local grad = Create("UIGradient", {
 
-grad.Color = gradientSection
+Color = gradientSection
+
+})
 
 grad.Parent = sectionSelector
 
