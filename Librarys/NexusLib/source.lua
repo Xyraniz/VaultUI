@@ -195,8 +195,8 @@ local function AdjustColor(color, amount)
     return Color3.fromRGB(r, g, b)
 end
 
-local HOVER_ADD = 15
-local PRESS_ADD = -25
+local HOVER_ADD = 12
+local PRESS_ADD = -20
 
 local function AddHoverPress(clickButton, targetFrame, getBaseFunc, hoverAdd, pressAdd)
     hoverAdd = hoverAdd or HOVER_ADD
@@ -228,7 +228,6 @@ local function AddHoverPress(clickButton, targetFrame, getBaseFunc, hoverAdd, pr
     end)
 
     Update()
-    return Update
 end
 
 CreateElement("Corner", function(Scale, Offset) return Create("UICorner", {CornerRadius = UDim.new(Scale or 0, Offset or 10)}) end)
@@ -280,16 +279,16 @@ function NexusLib:MakeNotification(NotificationConfig)
         })
 
         TweenService:Create(NotificationFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {Position = UDim2.new(0, 0, 0, 0)}):Play()
-        wait(NotificationConfig.Time - 0.88)
+        task.wait(NotificationConfig.Time - 0.88)
         TweenService:Create(NotificationFrame.Icon, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {ImageTransparency = 1}):Play()
         TweenService:Create(NotificationFrame, TweenInfo.new(0.8, Enum.EasingStyle.Quint), {BackgroundTransparency = 0.6}):Play()
-        wait(0.3)
+        task.wait(0.3)
         TweenService:Create(NotificationFrame.UIStroke, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {Transparency = 0.9}):Play()
         TweenService:Create(NotificationFrame.Title, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {TextTransparency = 0.4}):Play()
         TweenService:Create(NotificationFrame.Content, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {TextTransparency = 0.5}):Play()
-        wait(0.05)
+        task.wait(0.05)
         NotificationFrame:TweenPosition(UDim2.new(1, 20, 0, 0), 'In', 'Quint', 0.8, true)
-        wait(1.35)
+        task.wait(1.35)
         NotificationFrame:Destroy()
         NotificationParent:Destroy()
     end)
@@ -298,7 +297,7 @@ end
 function NexusLib:Init()
     if NexusLib.SaveConfig and isfile(NexusLib.Folder .. "/" .. game.GameId .. ".txt") then
         LoadCfg(readfile(NexusLib.Folder .. "/" .. game.GameId .. ".txt"))
-        NexusLib:MakeNotification({Name = "Configuration", Content = "Auto-loaded configuration", Time = 3})
+        NexusLib:MakeNotification({Name = "Configuration", Content = "Auto-loaded", Time = 3})
     end
 end
 
@@ -311,7 +310,7 @@ local function CreateElementFunctions(Container)
         LabelConfig.Default = LabelConfig.Default or ""
 
         local LabelFrame = AddThemeObject(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255,255,255), 0, 5), {Size = UDim2.new(1, 0, 0, 38), Parent = Container}), "Second")
-        local LabelLabel = AddThemeObject(SetProps(MakeElement("Label", LabelConfig.Name, 15), {Size = UDim2.new(1, -12, 1, 0), Position = UDim2.new(0, 12, 0, 0), Font = Enum.Font.GothamBold, Name = "Content"}), "Text")
+        local LabelLabel = AddThemeObject(SetProps(MakeElement("Label", LabelConfig.Name, 15), {Size = UDim2.new(1, -12, 1, 0), Position = UDim2.new(0, 12, 0,  0), Font = Enum.Font.GothamBold, Name = "Content"}), "Text")
         LabelLabel.Parent = LabelFrame
 
         local Label = {Value = LabelConfig.Default}
@@ -744,7 +743,7 @@ local function CreateElementFunctions(Container)
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                 colorDragging = true
                 local relX = math.clamp((input.Position.X - Color.AbsolutePosition.X) / Color.AbsoluteSize.X, 0, 1)
-                relY = math.clamp((input.Position.Y - Color.AbsolutePosition.Y) / Color.AbsoluteSize.Y, 0, 1)
+                local relY = math.clamp((input.Position.Y - Color.AbsolutePosition.Y) / Color.AbsoluteSize.Y, 0, 1)
                 ColorSelection.Position = UDim2.new(relX, 0, relY, 0)
                 ColorS = relX
                 ColorV = 1 - relY
@@ -955,7 +954,7 @@ function NexusLib:CreateWindow(WindowConfig)
         else
             TweenService:Create(MainWindow, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 615, 0, 344)}):Play()
             MinimizeBtn.Ico.Image = "rbxassetid://7072719338"
-            wait(0.02)
+            task.wait(0.02)
             MainWindow.ClipsDescendants = false
             WindowStuff.Visible = true
             WindowTopBarLine.Visible = true
