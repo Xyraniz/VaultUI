@@ -1,6 +1,5 @@
 local NexusLib = {}
 NexusLib.__index = NexusLib
-
 local HttpService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
@@ -8,10 +7,8 @@ local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 local StarterGui = game:GetService("StarterGui")
-
 local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
-
 local function deepCopy(original)
     local copy = {}
     for k, v in pairs(original) do
@@ -23,7 +20,6 @@ local function deepCopy(original)
     end
     return copy
 end
-
 local defaultThemes = {
     Dark = {
         Background = Color3.fromRGB(30, 30, 30),
@@ -51,10 +47,8 @@ local defaultThemes = {
     },
     Custom = {}
 }
-
 local screenSize = workspace.CurrentCamera.ViewportSize
 local isMobile = UserInputService.TouchEnabled and screenSize.Y > screenSize.X * 0.75
-
 function NexusLib.new(options)
     options = options or {}
     local self = setmetatable({}, NexusLib)
@@ -71,11 +65,10 @@ function NexusLib.new(options)
     self.Watermark = nil
     self.Tooltips = {}
     self.ScreenGui = Instance.new("ScreenGui")
-    self.ScreenGui.Parent = CoreGui
+    self.ScreenGui.Parent = LocalPlayer.PlayerGui
     self.ScreenGui.IgnoreGuiInset = true
     self.ScreenGui.ResetOnSpawn = false
     self.ScreenGui.DisplayOrder = 100
-
     RunService:BindToRenderStep("RainbowUpdate", Enum.RenderPriority.Camera.Value - 1, function(delta)
         if self.RainbowEnabled then
             self.RainbowHue = (self.RainbowHue + delta) % 1
@@ -84,10 +77,8 @@ function NexusLib.new(options)
             self:UpdateTheme()
         end
     end)
-
     return self
 end
-
 function NexusLib:UpdateTheme()
     for _, window in ipairs(self.Windows) do
         window.Frame.BackgroundColor3 = self.Theme.Background
@@ -112,7 +103,6 @@ function NexusLib:UpdateTheme()
         self.Watermark.BackgroundColor3 = self.Theme.Background
     end
 end
-
 function NexusLib:UpdateElementTheme(element)
     if element.Type == "Toggle" then
         element.Label.TextColor3 = self.Theme.Text
@@ -160,7 +150,6 @@ function NexusLib:UpdateElementTheme(element)
         end
     end
 end
-
 function NexusLib:Tween(object, properties)
     local tweenInfo = TweenInfo.new(properties.Time or 0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
     properties.Time = nil
@@ -168,7 +157,6 @@ function NexusLib:Tween(object, properties)
     tween:Play()
     return tween
 end
-
 function NexusLib:Dragger(frame, parent)
     local dragging = false
     local dragInput, dragStart, startPos
@@ -199,7 +187,6 @@ function NexusLib:Dragger(frame, parent)
         end
     end)
 end
-
 function NexusLib:CreateWindow(options)
     options = options or {}
     local window = {}
@@ -208,20 +195,18 @@ function NexusLib:CreateWindow(options)
     window.Position = options.Position or UDim2.new(0.5, -window.Size.X.Offset / 2, 0.5, -window.Size.Y.Offset / 2)
     window.Tabs = {}
     window.Visible = true
-
     window.Frame = Instance.new("Frame")
     window.Frame.Size = window.Size
     window.Frame.Position = window.Position
     window.Frame.BackgroundColor3 = self.Theme.Background
     window.Frame.BorderColor3 = self.Theme.Border
     window.Frame.BorderSizePixel = 1
+    window.Frame.Visible = true
     window.Frame.Parent = self.ScreenGui
-
     window.TitleBar = Instance.new("Frame")
     window.TitleBar.Size = UDim2.new(1, 0, 0, 30)
     window.TitleBar.BackgroundColor3 = self.Theme.Secondary
     window.TitleBar.Parent = window.Frame
-
     window.Title = Instance.new("TextLabel")
     window.Title.Size = UDim2.new(1, 0, 1, 0)
     window.Title.BackgroundTransparency = 1
@@ -230,36 +215,29 @@ function NexusLib:CreateWindow(options)
     window.Title.Font = self.Font
     window.Title.TextSize = 14
     window.Title.Parent = window.TitleBar
-
     window.TabContainer = Instance.new("Frame")
     window.TabContainer.Size = UDim2.new(1, 0, 0, 30)
     window.TabContainer.Position = UDim2.new(0, 0, 0, 30)
     window.TabContainer.BackgroundTransparency = 1
     window.TabContainer.Parent = window.Frame
-
     window.TabLayout = Instance.new("UIListLayout")
     window.TabLayout.FillDirection = Enum.FillDirection.Horizontal
     window.TabLayout.Parent = window.TabContainer
-
     window.ContentContainer = Instance.new("Frame")
     window.ContentContainer.Size = UDim2.new(1, 0, 1, -60)
     window.ContentContainer.Position = UDim2.new(0, 0, 0, 60)
     window.ContentContainer.BackgroundTransparency = 1
     window.ContentContainer.Parent = window.Frame
-
     self:Dragger(window.TitleBar, window.Frame)
-
     table.insert(self.Windows, window)
     return window
 end
-
 function NexusLib:CreateTab(window, options)
     options = options or {}
     local tab = {}
     tab.Title = options.Title or "Tab"
     tab.Sections = {}
     tab.Visible = false
-
     tab.Button = Instance.new("TextButton")
     tab.Button.Size = UDim2.new(0, 100, 1, 0)
     tab.Button.BackgroundColor3 = self.Theme.Secondary
@@ -268,19 +246,16 @@ function NexusLib:CreateTab(window, options)
     tab.Button.Font = self.Font
     tab.Button.TextSize = 14
     tab.Button.Parent = window.TabContainer
-
     tab.Container = Instance.new("ScrollingFrame")
     tab.Container.Size = UDim2.new(1, 0, 1, 0)
     tab.Container.BackgroundColor3 = self.Theme.Secondary
     tab.Container.ScrollBarThickness = 4
     tab.Container.Visible = false
     tab.Container.Parent = window.ContentContainer
-
     tab.Layout = Instance.new("UIListLayout")
     tab.Layout.Padding = UDim.new(0, 5)
     tab.Layout.Parent = tab.Container
-
-    tab.Button.MouseButton1Click:Connect(function()
+    tab.Button.Activated:Connect(function()
         for _, t in ipairs(window.Tabs) do
             t.Container.Visible = false
             t.Button.BackgroundColor3 = self.Theme.Secondary
@@ -288,7 +263,6 @@ function NexusLib:CreateTab(window, options)
         tab.Container.Visible = true
         tab.Button.BackgroundColor3 = self.Theme.Accent
     end)
-
     table.insert(window.Tabs, tab)
     if #window.Tabs == 1 then
         tab.Button.BackgroundColor3 = self.Theme.Accent
@@ -296,13 +270,11 @@ function NexusLib:CreateTab(window, options)
     end
     return tab
 end
-
 function NexusLib:CreateSection(tab, options)
     options = options or {}
     local section = {}
     section.Title = options.Title or "Section"
     section.Elements = {}
-
     section.Frame = Instance.new("Frame")
     section.Frame.Size = UDim2.new(1, -10, 0, 0)
     section.Frame.BackgroundColor3 = self.Theme.Background
@@ -310,7 +282,6 @@ function NexusLib:CreateSection(tab, options)
     section.Frame.BorderSizePixel = 1
     section.Frame.AutomaticSize = Enum.AutomaticSize.Y
     section.Frame.Parent = tab.Container
-
     section.Title = Instance.new("TextLabel")
     section.Title.Size = UDim2.new(1, 0, 0, 20)
     section.Title.BackgroundTransparency = 1
@@ -319,25 +290,20 @@ function NexusLib:CreateSection(tab, options)
     section.Title.Font = self.Font
     section.Title.TextSize = 12
     section.Title.Parent = section.Frame
-
     section.Container = Instance.new("Frame")
     section.Container.Size = UDim2.new(1, 0, 1, -20)
     section.Container.Position = UDim2.new(0, 0, 0, 20)
     section.Container.BackgroundTransparency = 1
     section.Container.Parent = section.Frame
-
     section.Layout = Instance.new("UIListLayout")
     section.Layout.Padding = UDim.new(0, 5)
     section.Layout.Parent = section.Container
-
     section.Padding = Instance.new("UIPadding")
     section.Padding.PaddingLeft = UDim.new(0, 5)
     section.Padding.Parent = section.Container
-
     table.insert(tab.Sections, section)
     return section
 end
-
 function NexusLib:CreateToggle(section, options)
     options = options or {}
     local element = {}
@@ -347,12 +313,10 @@ function NexusLib:CreateToggle(section, options)
     element.Callback = options.Callback or function() end
     element.Flag = options.Flag
     if element.Flag then self.Flags[element.Flag] = element.Default end
-
     element.Frame = Instance.new("Frame")
     element.Frame.Size = UDim2.new(1, 0, 0, 20)
     element.Frame.BackgroundTransparency = 1
     element.Frame.Parent = section.Container
-
     element.Label = Instance.new("TextLabel")
     element.Label.Size = UDim2.new(1, -40, 1, 0)
     element.Label.BackgroundTransparency = 1
@@ -362,7 +326,6 @@ function NexusLib:CreateToggle(section, options)
     element.Label.TextSize = 12
     element.Label.TextXAlignment = Enum.TextXAlignment.Left
     element.Label.Parent = element.Frame
-
     element.Toggle = Instance.new("TextButton")
     element.Toggle.Size = UDim2.new(0, 30, 0, 16)
     element.Toggle.Position = UDim2.new(1, -30, 0, 2)
@@ -370,36 +333,30 @@ function NexusLib:CreateToggle(section, options)
     element.Toggle.BorderColor3 = self.Theme.Border
     element.Toggle.Text = ""
     element.Toggle.Parent = element.Frame
-
     element.Fill = Instance.new("Frame")
     element.Fill.Size = element.Default and UDim2.new(1, 0, 1, 0) or UDim2.new(0, 0, 1, 0)
     element.Fill.BackgroundColor3 = self.Theme.Accent
     element.Fill.Parent = element.Toggle
-
     local toggled = element.Default
-    element.Toggle.MouseButton1Click:Connect(function()
+    element.Toggle.Activated:Connect(function()
         toggled = not toggled
         self:Tween(element.Fill, {Size = toggled and UDim2.new(1, 0, 1, 0) or UDim2.new(0, 0, 1, 0)})
         if element.Flag then self.Flags[element.Flag] = toggled end
         element.Callback(toggled)
     end)
-
     table.insert(section.Elements, element)
     return element
 end
-
 function NexusLib:CreateButton(section, options)
     options = options or {}
     local element = {}
     element.Type = "Button"
     element.Name = options.Name or "Button"
     element.Callback = options.Callback or function() end
-
     element.Frame = Instance.new("Frame")
     element.Frame.Size = UDim2.new(1, 0, 0, 20)
     element.Frame.BackgroundTransparency = 1
     element.Frame.Parent = section.Container
-
     element.Button = Instance.new("TextButton")
     element.Button.Size = UDim2.new(1, 0, 1, 0)
     element.Button.BackgroundColor3 = self.Theme.Accent
@@ -408,13 +365,10 @@ function NexusLib:CreateButton(section, options)
     element.Button.Font = self.Font
     element.Button.TextSize = 12
     element.Button.Parent = element.Frame
-
-    element.Button.MouseButton1Click:Connect(element.Callback)
-
+    element.Button.Activated:Connect(element.Callback)
     table.insert(section.Elements, element)
     return element
 end
-
 function NexusLib:CreateSlider(section, options)
     options = options or {}
     local element = {}
@@ -427,12 +381,10 @@ function NexusLib:CreateSlider(section, options)
     element.Callback = options.Callback or function() end
     element.Flag = options.Flag
     if element.Flag then self.Flags[element.Flag] = element.Default end
-
     element.Frame = Instance.new("Frame")
     element.Frame.Size = UDim2.new(1, 0, 0, 30)
     element.Frame.BackgroundTransparency = 1
     element.Frame.Parent = section.Container
-
     element.Label = Instance.new("TextLabel")
     element.Label.Size = UDim2.new(1, 0, 0, 15)
     element.Label.BackgroundTransparency = 1
@@ -442,18 +394,15 @@ function NexusLib:CreateSlider(section, options)
     element.Label.TextSize = 12
     element.Label.TextXAlignment = Enum.TextXAlignment.Left
     element.Label.Parent = element.Frame
-
     element.Slider = Instance.new("Frame")
     element.Slider.Size = UDim2.new(1, 0, 0, 10)
     element.Slider.Position = UDim2.new(0, 0, 0, 15)
     element.Slider.BackgroundColor3 = self.Theme.Secondary
     element.Slider.Parent = element.Frame
-
     element.Fill = Instance.new("Frame")
     element.Fill.Size = UDim2.new((element.Default - element.Min) / (element.Max - element.Min), 0, 1, 0)
     element.Fill.BackgroundColor3 = self.Theme.Accent
     element.Fill.Parent = element.Slider
-
     element.Value = Instance.new("TextLabel")
     element.Value.Size = UDim2.new(1, 0, 1, 0)
     element.Value.BackgroundTransparency = 1
@@ -462,7 +411,6 @@ function NexusLib:CreateSlider(section, options)
     element.Value.Font = self.Font
     element.Value.TextSize = 12
     element.Value.Parent = element.Slider
-
     local dragging = false
     element.Slider.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -485,11 +433,9 @@ function NexusLib:CreateSlider(section, options)
             element.Callback(value)
         end
     end)
-
     table.insert(section.Elements, element)
     return element
 end
-
 function NexusLib:CreateDropdown(section, options)
     options = options or {}
     local element = {}
@@ -501,12 +447,10 @@ function NexusLib:CreateDropdown(section, options)
     element.Callback = options.Callback or function() end
     element.Flag = options.Flag
     if element.Flag then self.Flags[element.Flag] = element.Default end
-
     element.Frame = Instance.new("Frame")
     element.Frame.Size = UDim2.new(1, 0, 0, 20)
     element.Frame.BackgroundTransparency = 1
     element.Frame.Parent = section.Container
-
     element.Label = Instance.new("TextLabel")
     element.Label.Size = UDim2.new(1, 0, 1, 0)
     element.Label.BackgroundTransparency = 1
@@ -516,7 +460,6 @@ function NexusLib:CreateDropdown(section, options)
     element.Label.TextSize = 12
     element.Label.TextXAlignment = Enum.TextXAlignment.Left
     element.Label.Parent = element.Frame
-
     element.Dropdown = Instance.new("TextButton")
     element.Dropdown.Size = UDim2.new(0, 150, 1, 0)
     element.Dropdown.Position = UDim2.new(1, -150, 0, 0)
@@ -526,7 +469,6 @@ function NexusLib:CreateDropdown(section, options)
     element.Dropdown.Font = self.Font
     element.Dropdown.TextSize = 12
     element.Dropdown.Parent = element.Frame
-
     element.DropFrame = Instance.new("ScrollingFrame")
     element.DropFrame.Size = UDim2.new(1, 0, 0, 0)
     element.DropFrame.Position = UDim2.new(0, 0, 1, 0)
@@ -534,10 +476,8 @@ function NexusLib:CreateDropdown(section, options)
     element.DropFrame.Visible = false
     element.DropFrame.ScrollBarThickness = 4
     element.DropFrame.Parent = element.Dropdown
-
     element.DropLayout = Instance.new("UIListLayout")
     element.DropLayout.Parent = element.DropFrame
-
     element.Options = {}
     for _, opt in ipairs(element.OptionsList) do
         local button = Instance.new("TextButton")
@@ -548,7 +488,7 @@ function NexusLib:CreateDropdown(section, options)
         button.Font = self.Font
         button.TextSize = 12
         button.Parent = element.DropFrame
-        button.MouseButton1Click:Connect(function()
+        button.Activated:Connect(function()
             if element.Multi then
                 -- Handle multi select
             else
@@ -560,17 +500,14 @@ function NexusLib:CreateDropdown(section, options)
         end)
         table.insert(element.Options, button)
     end
-
-    element.Dropdown.MouseButton1Click:Connect(function()
+    element.Dropdown.Activated:Connect(function()
         element.DropFrame.Visible = not element.DropFrame.Visible
         local height = #element.OptionsList * 20
         self:Tween(element.DropFrame, {Size = element.DropFrame.Visible and UDim2.new(1, 0, 0, math.min(height, 100)) or UDim2.new(1, 0, 0, 0)})
     end)
-
     table.insert(section.Elements, element)
     return element
 end
-
 function NexusLib:CreateColorPicker(section, options)
     options = options or {}
     local element = {}
@@ -581,12 +518,10 @@ function NexusLib:CreateColorPicker(section, options)
     element.Flag = options.Flag
     if element.Flag then self.Flags[element.Flag] = element.Default end
     element.Color = element.Default
-
     element.Frame = Instance.new("Frame")
     element.Frame.Size = UDim2.new(1, 0, 0, 20)
     element.Frame.BackgroundTransparency = 1
     element.Frame.Parent = section.Container
-
     element.Label = Instance.new("TextLabel")
     element.Label.Size = UDim2.new(1, -40, 1, 0)
     element.Label.BackgroundTransparency = 1
@@ -596,27 +531,22 @@ function NexusLib:CreateColorPicker(section, options)
     element.Label.TextSize = 12
     element.Label.TextXAlignment = Enum.TextXAlignment.Left
     element.Label.Parent = element.Frame
-
     element.Picker = Instance.new("TextButton")
     element.Picker.Size = UDim2.new(0, 30, 0, 16)
     element.Picker.Position = UDim2.new(1, -30, 0, 2)
     element.Picker.BackgroundColor3 = element.Color
     element.Picker.Text = ""
     element.Picker.Parent = element.Frame
-
     element.PickFrame = Instance.new("Frame")
     element.PickFrame.Size = UDim2.new(0, 150, 0, 150)
     element.PickFrame.Position = UDim2.new(1, 5, 0, 0)
     element.PickFrame.BackgroundColor3 = self.Theme.Background
     element.PickFrame.Visible = false
     element.PickFrame.Parent = element.Frame
-
     -- Add saturation, hue, etc. similar to provided script, but expanded
-
     table.insert(section.Elements, element)
     return element
 end
-
 function NexusLib:CreateKeybind(section, options)
     options = options or {}
     local element = {}
@@ -626,12 +556,10 @@ function NexusLib:CreateKeybind(section, options)
     element.Callback = options.Callback or function() end
     element.Flag = options.Flag
     if element.Flag then self.Flags[element.Flag] = element.Default end
-
     element.Frame = Instance.new("Frame")
     element.Frame.Size = UDim2.new(1, 0, 0, 20)
     element.Frame.BackgroundTransparency = 1
     element.Frame.Parent = section.Container
-
     element.Label = Instance.new("TextLabel")
     element.Label.Size = UDim2.new(1, -100, 1, 0)
     element.Label.BackgroundTransparency = 1
@@ -641,7 +569,6 @@ function NexusLib:CreateKeybind(section, options)
     element.Label.TextSize = 12
     element.Label.TextXAlignment = Enum.TextXAlignment.Left
     element.Label.Parent = element.Frame
-
     element.Bind = Instance.new("TextButton")
     element.Bind.Size = UDim2.new(0, 80, 1, 0)
     element.Bind.Position = UDim2.new(1, -80, 0, 0)
@@ -651,9 +578,8 @@ function NexusLib:CreateKeybind(section, options)
     element.Bind.Font = self.Font
     element.Bind.TextSize = 12
     element.Bind.Parent = element.Frame
-
     local binding = false
-    element.Bind.MouseButton1Click:Connect(function()
+    element.Bind.Activated:Connect(function()
         binding = true
         element.Bind.Text = "..."
     end)
@@ -667,11 +593,9 @@ function NexusLib:CreateKeybind(section, options)
             end
         end
     end)
-
     table.insert(section.Elements, element)
     return element
 end
-
 function NexusLib:CreateTextBox(section, options)
     options = options or {}
     local element = {}
@@ -681,12 +605,10 @@ function NexusLib:CreateTextBox(section, options)
     element.Callback = options.Callback or function() end
     element.Flag = options.Flag
     if element.Flag then self.Flags[element.Flag] = element.Default end
-
     element.Frame = Instance.new("Frame")
     element.Frame.Size = UDim2.new(1, 0, 0, 20)
     element.Frame.BackgroundTransparency = 1
     element.Frame.Parent = section.Container
-
     element.Label = Instance.new("TextLabel")
     element.Label.Size = UDim2.new(1, -160, 1, 0)
     element.Label.BackgroundTransparency = 1
@@ -696,7 +618,6 @@ function NexusLib:CreateTextBox(section, options)
     element.Label.TextSize = 12
     element.Label.TextXAlignment = Enum.TextXAlignment.Left
     element.Label.Parent = element.Frame
-
     element.Box = Instance.new("TextBox")
     element.Box.Size = UDim2.new(0, 150, 1, 0)
     element.Box.Position = UDim2.new(1, -150, 0, 0)
@@ -706,27 +627,22 @@ function NexusLib:CreateTextBox(section, options)
     element.Box.Font = self.Font
     element.Box.TextSize = 12
     element.Box.Parent = element.Frame
-
     element.Box.FocusLost:Connect(function()
         if element.Flag then self.Flags[element.Flag] = element.Box.Text end
         element.Callback(element.Box.Text)
     end)
-
     table.insert(section.Elements, element)
     return element
 end
-
 function NexusLib:CreateLabel(section, options)
     options = options or {}
     local element = {}
     element.Type = "Label"
     element.Text = options.Text or "Label"
-
     element.Frame = Instance.new("Frame")
     element.Frame.Size = UDim2.new(1, 0, 0, 20)
     element.Frame.BackgroundTransparency = 1
     element.Frame.Parent = section.Container
-
     element.Label = Instance.new("TextLabel")
     element.Label.Size = UDim2.new(1, 0, 1, 0)
     element.Label.BackgroundTransparency = 1
@@ -736,11 +652,9 @@ function NexusLib:CreateLabel(section, options)
     element.Label.TextSize = 12
     element.Label.TextXAlignment = Enum.TextXAlignment.Left
     element.Label.Parent = element.Frame
-
     table.insert(section.Elements, element)
     return element
 end
-
 function NexusLib:CreateProgressBar(section, options)
     options = options or {}
     local element = {}
@@ -750,12 +664,10 @@ function NexusLib:CreateProgressBar(section, options)
     element.Max = options.Max or 100
     element.Default = options.Default or 0
     element.Callback = options.Callback or function() end
-
     element.Frame = Instance.new("Frame")
     element.Frame.Size = UDim2.new(1, 0, 0, 30)
     element.Frame.BackgroundTransparency = 1
     element.Frame.Parent = section.Container
-
     element.Label = Instance.new("TextLabel")
     element.Label.Size = UDim2.new(1, 0, 0, 15)
     element.Label.BackgroundTransparency = 1
@@ -765,28 +677,23 @@ function NexusLib:CreateProgressBar(section, options)
     element.Label.TextSize = 12
     element.Label.TextXAlignment = Enum.TextXAlignment.Left
     element.Label.Parent = element.Frame
-
     element.Bar = Instance.new("Frame")
     element.Bar.Size = UDim2.new(1, 0, 0, 10)
     element.Bar.Position = UDim2.new(0, 0, 0, 15)
     element.Bar.BackgroundColor3 = self.Theme.Secondary
     element.Bar.Parent = element.Frame
-
     element.Fill = Instance.new("Frame")
     element.Fill.Size = UDim2.new((element.Default - element.Min) / (element.Max - element.Min), 0, 1, 0)
     element.Fill.BackgroundColor3 = self.Theme.Accent
     element.Fill.Parent = element.Bar
-
     function element:Set(value)
         value = math.clamp(value, element.Min, element.Max)
         self:Tween(element.Fill, {Size = UDim2.new((value - element.Min) / (element.Max - element.Min), 0, 1, 0)})
         element.Callback(value)
     end
-
     table.insert(section.Elements, element)
     return element
 end
-
 function NexusLib:CreateList(section, options)
     options = options or {}
     local element = {}
@@ -794,12 +701,10 @@ function NexusLib:CreateList(section, options)
     element.Name = options.Name or "List"
     element.ItemsList = options.Items or {}
     element.Callback = options.Callback or function() end
-
     element.Frame = Instance.new("Frame")
     element.Frame.Size = UDim2.new(1, 0, 0, 100)
     element.Frame.BackgroundTransparency = 1
     element.Frame.Parent = section.Container
-
     element.Label = Instance.new("TextLabel")
     element.Label.Size = UDim2.new(1, 0, 0, 20)
     element.Label.BackgroundTransparency = 1
@@ -809,17 +714,14 @@ function NexusLib:CreateList(section, options)
     element.Label.TextSize = 12
     element.Label.TextXAlignment = Enum.TextXAlignment.Left
     element.Label.Parent = element.Frame
-
     element.List = Instance.new("ScrollingFrame")
     element.List.Size = UDim2.new(1, 0, 1, -20)
     element.List.Position = UDim2.new(0, 0, 0, 20)
     element.List.BackgroundColor3 = self.Theme.Secondary
     element.List.ScrollBarThickness = 4
     element.List.Parent = element.Frame
-
     element.Layout = Instance.new("UIListLayout")
     element.Layout.Parent = element.List
-
     element.Items = {}
     for _, item in ipairs(element.ItemsList) do
         local label = Instance.new("TextLabel")
@@ -832,7 +734,6 @@ function NexusLib:CreateList(section, options)
         label.Parent = element.List
         table.insert(element.Items, label)
     end
-
     function element:Add(item)
         local label = Instance.new("TextLabel")
         label.Size = UDim2.new(1, 0, 0, 20)
@@ -844,7 +745,6 @@ function NexusLib:CreateList(section, options)
         label.Parent = element.List
         table.insert(element.Items, label)
     end
-
     function element:Remove(item)
         for i, lbl in ipairs(element.Items) do
             if lbl.Text == item then
@@ -854,11 +754,9 @@ function NexusLib:CreateList(section, options)
             end
         end
     end
-
     table.insert(section.Elements, element)
     return element
 end
-
 function NexusLib:Notify(options)
     options = options or {}
     local notification = {}
@@ -866,14 +764,12 @@ function NexusLib:Notify(options)
     notification.Description = options.Description or "Description"
     notification.Duration = options.Duration or 5
     notification.Callback = options.Callback or function() end
-
     local frame = Instance.new("Frame")
     frame.Size = UDim2.new(0, 200, 0, 50)
     frame.Position = UDim2.new(1, -210, 1, -60 - (#self.Notifications * 60))
     frame.BackgroundColor3 = self.Theme.Background
     frame.BorderColor3 = self.Theme.Border
     frame.Parent = self.ScreenGui
-
     local title = Instance.new("TextLabel")
     title.Size = UDim2.new(1, 0, 0, 20)
     title.BackgroundTransparency = 1
@@ -882,7 +778,6 @@ function NexusLib:Notify(options)
     title.Font = self.Font
     title.TextSize = 12
     title.Parent = frame
-
     local desc = Instance.new("TextLabel")
     desc.Size = UDim2.new(1, 0, 1, -20)
     desc.Position = UDim2.new(0, 0, 0, 20)
@@ -892,7 +787,6 @@ function NexusLib:Notify(options)
     desc.Font = self.Font
     desc.TextSize = 10
     desc.Parent = frame
-
     table.insert(self.Notifications, frame)
     self:Tween(frame, {Position = UDim2.new(1, -210, 1, -60 - (#self.Notifications * 60) + 60)})
     wait(notification.Duration)
@@ -904,23 +798,19 @@ function NexusLib:Notify(options)
         end
     end)
 end
-
 function NexusLib:SetTheme(themeName)
     if defaultThemes[themeName] then
         self.Theme = deepCopy(defaultThemes[themeName])
         self:UpdateTheme()
     end
 end
-
 function NexusLib:SetCustomTheme(customTheme)
     self.Theme = customTheme
     self:UpdateTheme()
 end
-
 function NexusLib:ToggleRainbow(enabled)
     self.RainbowEnabled = enabled
 end
-
 function NexusLib:CreateWatermark(text)
     self.Watermark = Instance.new("TextLabel")
     self.Watermark.Size = UDim2.new(0, 200, 0, 20)
@@ -932,7 +822,6 @@ function NexusLib:CreateWatermark(text)
     self.Watermark.TextSize = 12
     self.Watermark.Parent = self.ScreenGui
 end
-
 function NexusLib:SaveConfig(configName)
     local config = {}
     for flag, value in pairs(self.Flags) do
@@ -941,7 +830,6 @@ function NexusLib:SaveConfig(configName)
     self.Configs[configName] = config
     -- Save to file or HttpService if needed
 end
-
 function NexusLib:LoadConfig(configName)
     if self.Configs[configName] then
         for flag, value in pairs(self.Configs[configName]) do
@@ -950,7 +838,6 @@ function NexusLib:LoadConfig(configName)
         end
     end
 end
-
 function NexusLib:AddTooltip(element, text)
     local tooltip = Instance.new("TextLabel")
     tooltip.Size = UDim2.new(0, 150, 0, 20)
@@ -961,7 +848,6 @@ function NexusLib:AddTooltip(element, text)
     tooltip.TextSize = 10
     tooltip.Visible = false
     tooltip.Parent = self.ScreenGui
-
     element.Frame.MouseEnter:Connect(function()
         tooltip.Position = UDim2.new(0, Mouse.X + 10, 0, Mouse.Y + 10)
         tooltip.Visible = true
@@ -969,8 +855,6 @@ function NexusLib:AddTooltip(element, text)
     element.Frame.MouseLeave:Connect(function()
         tooltip.Visible = false
     end)
-
     table.insert(self.Tooltips, tooltip)
 end
-
 return NexusLib
