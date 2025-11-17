@@ -575,14 +575,8 @@ function NexusLib:CreateWindow(WindowConfig)
         if FirstTab then
             FirstTab = false
             TabFrame.BackgroundColor3 = NexusLib.Themes[NexusLib.SelectedTheme].Second
-            AddConnection(TabFrame.MouseButton1Click, function()
-                TabFrame.BackgroundColor3 = NexusLib.Themes[NexusLib.SelectedTheme].Second
-            end)
         else
             TabFrame.BackgroundColor3 = NexusLib.Themes[NexusLib.SelectedTheme].Main
-            AddConnection(TabFrame.MouseButton1Click, function()
-                TabFrame.BackgroundColor3 = NexusLib.Themes[NexusLib.SelectedTheme].Main
-            end)
         end
         local Container = AddThemeObject(SetChildren(SetProps(MakeElement("ScrollFrame", Color3.fromRGB(255, 255, 255), 4), {
             Size = UDim2.new(1, 0, 1, 0),
@@ -650,7 +644,7 @@ function NexusLib:CreateWindow(WindowConfig)
             local Click = SetProps(MakeElement("Button"), {
                 Size = UDim2.new(1, 0, 1, 0)
             })
-            local ToggleBox = SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
+            local ToggleBox = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
                 Size = UDim2.new(0, 24, 0, 24),
                 Position = UDim2.new(1, -12, 0.5, 0),
                 AnchorPoint = Vector2.new(1, 0.5)
@@ -662,7 +656,7 @@ function NexusLib:CreateWindow(WindowConfig)
                     Position = UDim2.new(0.5, 0, 0.5, 0),
                     ImageTransparency = Toggle.Value and 0 or 1
                 }), "TextDark")
-            })
+            }), "Second")
             local ToggleFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
                 Size = UDim2.new(1, 0, 0, 38),
                 Parent = Container
@@ -698,6 +692,11 @@ function NexusLib:CreateWindow(WindowConfig)
             if ToggleConfig.Flag then
                 NexusLib.Flags[ToggleConfig.Flag] = Toggle
             end
+            function Toggle:Set(Value)
+                Toggle.Value = Value
+                TweenService:Create(ToggleBox.ImageLabel, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = Toggle.Value and 0 or 1}):Play()
+                ToggleConfig.Callback(Toggle.Value)
+            end
             Toggle:Set(Toggle.Value)
             return Toggle
         end
@@ -713,11 +712,11 @@ function NexusLib:CreateWindow(WindowConfig)
             SliderConfig.Save = SliderConfig.Save or false
             local Slider = {Value = SliderConfig.Default, Save = SliderConfig.Save, Type = "Slider"}
             local Dragging = false
-            local SliderDrag = SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
+            local SliderDrag = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
                 Size = UDim2.new(0, 0, 1, 0)
             }), {
                 AddThemeObject(MakeElement("Stroke"), "Stroke")
-            })
+            }), "Accent")
             local SliderLabel = AddThemeObject(SetProps(MakeElement("Label",""..SliderConfig.Default.."",14), {
                 Size = UDim2.new(1, 0, 1, 0),
                 AnchorPoint = Vector2.new(0.5, 0.5),
@@ -796,8 +795,7 @@ function NexusLib:CreateWindow(WindowConfig)
                 SortOrder = Enum.SortOrder.LayoutOrder,
                 Padding = UDim.new(0, 1)
             })
-            local DropdownContainerHolder = SetChildren(SetProps(MakeElement("ScrollFrame", Color3.fromRGB(40, 40, 40), 4), {
-                ScrollBarImageColor3 = Color3.fromRGB(240, 240, 240),
+            local DropdownContainerHolder = AddThemeObject(SetChildren(SetProps(MakeElement("ScrollFrame", Color3.fromRGB(255, 255, 255), 4), {
                 Size = UDim2.new(1, 0, 1, 0)
             }), {
                 DropdownList,
@@ -807,7 +805,7 @@ function NexusLib:CreateWindow(WindowConfig)
                     PaddingBottom = UDim.new(0, 2),
                     PaddingRight = UDim.new(0, 2)
                 })
-            })
+            }), "Stroke")
             local DropdownContainer = SetProps(MakeElement("Frame"), {
                 Size = UDim2.new(1, 0, 0, 0),
                 AutomaticSize = Enum.AutomaticSize.Y,
@@ -851,9 +849,48 @@ function NexusLib:CreateWindow(WindowConfig)
                     DropdownFrame.Content.Text = DropdownConfig.Name
                 end
                 for _, v in next, DropdownContainer:GetChildren() do
-                    if v:IsA("TextButton") then
+                    if v:IsA("Frame") then
                         v:Destroy()
                     end
+                end
+                for _, option in ipairs(Dropdown.Options) do
+                    local OptionFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
+                        Size = UDim2.new(1, 0, 0, 28)
+                    }), {
+                        AddThemeObject(SetProps(MakeElement("Label", option, 13), {
+                            Size = UDim2.new(1, -12, 1, 0),
+                            Position = UDim2.new(0, 12, 0, 0),
+                            BackgroundTransparency = 1,
+                            Font = Enum.Font.Gotham
+                        }), "TextDark"),
+                        AddThemeObject(MakeElement("Stroke"), "Stroke"),
+                        SetProps(MakeElement("Button"), {
+                            Size = UDim2.new(1, 0, 1, 0),
+                            BackgroundTransparency = 1,
+                            Name = "Click"
+                        })
+                    }), "Second")
+                    OptionFrame.Parent = DropdownContainer
+                    local OptionClick = OptionFrame.Click
+                    AddConnection(OptionClick.MouseEnter, function()
+                        TweenService:Create(OptionFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 3)}):Play()
+                    end)
+                    AddConnection(OptionClick.MouseLeave, function()
+                        TweenService:Create(OptionFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = NexusLib.Themes[NexusLib.SelectedTheme].Second}):Play()
+                    end)
+                    AddConnection(OptionClick.MouseButton1Up, function()
+                        TweenService:Create(OptionFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 3)}):Play()
+                    end)
+                    AddConnection(OptionClick.MouseButton1Down, function()
+                        TweenService:Create(OptionFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 6, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 6, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 6)}):Play()
+                    end)
+                    AddConnection(OptionClick.MouseButton1Click, function()
+                        Dropdown:Set(option)
+                        Dropdown.Toggled = false
+                        TweenService:Create(DropdownFrame.Ico, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 0}):Play()
+                        TweenService:Create(DropdownFrame, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, 38)}):Play()
+                        DropdownFrame.Line.Visible = false
+                    end)
                 end
                 DropdownContainerHolder.CanvasSize = UDim2.new(0, 0, 0, DropdownList.AbsoluteContentSize.Y + 4)
             end
@@ -1278,7 +1315,7 @@ function NexusLib:CreateWindow(WindowConfig)
             end
             return SectionFunction
         end
-       
+      
         return ElementFunction
     end
     return TabFunction
