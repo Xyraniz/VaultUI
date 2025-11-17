@@ -8,16 +8,13 @@ local NexusLib = {
     Folder = "NexusLib_Configs",
     SaveConfig = false
 }
-
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
-
 local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
-
 local Nexus = Instance.new("ScreenGui")
 Nexus.Name = "NexusLib"
 if syn and syn.protect_gui then
@@ -26,7 +23,6 @@ if syn and syn.protect_gui then
 else
     Nexus.Parent = game.CoreGui
 end
-
 NexusLib.Themes = {
     Dark = {
         Main = Color3.fromRGB(30, 30, 30),
@@ -56,10 +52,8 @@ NexusLib.Themes = {
         Accent = Color3.fromRGB(102, 41, 255)
     }
 }
-
 local WhitelistedMouse = {Enum.UserInputType.MouseButton1, Enum.UserInputType.MouseButton2, Enum.UserInputType.MouseButton3}
 local BlacklistedKeys = {Enum.KeyCode.Unknown, Enum.KeyCode.W, Enum.KeyCode.A, Enum.KeyCode.S, Enum.KeyCode.D, Enum.KeyCode.Up, Enum.KeyCode.Left, Enum.KeyCode.Down, Enum.KeyCode.Right, Enum.KeyCode.Slash, Enum.KeyCode.Tab, Enum.KeyCode.Backspace, Enum.KeyCode.Escape}
-
 local function CheckKey(Table, Key)
     for _, v in next, Table do
         if v == Key then
@@ -68,13 +62,11 @@ local function CheckKey(Table, Key)
     end
     return false
 end
-
 local function AddConnection(Signal, Function)
     local Conn = Signal:Connect(Function)
     table.insert(NexusLib.Connections, Conn)
     return Conn
 end
-
 local function Create(Name, Properties, Children)
     local Object = Instance.new(Name)
     for i, v in next, Properties or {} do
@@ -85,13 +77,11 @@ local function Create(Name, Properties, Children)
     end
     return Object
 end
-
 local function CreateElement(ElementName, ElementFunction)
     NexusLib.Elements[ElementName] = function(...)
         return ElementFunction(...)
     end
 end
-
 local function MakeElement(ElementName, ...)
     local ElementFunc = NexusLib.Elements[ElementName]
     if ElementFunc then
@@ -99,14 +89,12 @@ local function MakeElement(ElementName, ...)
     end
     return nil
 end
-
 local function SetProps(Element, Props)
     for Property, Value in pairs(Props) do
         Element[Property] = Value
     end
     return Element
 end
-
 local function SetChildren(Element, Children)
     for _, Child in pairs(Children) do
         if typeof(Child) == "Instance" then
@@ -115,7 +103,6 @@ local function SetChildren(Element, Children)
     end
     return Element
 end
-
 local function ReturnProperty(Object)
     if Object:IsA("Frame") or Object:IsA("TextButton") then
         return "BackgroundColor3"
@@ -130,7 +117,6 @@ local function ReturnProperty(Object)
     end
     return "BackgroundColor3"
 end
-
 local function AddThemeObject(Object, Type)
     if not NexusLib.ThemeObjects[Type] then
         NexusLib.ThemeObjects[Type] = {}
@@ -139,7 +125,6 @@ local function AddThemeObject(Object, Type)
     Object[ReturnProperty(Object)] = NexusLib.Themes[NexusLib.SelectedTheme][Type]
     return Object
 end
-
 local function SetTheme()
     for TypeName, Objects in pairs(NexusLib.ThemeObjects) do
         for _, Object in ipairs(Objects) do
@@ -147,15 +132,12 @@ local function SetTheme()
         end
     end
 end
-
 local function PackColor(Color)
     return {R = math.floor(Color.R * 255), G = math.floor(Color.G * 255), B = math.floor(Color.B * 255)}
 end
-
 local function UnpackColor(Color)
     return Color3.fromRGB(Color.R, Color.G, Color.B)
 end
-
 local function LoadCfg(Config)
     local Data = HttpService:JSONDecode(Config)
     for flagName, flagValue in pairs(Data) do
@@ -171,7 +153,6 @@ local function LoadCfg(Config)
         end
     end
 end
-
 local function SaveCfg(Name)
     if not NexusLib.SaveConfig then return end
     local Data = {}
@@ -186,7 +167,6 @@ local function SaveCfg(Name)
     end
     writefile(NexusLib.Folder .. "/" .. Name .. ".txt", HttpService:JSONEncode(Data))
 end
-
 local function AddDraggingFunctionality(DragPoint, Main)
     local Dragging, DragStart, StartPos
     AddConnection(DragPoint.InputBegan, function(input)
@@ -208,14 +188,12 @@ local function AddDraggingFunctionality(DragPoint, Main)
         end
     end)
 end
-
 CreateElement("Corner", function(Scale, Offset)
     local Corner = Create("UICorner", {
         CornerRadius = UDim.new(Scale or 0, Offset or 10)
     })
     return Corner
 end)
-
 CreateElement("Stroke", function(Color, Thickness)
     local Stroke = Create("UIStroke", {
         Color = Color or Color3.fromRGB(255, 255, 255),
@@ -223,7 +201,6 @@ CreateElement("Stroke", function(Color, Thickness)
     })
     return Stroke
 end)
-
 CreateElement("List", function(Scale, Offset)
     local List = Create("UIListLayout", {
         SortOrder = Enum.SortOrder.LayoutOrder,
@@ -231,7 +208,6 @@ CreateElement("List", function(Scale, Offset)
     })
     return List
 end)
-
 CreateElement("Padding", function(Bottom, Left, Right, Top)
     local Padding = Create("UIPadding", {
         PaddingBottom = UDim.new(0, Bottom or 4),
@@ -241,14 +217,12 @@ CreateElement("Padding", function(Bottom, Left, Right, Top)
     })
     return Padding
 end)
-
 CreateElement("TFrame", function()
     local TFrame = Create("Frame", {
         BackgroundTransparency = 1
     })
     return TFrame
 end)
-
 CreateElement("Frame", function(Color)
     local Frame = Create("Frame", {
         BackgroundColor3 = Color or Color3.fromRGB(255, 255, 255),
@@ -256,7 +230,6 @@ CreateElement("Frame", function(Color)
     })
     return Frame
 end)
-
 CreateElement("RoundFrame", function(Color, Scale, Offset)
     local Frame = Create("Frame", {
         BackgroundColor3 = Color or Color3.fromRGB(255, 255, 255),
@@ -268,7 +241,6 @@ CreateElement("RoundFrame", function(Color, Scale, Offset)
     })
     return Frame
 end)
-
 CreateElement("Button", function()
     local Button = Create("TextButton", {
         Text = "",
@@ -278,7 +250,6 @@ CreateElement("Button", function()
     })
     return Button
 end)
-
 CreateElement("ScrollFrame", function(Color, Width)
     local ScrollFrame = Create("ScrollingFrame", {
         BackgroundTransparency = 1,
@@ -291,7 +262,6 @@ CreateElement("ScrollFrame", function(Color, Width)
     })
     return ScrollFrame
 end)
-
 CreateElement("Image", function(ImageID)
     local ImageNew = Create("ImageLabel", {
         Image = ImageID,
@@ -299,7 +269,6 @@ CreateElement("Image", function(ImageID)
     })
     return ImageNew
 end)
-
 CreateElement("Label", function(Text, TextSize, Transparency)
     local Label = Create("TextLabel", {
         Text = Text or "",
@@ -313,7 +282,6 @@ CreateElement("Label", function(Text, TextSize, Transparency)
     })
     return Label
 end)
-
 local NotificationHolder = SetProps(SetChildren(MakeElement("TFrame"), {
     SetProps(MakeElement("List"), {
         HorizontalAlignment = Enum.HorizontalAlignment.Center,
@@ -327,20 +295,17 @@ local NotificationHolder = SetProps(SetChildren(MakeElement("TFrame"), {
     AnchorPoint = Vector2.new(1, 1),
     Parent = Nexus
 })
-
 function NexusLib:MakeNotification(NotificationConfig)
     spawn(function()
         NotificationConfig.Name = NotificationConfig.Name or "Notification"
         NotificationConfig.Content = NotificationConfig.Content or "Test"
         NotificationConfig.Image = NotificationConfig.Image or "rbxassetid://4384403532"
         NotificationConfig.Time = NotificationConfig.Time or 5
-
         local NotificationParent = SetProps(MakeElement("TFrame"), {
             Size = UDim2.new(1, 0, 0, 0),
             AutomaticSize = Enum.AutomaticSize.Y,
             Parent = NotificationHolder
         })
-
         local NotificationFrame = SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(25, 25, 25), 0, 10), {
             Parent = NotificationParent,
             Size = UDim2.new(1, 0, 0, 0),
@@ -371,9 +336,7 @@ function NexusLib:MakeNotification(NotificationConfig)
                 TextWrapped = true
             })
         })
-
         TweenService:Create(NotificationFrame, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {Position = UDim2.new(0, 0, 0, 0)}):Play()
-
         wait(NotificationConfig.Time - 0.88)
         TweenService:Create(NotificationFrame.Icon, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {ImageTransparency = 1}):Play()
         TweenService:Create(NotificationFrame, TweenInfo.new(0.8, Enum.EasingStyle.Quint), {BackgroundTransparency = 0.6}):Play()
@@ -382,14 +345,12 @@ function NexusLib:MakeNotification(NotificationConfig)
         TweenService:Create(NotificationFrame.Title, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {TextTransparency = 0.4}):Play()
         TweenService:Create(NotificationFrame.Content, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {TextTransparency = 0.5}):Play()
         wait(0.05)
-
         NotificationFrame:TweenPosition(UDim2.new(1, 20, 0, 0), 'In', 'Quint', 0.8, true)
         wait(1.35)
         NotificationFrame:Destroy()
         NotificationParent:Destroy()
     end)
 end
-
 function NexusLib:Init()
     if NexusLib.SaveConfig then
         if isfile(NexusLib.Folder .. "/" .. game.GameId .. ".txt") then
@@ -402,7 +363,13 @@ function NexusLib:Init()
         end
     end
 end
-
+local function GetElements(Container)
+    local Elements = {}
+    for i, v in next, NexusLib.Elements do
+        Elements[i] = v
+    end
+    return Elements
+end
 function NexusLib:CreateWindow(WindowConfig)
     WindowConfig = WindowConfig or {}
     WindowConfig.Name = WindowConfig.Name or "Nexus Lib"
@@ -411,32 +378,26 @@ function NexusLib:CreateWindow(WindowConfig)
     WindowConfig.ToggleKey = WindowConfig.ToggleKey or Enum.KeyCode.RightShift
     WindowConfig.ShowIcon = WindowConfig.ShowIcon or false
     WindowConfig.Icon = WindowConfig.Icon or ""
-
     NexusLib.SelectedTheme = WindowConfig.Theme
     NexusLib.SaveConfig = WindowConfig.SaveConfig
     NexusLib.Folder = WindowConfig.ConfigFolder or "NexusLib_Configs"
-
     if NexusLib.SaveConfig then
         if not isfolder(NexusLib.Folder) then
             makefolder(NexusLib.Folder)
         end
     end
-
     local FirstTab = true
     local Minimized = false
     local UIHidden = false
-
     local TabHolder = AddThemeObject(SetChildren(SetProps(MakeElement("ScrollFrame", Color3.fromRGB(255, 255, 255), 4), {
         Size = UDim2.new(1, 0, 1, -50)
     }), {
         MakeElement("List"),
         MakeElement("Padding", 8, 0, 0, 8)
     }), "Divider")
-
     AddConnection(TabHolder.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
         TabHolder.CanvasSize = UDim2.new(0, 0, 0, TabHolder.UIListLayout.AbsoluteContentSize.Y + 16)
     end)
-
     local CloseBtn = SetChildren(SetProps(MakeElement("Button"), {
         Size = UDim2.new(0.5, 0, 1, 0),
         Position = UDim2.new(0.5, 0, 0, 0),
@@ -447,7 +408,6 @@ function NexusLib:CreateWindow(WindowConfig)
             Size = UDim2.new(0, 18, 0, 18)
         }), "Text")
     })
-
     local MinimizeBtn = SetChildren(SetProps(MakeElement("Button"), {
         Size = UDim2.new(0.5, 0, 1, 0),
         BackgroundTransparency = 1
@@ -458,11 +418,9 @@ function NexusLib:CreateWindow(WindowConfig)
             Name = "Ico"
         }), "Text")
     })
-
     local DragPoint = SetProps(MakeElement("TFrame"), {
         Size = UDim2.new(1, 0, 0, 50)
     })
-
     local WindowStuff = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 10), {
         Size = UDim2.new(0, 150, 1, -50),
         Position = UDim2.new(0, 0, 0, 50)
@@ -516,19 +474,16 @@ function NexusLib:CreateWindow(WindowConfig)
             }), "Text")
         }),
     }), "Second")
-
     local WindowName = AddThemeObject(SetProps(MakeElement("Label", WindowConfig.Name, 14), {
         Size = UDim2.new(1, -30, 2, 0),
         Position = UDim2.new(0, 25, 0, -24),
         Font = Enum.Font.GothamBlack,
         TextSize = 20
     }), "Text")
-
     local WindowTopBarLine = AddThemeObject(SetProps(MakeElement("Frame"), {
         Size = UDim2.new(1, 0, 0, 1),
         Position = UDim2.new(0, 0, 1, -1)
     }), "Stroke")
-
     local MainWindow = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 10), {
         Parent = Nexus,
         Position = UDim2.new(0.5, -307, 0.5, -172),
@@ -557,7 +512,6 @@ function NexusLib:CreateWindow(WindowConfig)
         DragPoint,
         WindowStuff
     }), "Main")
-
     if WindowConfig.ShowIcon then
         WindowName.Position = UDim2.new(0, 50, 0, -24)
         local WindowIcon = SetProps(MakeElement("Image", WindowConfig.Icon), {
@@ -566,9 +520,7 @@ function NexusLib:CreateWindow(WindowConfig)
         })
         WindowIcon.Parent = MainWindow.TopBar
     end
-
     AddDraggingFunctionality(DragPoint, MainWindow)
-
     AddConnection(CloseBtn.MouseButton1Up, function()
         MainWindow.Visible = false
         UIHidden = true
@@ -578,14 +530,12 @@ function NexusLib:CreateWindow(WindowConfig)
             Time = 3
         })
     end)
-
     AddConnection(UserInputService.InputBegan, function(Input)
         if Input.KeyCode == WindowConfig.ToggleKey and UIHidden then
             MainWindow.Visible = true
             UIHidden = false
         end
     end)
-
     AddConnection(MinimizeBtn.MouseButton1Up, function()
         if Minimized then
             TweenService:Create(MainWindow, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(0, 615, 0, 344)}):Play()
@@ -603,13 +553,11 @@ function NexusLib:CreateWindow(WindowConfig)
         end
         Minimized = not Minimized
     end)
-
     local TabFunction = {}
     function TabFunction:AddTab(TabConfig)
         TabConfig = TabConfig or {}
         TabConfig.Name = TabConfig.Name or "New Tab"
         TabConfig.Icon = TabConfig.Icon or ""
-
         local TabFrame = SetChildren(SetProps(MakeElement("Button"), {
             Size = UDim2.new(1, 0, 0, 30),
             Parent = TabHolder
@@ -624,7 +572,6 @@ function NexusLib:CreateWindow(WindowConfig)
                 Position = UDim2.new(0, -8, 0, 5)
             }), "TextDark")
         })
-
         if FirstTab then
             FirstTab = false
             TabFrame.BackgroundColor3 = NexusLib.Themes[NexusLib.SelectedTheme].Second
@@ -637,7 +584,6 @@ function NexusLib:CreateWindow(WindowConfig)
                 TabFrame.BackgroundColor3 = NexusLib.Themes[NexusLib.SelectedTheme].Main
             end)
         end
-
         local Container = AddThemeObject(SetChildren(SetProps(MakeElement("ScrollFrame", Color3.fromRGB(255, 255, 255), 4), {
             Size = UDim2.new(1, 0, 1, 0),
             Position = UDim2.new(0, 150, 0, 50),
@@ -647,17 +593,14 @@ function NexusLib:CreateWindow(WindowConfig)
             MakeElement("List", 0, 6),
             MakeElement("Padding", 8, 8, 8, 8)
         }), "Divider")
-
         AddConnection(Container.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
             Container.CanvasSize = UDim2.new(0, 0, 0, Container.UIListLayout.AbsoluteContentSize.Y + 14)
         end)
-
         if FirstTab then
             Container.Visible = true
         else
             Container.Visible = false
         end
-
         AddConnection(TabFrame.MouseButton1Click, function()
             for i, v in next, TabHolder:GetChildren() do
                 if v:IsA("TextButton") then
@@ -672,39 +615,30 @@ function NexusLib:CreateWindow(WindowConfig)
             TabFrame.BackgroundColor3 = NexusLib.Themes[NexusLib.SelectedTheme].Second
             Container.Visible = true
         end)
-
         local ElementFunction = {}
-
         function ElementFunction:AddLabel(LabelConfig)
             LabelConfig = LabelConfig or {}
             LabelConfig.Name = LabelConfig.Name or "Label"
             LabelConfig.Default = LabelConfig.Default or ""
-
             local Label = {Value = LabelConfig.Default, Type = "Label"}
-
             local LabelFrame = AddThemeObject(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
                 Size = UDim2.new(1, 0, 0, 38),
                 Parent = Container
             }), "Second")
-
             local LabelLabel = AddThemeObject(SetProps(MakeElement("Label", LabelConfig.Name, 15), {
                 Size = UDim2.new(1, -12, 1, 0),
                 Position = UDim2.new(0, 12, 0, 0),
                 Font = Enum.Font.GothamBold,
                 Name = "Content"
             }), "Text")
-
             LabelLabel.Parent = LabelFrame
-
             function Label:Set(Value)
                 Label.Value = Value
                 LabelLabel.Text = Value
             end
-
             Label:Set(Label.Value)
             return Label
         end
-
         function ElementFunction:AddToggle(ToggleConfig)
             ToggleConfig = ToggleConfig or {}
             ToggleConfig.Name = ToggleConfig.Name or "Toggle"
@@ -712,13 +646,10 @@ function NexusLib:CreateWindow(WindowConfig)
             ToggleConfig.Callback = ToggleConfig.Callback or function() end
             ToggleConfig.Flag = ToggleConfig.Flag or nil
             ToggleConfig.Save = ToggleConfig.Save or false
-
             local Toggle = {Value = ToggleConfig.Default, Save = ToggleConfig.Save, Type = "Toggle"}
-
             local Click = SetProps(MakeElement("Button"), {
                 Size = UDim2.new(1, 0, 1, 0)
             })
-
             local ToggleBox = SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
                 Size = UDim2.new(0, 24, 0, 24),
                 Position = UDim2.new(1, -12, 0.5, 0),
@@ -732,7 +663,6 @@ function NexusLib:CreateWindow(WindowConfig)
                     ImageTransparency = Toggle.Value and 0 or 1
                 }), "TextDark")
             })
-
             local ToggleFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
                 Size = UDim2.new(1, 0, 0, 38),
                 Parent = Container
@@ -747,38 +677,30 @@ function NexusLib:CreateWindow(WindowConfig)
                 ToggleBox,
                 Click
             }), "Second")
-
             AddConnection(Click.MouseEnter, function()
                 TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 3)}):Play()
             end)
-
             AddConnection(Click.MouseLeave, function()
                 TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = NexusLib.Themes[NexusLib.SelectedTheme].Second}):Play()
             end)
-
             AddConnection(Click.MouseButton1Up, function()
                 TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 3)}):Play()
             end)
-
             AddConnection(Click.MouseButton1Down, function()
                 TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 6, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 6, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 6)}):Play()
             end)
-
             AddConnection(Click.MouseButton1Click, function()
                 Toggle.Value = not Toggle.Value
                 TweenService:Create(ToggleBox.ImageLabel, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = Toggle.Value and 0 or 1}):Play()
                 ToggleConfig.Callback(Toggle.Value)
                 SaveCfg(game.GameId)
             end)
-
             if ToggleConfig.Flag then
                 NexusLib.Flags[ToggleConfig.Flag] = Toggle
             end
-
             Toggle:Set(Toggle.Value)
             return Toggle
         end
-
         function ElementFunction:AddSlider(SliderConfig)
             SliderConfig = SliderConfig or {}
             SliderConfig.Name = SliderConfig.Name or "Slider"
@@ -789,17 +711,13 @@ function NexusLib:CreateWindow(WindowConfig)
             SliderConfig.Callback = SliderConfig.Callback or function() end
             SliderConfig.Flag = SliderConfig.Flag or nil
             SliderConfig.Save = SliderConfig.Save or false
-
             local Slider = {Value = SliderConfig.Default, Save = SliderConfig.Save, Type = "Slider"}
-
             local Dragging = false
-
             local SliderDrag = SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
                 Size = UDim2.new(0, 0, 1, 0)
             }), {
                 AddThemeObject(MakeElement("Stroke"), "Stroke")
             })
-
             local SliderLabel = AddThemeObject(SetProps(MakeElement("Label",""..SliderConfig.Default.."",14), {
                 Size = UDim2.new(1, 0, 1, 0),
                 AnchorPoint = Vector2.new(0.5, 0.5),
@@ -807,7 +725,6 @@ function NexusLib:CreateWindow(WindowConfig)
                 Font = Enum.Font.GothamBold,
                 TextTransparency = 0.4
             }), "Text")
-
             local SliderFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
                 Size = UDim2.new(1, 0, 0, 38),
                 Parent = Container
@@ -825,27 +742,22 @@ function NexusLib:CreateWindow(WindowConfig)
                     Size = UDim2.new(1, 0, 1, 0)
                 })
             }), "Second")
-
             SliderLabel.Text = SliderConfig.Name .. ": " .. Slider.Value
-
             local function UpdateSlider()
                 local Percentage = math.clamp((Slider.Value - SliderConfig.Min) / (SliderConfig.Max - SliderConfig.Min), 0, 1)
                 TweenService:Create(SliderDrag, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(Percentage, 0, 1, 0)}):Play()
                 SliderLabel.Text = SliderConfig.Name .. ": " .. Slider.Value
             end
-
             AddConnection(SliderFrame.Button.InputBegan, function(Input)
                 if Input.UserInputType == Enum.UserInputType.MouseButton1 then
                     Dragging = true
                 end
             end)
-
             AddConnection(SliderFrame.Button.InputEnded, function(Input)
                 if Input.UserInputType == Enum.UserInputType.MouseButton1 then
                     Dragging = false
                 end
             end)
-
             AddConnection(UserInputService.InputChanged, function(Input)
                 if Dragging and Input.UserInputType == Enum.UserInputType.MouseMovement then
                     local SizeScale = math.clamp((Input.Position.X - SliderFrame.AbsolutePosition.X) / SliderFrame.AbsoluteSize.X, 0, 1)
@@ -856,21 +768,17 @@ function NexusLib:CreateWindow(WindowConfig)
                     SaveCfg(game.GameId)
                 end
             end)
-
             function Slider:Set(Value)
                 Slider.Value = math.clamp(math.round(Value / SliderConfig.Increment) * SliderConfig.Increment, SliderConfig.Min, SliderConfig.Max)
                 UpdateSlider()
                 SliderConfig.Callback(Slider.Value)
             end
-
             if SliderConfig.Flag then
                 NexusLib.Flags[SliderConfig.Flag] = Slider
             end
-
             Slider:Set(Slider.Value)
             return Slider
         end
-
         function ElementFunction:AddDropdown(DropdownConfig)
             DropdownConfig = DropdownConfig or {}
             DropdownConfig.Name = DropdownConfig.Name or "Dropdown"
@@ -879,11 +787,8 @@ function NexusLib:CreateWindow(WindowConfig)
             DropdownConfig.Callback = DropdownConfig.Callback or function() end
             DropdownConfig.Flag = DropdownConfig.Flag or nil
             DropdownConfig.Save = DropdownConfig.Save or false
-
             local Dropdown = {Value = DropdownConfig.Default, Toggled = false, Options = DropdownConfig.Options, Save = DropdownConfig.Save, Type = "Dropdown"}
-
             local MaxElements = 5
-
             local DropdownList = SetProps(MakeElement("List"), {
                 FillDirection = Enum.FillDirection.Vertical,
                 HorizontalAlignment = Enum.HorizontalAlignment.Left,
@@ -891,7 +796,6 @@ function NexusLib:CreateWindow(WindowConfig)
                 SortOrder = Enum.SortOrder.LayoutOrder,
                 Padding = UDim.new(0, 1)
             })
-
             local DropdownContainerHolder = SetChildren(SetProps(MakeElement("ScrollFrame", Color3.fromRGB(40, 40, 40), 4), {
                 ScrollBarImageColor3 = Color3.fromRGB(240, 240, 240),
                 Size = UDim2.new(1, 0, 1, 0)
@@ -904,19 +808,15 @@ function NexusLib:CreateWindow(WindowConfig)
                     PaddingRight = UDim.new(0, 2)
                 })
             })
-
             local DropdownContainer = SetProps(MakeElement("Frame"), {
                 Size = UDim2.new(1, 0, 0, 0),
                 AutomaticSize = Enum.AutomaticSize.Y,
                 BackgroundTransparency = 1
             })
-
             DropdownContainer.Parent = DropdownContainerHolder
-
             local Click = SetProps(MakeElement("Button"), {
                 Size = UDim2.new(1, 0, 1, 0)
             })
-
             local DropdownFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
                 Size = UDim2.new(1, 0, 0, 38),
                 Parent = Container
@@ -943,9 +843,7 @@ function NexusLib:CreateWindow(WindowConfig)
                 }),
                 DropdownContainerHolder
             }), "Second")
-
             DropdownContainerHolder.Parent = DropdownFrame
-
             function Dropdown:Refresh(Options, Delete)
                 Dropdown.Options = Options
                 if Delete then
@@ -959,20 +857,17 @@ function NexusLib:CreateWindow(WindowConfig)
                 end
                 DropdownContainerHolder.CanvasSize = UDim2.new(0, 0, 0, DropdownList.AbsoluteContentSize.Y + 4)
             end
-
             function Dropdown:Set(Value)
                 if not table.find(Dropdown.Options, Value) then
                     Dropdown.Value = nil
                     DropdownFrame.Content.Text = DropdownConfig.Name
                     return
                 end
-
                 Dropdown.Value = Value
                 DropdownFrame.Content.Text = Value
                 DropdownConfig.Callback(Value)
                 SaveCfg(game.GameId)
             end
-
             AddConnection(Click.MouseButton1Click, function()
                 Dropdown.Toggled = not Dropdown.Toggled
                 DropdownFrame.Line.Visible = Dropdown.Toggled
@@ -983,16 +878,13 @@ function NexusLib:CreateWindow(WindowConfig)
                     TweenService:Create(DropdownFrame, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = Dropdown.Toggled and UDim2.new(1, 0, 0, DropdownList.AbsoluteContentSize.Y + 38) or UDim2.new(1, 0, 0, 38)}):Play()
                 end
             end)
-
             Dropdown:Refresh(Dropdown.Options, false)
             Dropdown:Set(Dropdown.Value)
             if DropdownConfig.Flag then
                 NexusLib.Flags[DropdownConfig.Flag] = Dropdown
             end
-
             return Dropdown
         end
-
         function ElementFunction:AddBind(BindConfig)
             BindConfig = BindConfig or {}
             BindConfig.Name = BindConfig.Name or "Bind"
@@ -1001,14 +893,11 @@ function NexusLib:CreateWindow(WindowConfig)
             BindConfig.Callback = BindConfig.Callback or function() end
             BindConfig.Flag = BindConfig.Flag or nil
             BindConfig.Save = BindConfig.Save or false
-
             local Bind = {Value = BindConfig.Default, Binding = false, Type = "Bind", Save = BindConfig.Save}
             local Holding = false
-
             local Click = SetProps(MakeElement("Button"), {
                 Size = UDim2.new(1, 0, 1, 0)
             })
-
             local BindBox = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
                 Size = UDim2.new(0, 24, 0, 24),
                 Position = UDim2.new(1, -12, 0.5, 0),
@@ -1022,7 +911,6 @@ function NexusLib:CreateWindow(WindowConfig)
                     Name = "Value"
                 }), "Text")
             }), "Main")
-
             local BindFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
                 Size = UDim2.new(1, 0, 0, 38),
                 Parent = Container
@@ -1037,11 +925,9 @@ function NexusLib:CreateWindow(WindowConfig)
                 BindBox,
                 Click
             }), "Second")
-
             AddConnection(BindBox.Value:GetPropertyChangedSignal("Text"), function()
                 TweenService:Create(BindBox, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(0, BindBox.Value.TextBounds.X + 16, 0, 24)}):Play()
             end)
-
             AddConnection(Click.InputEnded, function(Input)
                 if Input.UserInputType == Enum.UserInputType.MouseButton1 then
                     if Bind.Binding then return end
@@ -1049,7 +935,6 @@ function NexusLib:CreateWindow(WindowConfig)
                     BindBox.Value.Text = "..."
                 end
             end)
-
             AddConnection(UserInputService.InputBegan, function(Input)
                 if UserInputService:GetFocusedTextBox() then return end
                 if (Input.KeyCode.Name == Bind.Value or Input.UserInputType.Name == Bind.Value) and not Bind.Binding then
@@ -1076,7 +961,6 @@ function NexusLib:CreateWindow(WindowConfig)
                     SaveCfg(game.GameId)
                 end
             end)
-
             AddConnection(UserInputService.InputEnded, function(Input)
                 if Input.KeyCode.Name == Bind.Value or Input.UserInputType.Name == Bind.Value then
                     if BindConfig.Hold and Holding then
@@ -1085,37 +969,30 @@ function NexusLib:CreateWindow(WindowConfig)
                     end
                 end
             end)
-
             AddConnection(Click.MouseEnter, function()
                 TweenService:Create(BindFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 3)}):Play()
             end)
-
             AddConnection(Click.MouseLeave, function()
                 TweenService:Create(BindFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = NexusLib.Themes[NexusLib.SelectedTheme].Second}):Play()
             end)
-
             AddConnection(Click.MouseButton1Up, function()
                 TweenService:Create(BindFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 3)}):Play()
             end)
-
             AddConnection(Click.MouseButton1Down, function()
                 TweenService:Create(BindFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 6, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 6, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 6)}):Play()
             end)
-
             function Bind:Set(Key)
                 Bind.Binding = false
                 Bind.Value = Key or Bind.Value
                 Bind.Value = Bind.Value.Name or Bind.Value
                 BindBox.Value.Text = Bind.Value
             end
-
             Bind:Set(BindConfig.Default)
             if BindConfig.Flag then
                 NexusLib.Flags[BindConfig.Flag] = Bind
             end
             return Bind
         end
-
         function ElementFunction:AddTextbox(TextboxConfig)
             TextboxConfig = TextboxConfig or {}
             TextboxConfig.Name = TextboxConfig.Name or "Textbox"
@@ -1124,13 +1001,10 @@ function NexusLib:CreateWindow(WindowConfig)
             TextboxConfig.Callback = TextboxConfig.Callback or function() end
             TextboxConfig.Flag = TextboxConfig.Flag or nil
             TextboxConfig.Save = TextboxConfig.Save or false
-
             local Textbox = {Value = TextboxConfig.Default, Type = "Textbox", Save = TextboxConfig.Save}
-
             local Click = SetProps(MakeElement("Button"), {
                 Size = UDim2.new(1, 0, 1, 0)
             })
-
             local TextboxActual = AddThemeObject(Create("TextBox", {
                 Size = UDim2.new(1, 0, 1, 0),
                 BackgroundTransparency = 1,
@@ -1142,7 +1016,6 @@ function NexusLib:CreateWindow(WindowConfig)
                 TextSize = 14,
                 ClearTextOnFocus = false
             }), "Text")
-
             local TextContainer = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
                 Size = UDim2.new(0, 24, 0, 24),
                 Position = UDim2.new(1, -12, 0.5, 0),
@@ -1151,7 +1024,6 @@ function NexusLib:CreateWindow(WindowConfig)
                 AddThemeObject(MakeElement("Stroke"), "Stroke"),
                 TextboxActual
             }), "Main")
-
             local TextboxFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
                 Size = UDim2.new(1, 0, 0, 38),
                 Parent = Container
@@ -1166,11 +1038,9 @@ function NexusLib:CreateWindow(WindowConfig)
                 TextContainer,
                 Click
             }), "Second")
-
             AddConnection(TextboxActual:GetPropertyChangedSignal("Text"), function()
                 TweenService:Create(TextContainer, TweenInfo.new(0.45, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(0, TextboxActual.TextBounds.X + 16, 0, 24)}):Play()
             end)
-
             AddConnection(TextboxActual.FocusLost, function()
                 Textbox.Value = TextboxActual.Text
                 TextboxConfig.Callback(TextboxActual.Text)
@@ -1179,37 +1049,29 @@ function NexusLib:CreateWindow(WindowConfig)
                 end
                 SaveCfg(game.GameId)
             end)
-
             TextboxActual.Text = TextboxConfig.Default
-
             AddConnection(Click.MouseEnter, function()
                 TweenService:Create(TextboxFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 3)}):Play()
             end)
-
             AddConnection(Click.MouseLeave, function()
                 TweenService:Create(TextboxFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = NexusLib.Themes[NexusLib.SelectedTheme].Second}):Play()
             end)
-
             AddConnection(Click.MouseButton1Up, function()
                 TweenService:Create(TextboxFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 3)}):Play()
                 TextboxActual:CaptureFocus()
             end)
-
             AddConnection(Click.MouseButton1Down, function()
                 TweenService:Create(TextboxFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 6, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 6, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 6)}):Play()
             end)
-
             function Textbox:Set(Value)
                 TextboxActual.Text = Value
                 Textbox.Value = Value
             end
-
             if TextboxConfig.Flag then
                 NexusLib.Flags[TextboxConfig.Flag] = Textbox
             end
             return Textbox
         end
-
         function ElementFunction:AddColorpicker(ColorpickerConfig)
             ColorpickerConfig = ColorpickerConfig or {}
             ColorpickerConfig.Name = ColorpickerConfig.Name or "Colorpicker"
@@ -1217,13 +1079,10 @@ function NexusLib:CreateWindow(WindowConfig)
             ColorpickerConfig.Callback = ColorpickerConfig.Callback or function() end
             ColorpickerConfig.Flag = ColorpickerConfig.Flag or nil
             ColorpickerConfig.Save = ColorpickerConfig.Save or false
-
             local Colorpicker = {Value = ColorpickerConfig.Default, Type = "Colorpicker", Save = ColorpickerConfig.Save, Toggled = false}
             local ColorInput, HueInput
-
             local DefaultH, DefaultS, DefaultV = Color3.toHSV(ColorpickerConfig.Default)
             local ColorH, ColorS, ColorV = DefaultH, DefaultS, DefaultV
-
             local ColorSelection = Create("ImageLabel", {
                 Size = UDim2.new(0, 18, 0, 18),
                 Position = UDim2.new(DefaultS, 0, 1 - DefaultV, 0),
@@ -1232,7 +1091,6 @@ function NexusLib:CreateWindow(WindowConfig)
                 BackgroundTransparency = 1,
                 Image = "rbxassetid://4805639000"
             })
-
             local HueSelection = Create("ImageLabel", {
                 Size = UDim2.new(0, 18, 0, 18),
                 Position = UDim2.new(0.5, 0, 1 - DefaultH, 0),
@@ -1241,7 +1099,6 @@ function NexusLib:CreateWindow(WindowConfig)
                 BackgroundTransparency = 1,
                 Image = "rbxassetid://4805639000"
             })
-
             local Color = Create("ImageLabel", {
                 Size = UDim2.new(1, -25, 1, 0),
                 Visible = false,
@@ -1250,7 +1107,6 @@ function NexusLib:CreateWindow(WindowConfig)
                 Create("UICorner", {CornerRadius = UDim.new(0, 5)}),
                 ColorSelection
             })
-
             local Hue = Create("Frame", {
                 Size = UDim2.new(0, 20, 1, 0),
                 Position = UDim2.new(1, -20, 0, 0),
@@ -1268,7 +1124,6 @@ function NexusLib:CreateWindow(WindowConfig)
                 Create("UICorner", {CornerRadius = UDim.new(0, 5)}),
                 HueSelection
             })
-
             local ColorpickerContainer = Create("Frame", {
                 Position = UDim2.new(0, 0, 0, 32),
                 Size = UDim2.new(1, 0, 1, -32),
@@ -1284,11 +1139,9 @@ function NexusLib:CreateWindow(WindowConfig)
                     PaddingTop = UDim.new(0, 17)
                 })
             })
-
             local Click = SetProps(MakeElement("Button"), {
                 Size = UDim2.new(1, 0, 1, 0)
             })
-
             local ColorpickerBox = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
                 Size = UDim2.new(0, 24, 0, 24),
                 Position = UDim2.new(1, -12, 0.5, 0),
@@ -1296,7 +1149,6 @@ function NexusLib:CreateWindow(WindowConfig)
             }), {
                 AddThemeObject(MakeElement("Stroke"), "Stroke")
             }), "Main")
-
             local ColorpickerFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
                 Size = UDim2.new(1, 0, 0, 38),
                 Parent = Container
@@ -1324,7 +1176,6 @@ function NexusLib:CreateWindow(WindowConfig)
                 ColorpickerContainer,
                 AddThemeObject(MakeElement("Stroke"), "Stroke"),
             }), "Second")
-
             local function UpdateColorPicker()
                 ColorpickerBox.BackgroundColor3 = Color3.fromHSV(ColorH, ColorS, ColorV)
                 Color.BackgroundColor3 = Color3.fromHSV(ColorH, 1, 1)
@@ -1332,9 +1183,7 @@ function NexusLib:CreateWindow(WindowConfig)
                 ColorpickerConfig.Callback(Colorpicker.Value)
                 SaveCfg(game.GameId)
             end
-
             UpdateColorPicker()
-
             AddConnection(Click.MouseButton1Click, function()
                 Colorpicker.Toggled = not Colorpicker.Toggled
                 TweenService:Create(ColorpickerFrame, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = Colorpicker.Toggled and UDim2.new(1, 0, 0, 148) or UDim2.new(1, 0, 0, 38)}):Play()
@@ -1342,7 +1191,6 @@ function NexusLib:CreateWindow(WindowConfig)
                 Hue.Visible = Colorpicker.Toggled
                 ColorpickerFrame.F.Line.Visible = Colorpicker.Toggled
             end)
-
             AddConnection(Color.InputBegan, function(input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 then
                     if ColorInput then
@@ -1358,7 +1206,6 @@ function NexusLib:CreateWindow(WindowConfig)
                     end)
                 end
             end)
-
             AddConnection(Color.InputEnded, function(input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 then
                     if ColorInput then
@@ -1366,24 +1213,19 @@ function NexusLib:CreateWindow(WindowConfig)
                     end
                 end
             end)
-
             AddConnection(Hue.InputBegan, function(input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 then
                     if HueInput then
                         HueInput:Disconnect()
                     end
-
                     HueInput = AddConnection(RunService.RenderStepped, function()
                         local HueY = (math.clamp(Mouse.Y - Hue.AbsolutePosition.Y, 0, Hue.AbsoluteSize.Y) / Hue.AbsoluteSize.Y)
-
                         HueSelection.Position = UDim2.new(0.5, 0, HueY, 0)
                         ColorH = 1 - HueY
-
                         UpdateColorPicker()
                     end)
                 end
             end)
-
             AddConnection(Hue.InputEnded, function(input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 then
                     if HueInput then
@@ -1391,7 +1233,6 @@ function NexusLib:CreateWindow(WindowConfig)
                     end
                 end
             end)
-
             function Colorpicker:Set(Value)
                 Colorpicker.Value = Value
                 ColorH, ColorS, ColorV = Color3.toHSV(Value)
@@ -1400,18 +1241,15 @@ function NexusLib:CreateWindow(WindowConfig)
                 HueSelection.Position = UDim2.new(0.5, 0, 1 - ColorH, 0)
                 ColorpickerConfig.Callback(Colorpicker.Value)
             end
-
             Colorpicker:Set(Colorpicker.Value)
             if ColorpickerConfig.Flag then
                 NexusLib.Flags[ColorpickerConfig.Flag] = Colorpicker
             end
             return Colorpicker
         end
-
         function ElementFunction:AddSection(SectionConfig)
             SectionConfig = SectionConfig or {}
             SectionConfig.Name = SectionConfig.Name or "Section"
-
             local SectionFrame = SetChildren(SetProps(MakeElement("TFrame"), {
                 Size = UDim2.new(1, 0, 0, 26),
                 Parent = Container
@@ -1430,32 +1268,26 @@ function NexusLib:CreateWindow(WindowConfig)
                     MakeElement("List", 0, 6)
                 }),
             })
-
             AddConnection(SectionFrame.Holder.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
                 SectionFrame.Size = UDim2.new(1, 0, 0, SectionFrame.Holder.UIListLayout.AbsoluteContentSize.Y + 31)
                 SectionFrame.Holder.Size = UDim2.new(1, 0, 0, SectionFrame.Holder.UIListLayout.AbsoluteContentSize.Y)
             end)
-
             local SectionFunction = {}
             for i, v in next, GetElements(SectionFrame.Holder) do
-                SectionFunction[i] = v 
+                SectionFunction[i] = v
             end
             return SectionFunction
         end
-        
+       
         return ElementFunction
     end
-
     return TabFunction
 end
-
 function NexusLib:Destroy()
     Nexus:Destroy()
 end
-
 function NexusLib:SetTheme(ThemeName)
     NexusLib.SelectedTheme = ThemeName or "Dark"
-    SetTheme()  
+    SetTheme()
 end
-
 return NexusLib
