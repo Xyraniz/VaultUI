@@ -170,19 +170,19 @@ end
 local function AddDraggingFunctionality(DragPoint, Main)
     local Dragging, DragStart, StartPos
     AddConnection(DragPoint.InputBegan, function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
             Dragging = true
             DragStart = input.Position
             StartPos = Main.Position
         end
     end)
     AddConnection(DragPoint.InputEnded, function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
             Dragging = false
         end
     end)
     AddConnection(UserInputService.InputChanged, function(input)
-        if Dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+        if Dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
             local delta = input.Position - DragStart
             TweenService:Create(Main, TweenInfo.new(0.01, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {Position = UDim2.new(StartPos.X.Scale, StartPos.X.Offset + delta.X, StartPos.Y.Scale, StartPos.Y.Offset + delta.Y)}):Play()
         end
@@ -434,13 +434,7 @@ local function CreateElementFunctions(Container)
         AddConnection(Click.MouseLeave, function()
             TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = NexusLib.Themes[NexusLib.SelectedTheme].Second}):Play()
         end)
-        AddConnection(Click.MouseButton1Up, function()
-            TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 3)}):Play()
-        end)
-        AddConnection(Click.MouseButton1Down, function()
-            TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 6, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 6, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 6)}):Play()
-        end)
-        AddConnection(Click.MouseButton1Click, function()
+        AddConnection(Click.Activated, function()
             Toggle.Value = not Toggle.Value
             TweenService:Create(Checkmark, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = Toggle.Value and 0 or 1}):Play()
             ToggleConfig.Callback(Toggle.Value)
@@ -507,17 +501,17 @@ local function CreateElementFunctions(Container)
             SliderLabel.Text = SliderConfig.Name .. ": " .. Slider.Value
         end
         AddConnection(SliderButton.InputBegan, function(Input)
-            if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+            if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
                 Dragging = true
             end
         end)
         AddConnection(SliderButton.InputEnded, function(Input)
-            if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+            if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
                 Dragging = false
             end
         end)
         AddConnection(UserInputService.InputChanged, function(Input)
-            if Dragging and Input.UserInputType == Enum.UserInputType.MouseMovement then
+            if Dragging and (Input.UserInputType == Enum.UserInputType.MouseMovement or Input.UserInputType == Enum.UserInputType.Touch) then
                 local SizeScale = math.clamp((Input.Position.X - SliderFrame.AbsolutePosition.X) / SliderFrame.AbsoluteSize.X, 0, 1)
                 Slider.Value = SliderConfig.Min + ((SliderConfig.Max - SliderConfig.Min) * SizeScale)
                 Slider.Value = math.round(Slider.Value / SliderConfig.Increment) * SliderConfig.Increment
@@ -637,13 +631,7 @@ local function CreateElementFunctions(Container)
                 AddConnection(OptionClick.MouseLeave, function()
                     TweenService:Create(OptionFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = NexusLib.Themes[NexusLib.SelectedTheme].Second}):Play()
                 end)
-                AddConnection(OptionClick.MouseButton1Up, function()
-                    TweenService:Create(OptionFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 3)}):Play()
-                end)
-                AddConnection(OptionClick.MouseButton1Down, function()
-                    TweenService:Create(OptionFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 6, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 6, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 6)}):Play()
-                end)
-                AddConnection(OptionClick.MouseButton1Click, function()
+                AddConnection(OptionClick.Activated, function()
                     Dropdown:Set(option)
                     Dropdown.Toggled = false
                     TweenService:Create(DropdownFrame.Ico, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = 0}):Play()
@@ -664,7 +652,7 @@ local function CreateElementFunctions(Container)
             DropdownConfig.Callback(Value)
             SaveCfg(game.GameId)
         end
-        AddConnection(Click.MouseButton1Click, function()
+        AddConnection(Click.Activated, function()
             Dropdown.Toggled = not Dropdown.Toggled
             DropdownFrame.Line.Visible = Dropdown.Toggled
             TweenService:Create(DropdownFrame.Ico, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Rotation = Dropdown.Toggled and 180 or 0}):Play()
@@ -701,7 +689,7 @@ local function CreateElementFunctions(Container)
         }), {
             AddThemeObject(MakeElement("Stroke"), "Stroke"),
             AddThemeObject(SetProps(MakeElement("Label", "NONE", 14), {
-                Size = UDim2.new(1, 0,1,0),
+                Size = UDim2.new(1, 0, 1, 0),
                 Font = Enum.Font.GothamBold,
                 TextXAlignment = Enum.TextXAlignment.Center,
                 Name = "Value"
@@ -724,12 +712,10 @@ local function CreateElementFunctions(Container)
         AddConnection(BindBox.Value:GetPropertyChangedSignal("Text"), function()
             TweenService:Create(BindBox, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(0, BindBox.Value.TextBounds.X + 16, 0, 24)}):Play()
         end)
-        AddConnection(Click.InputEnded, function(Input)
-            if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                if Bind.Binding then return end
-                Bind.Binding = true
-                BindBox.Value.Text = "..."
-            end
+        AddConnection(Click.Activated, function()
+            if Bind.Binding then return end
+            Bind.Binding = true
+            BindBox.Value.Text = "..."
         end)
         AddConnection(UserInputService.InputBegan, function(Input)
             if UserInputService:GetFocusedTextBox() then return end
@@ -770,12 +756,6 @@ local function CreateElementFunctions(Container)
         end)
         AddConnection(Click.MouseLeave, function()
             TweenService:Create(BindFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = NexusLib.Themes[NexusLib.SelectedTheme].Second}):Play()
-        end)
-        AddConnection(Click.MouseButton1Up, function()
-            TweenService:Create(BindFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 3)}):Play()
-        end)
-        AddConnection(Click.MouseButton1Down, function()
-            TweenService:Create(BindFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 6, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 6, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 6)}):Play()
         end)
         function Bind:Set(Key)
             Bind.Binding = false
@@ -852,12 +832,8 @@ local function CreateElementFunctions(Container)
         AddConnection(Click.MouseLeave, function()
             TweenService:Create(TextboxFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = NexusLib.Themes[NexusLib.SelectedTheme].Second}):Play()
         end)
-        AddConnection(Click.MouseButton1Up, function()
-            TweenService:Create(TextboxFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 3, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 3)}):Play()
+        AddConnection(Click.Activated, function()
             TextboxActual:CaptureFocus()
-        end)
-        AddConnection(Click.MouseButton1Down, function()
-            TweenService:Create(TextboxFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(NexusLib.Themes[NexusLib.SelectedTheme].Second.R * 255 + 6, NexusLib.Themes[NexusLib.SelectedTheme].Second.G * 255 + 6, NexusLib.Themes[NexusLib.SelectedTheme].Second.B * 255 + 6)}):Play()
         end)
         function Textbox:Set(Value)
             TextboxActual.Text = Value
@@ -980,7 +956,7 @@ local function CreateElementFunctions(Container)
             SaveCfg(game.GameId)
         end
         UpdateColorPicker()
-        AddConnection(Click.MouseButton1Click, function()
+        AddConnection(Click.Activated, function()
             Colorpicker.Toggled = not Colorpicker.Toggled
             TweenService:Create(ColorpickerFrame, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Size = Colorpicker.Toggled and UDim2.new(1, 0, 0, 148) or UDim2.new(1, 0, 0, 38)}):Play()
             Color.Visible = Colorpicker.Toggled
@@ -988,7 +964,7 @@ local function CreateElementFunctions(Container)
             ColorpickerFrame.F.Line.Visible = Colorpicker.Toggled
         end)
         AddConnection(Color.InputBegan, function(input)
-            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                 if ColorInput then
                     ColorInput:Disconnect()
                 end
@@ -1003,14 +979,14 @@ local function CreateElementFunctions(Container)
             end
         end)
         AddConnection(Color.InputEnded, function(input)
-            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                 if ColorInput then
                     ColorInput:Disconnect()
                 end
             end
         end)
         AddConnection(Hue.InputBegan, function(input)
-            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                 if HueInput then
                     HueInput:Disconnect()
                 end
@@ -1023,7 +999,7 @@ local function CreateElementFunctions(Container)
             end
         end)
         AddConnection(Hue.InputEnded, function(input)
-            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                 if HueInput then
                     HueInput:Disconnect()
                 end
@@ -1223,7 +1199,7 @@ function NexusLib:CreateWindow(WindowConfig)
         WindowIcon.Parent = MainWindow.TopBar
     end
     AddDraggingFunctionality(DragPoint, MainWindow)
-    AddConnection(CloseBtn.MouseButton1Up, function()
+    AddConnection(CloseBtn.Activated, function()
         MainWindow.Visible = false
         UIHidden = true
         NexusLib:MakeNotification({
@@ -1238,7 +1214,7 @@ function NexusLib:CreateWindow(WindowConfig)
             UIHidden = false
         end
     end)
-    AddConnection(MinimizeBtn.MouseButton1Up, function()
+    AddConnection(MinimizeBtn.Activated, function()
         if Minimized then
             TweenService:Create(MainWindow, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(0, 615, 0, 344)}):Play()
             MinimizeBtn.Ico.Image = "rbxassetid://7072719338"
@@ -1274,17 +1250,10 @@ function NexusLib:CreateWindow(WindowConfig)
                 Position = UDim2.new(0, -8, 0, 5)
             }), "TextDark")
         })
-        if FirstTab then
-            FirstTab = false
-            TabFrame.BackgroundColor3 = NexusLib.Themes[NexusLib.SelectedTheme].Second
-        else
-            TabFrame.BackgroundColor3 = NexusLib.Themes[NexusLib.SelectedTheme].Main
-        end
         local TabContainer = AddThemeObject(SetChildren(SetProps(MakeElement("ScrollFrame", Color3.fromRGB(255, 255, 255), 4), {
             Size = UDim2.new(1, -150, 1, -50),
             Position = UDim2.new(0, 150, 0, 50),
             Parent = MainWindow,
-            Visible = FirstTab
         }), {
             MakeElement("List", 0, 6),
             MakeElement("Padding", 8, 8, 8, 8)
@@ -1293,11 +1262,14 @@ function NexusLib:CreateWindow(WindowConfig)
             TabContainer.CanvasSize = UDim2.new(0, 0, 0, TabContainer.UIListLayout.AbsoluteContentSize.Y + 14)
         end)
         if FirstTab then
+            FirstTab = false
+            TabFrame.BackgroundColor3 = NexusLib.Themes[NexusLib.SelectedTheme].Second
             TabContainer.Visible = true
         else
+            TabFrame.BackgroundColor3 = NexusLib.Themes[NexusLib.SelectedTheme].Main
             TabContainer.Visible = false
         end
-        AddConnection(TabFrame.MouseButton1Click, function()
+        AddConnection(TabFrame.Activated, function()
             for i, v in next, TabHolder:GetChildren() do
                 if v:IsA("TextButton") then
                     v.BackgroundColor3 = NexusLib.Themes[NexusLib.SelectedTheme].Main
