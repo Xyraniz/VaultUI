@@ -53,13 +53,13 @@ end
 
 if type(gethui) == "function" then
     for _, Interface in ipairs(gethui():GetChildren()) do
-        if Interface.Name = gui.Name and Interface ~= gui then
+        if Interface.Name == gui.Name and Interface ~= gui then
             pcall(function() Interface:Destroy() end)
         end
     end
 else
     for _, Interface in ipairs(game.CoreGui:GetChildren()) do
-        if Interface.Name = gui.Name and Interface ~= gui then
+        if Interface.Name == gui.Name and Interface ~= gui then
             pcall(function() Interface:Destroy() end)
         end
     end
@@ -67,9 +67,9 @@ end
 
 function library:IsRunning()
     if type(gethui) == "function" then
-        return gui.Parent = gethui()
+        return gui.Parent == gethui()
     else
-        return gui.Parent = game:GetService("CoreGui")
+        return gui.Parent == game:GetService("CoreGui")
     end
 end
 
@@ -493,7 +493,7 @@ local gradientSection = ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fr
 
 local shadowGradient = ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 20, 20)), ColorSequenceKeypoint.new(1, Color3.fromRGB(36, 36, 36))}
 
-local main = MakeElement("RoundFrame", "Main", 0, 10)
+local main = MakeElement("RoundFrame", library.Themes[library.SelectedTheme].Main, 0, 10)
 
 SetProps(main, {
 
@@ -507,11 +507,9 @@ Size = UDim2.new(0, 400, 0, 270),
 
 })
 
-local Search = SetChildren(SetProps(MakeElement("RoundFrame", "Second", 0, 4), {
+local Search = SetChildren(SetProps(MakeElement("RoundFrame", library.Themes[library.SelectedTheme].Second, 0, 4), {
 
 Name = "Search",
-
-Parent = main,
 
 Position = UDim2.new(0, 4, 0, 46),
 
@@ -537,7 +535,7 @@ PlaceholderText = "Search",
 
 Text = "",
 
-TextColor3 = "Text",
+TextColor3 = library.Themes[library.SelectedTheme].Text,
 
 TextSize = 14,
 
@@ -569,13 +567,15 @@ Rotation = 45,
 
 })
 
+Search.Parent = main
+
 local border = SetProps(MakeElement("Frame"), {
 
 Name = "border",
 
-BackgroundColor3 = "Second",
+BackgroundColor3 = library.Themes[library.SelectedTheme].Second,
 
-BorderColor3 = "Stroke",
+BorderColor3 = library.Themes[library.SelectedTheme].Stroke,
 
 BorderSizePixel = 1,
 
@@ -586,8 +586,6 @@ Size = UDim2.new(0, 390, 0, 186),
 })
 
 border.Parent = main
-
-AddThemeObject(border, "Second")
 
 local shadow1 = SetProps(MakeElement("Frame"), {
 
@@ -607,15 +605,11 @@ Size = UDim2.new(1, 0, 0, 8),
 
 shadow1.Parent = border
 
-local grad1 = Instance.new("UIGradient")
+Instance.new("UIGradient", shadow1).Color = shadowGradient
 
-grad1.Color = shadowGradient
+Instance.new("UIGradient", shadow1).Rotation = 270
 
-grad1.Rotation = 270
-
-grad1.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(1, 1)}
-
-grad1.Parent = shadow1
+Instance.new("UIGradient", shadow1).Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(1, 1)}
 
 local shadow2 = SetProps(MakeElement("Frame"), {
 
@@ -633,15 +627,11 @@ Size = UDim2.new(1, 0, 0, 8),
 
 shadow2.Parent = border
 
-local grad2 = Instance.new("UIGradient")
+Instance.new("UIGradient", shadow2).Color = shadowGradient
 
-grad2.Color = shadowGradient
+Instance.new("UIGradient", shadow2).Rotation = 90
 
-grad2.Rotation = 90
-
-grad2.Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(1, 1)}
-
-grad2.Parent = shadow2
+Instance.new("UIGradient", shadow2).Transparency = NumberSequence.new{NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(1, 1)}
 
 local bar = SetProps(MakeElement("Frame"), {
 
@@ -659,11 +649,7 @@ Position = UDim2.new(0, 0, 0, 0),
 
 bar.Parent = main
 
-local grad3 = Instance.new("UIGradient")
-
-grad3.Color = gradientColor
-
-grad3.Parent = bar
+Instance.new("UIGradient", bar).Color = gradientColor
 
 local bottom = SetProps(MakeElement("Frame"), {
 
@@ -671,7 +657,7 @@ Name = "bottom",
 
 BorderSizePixel = 0,
 
-BackgroundColor3 = "Second",
+BackgroundColor3 = library.Themes[library.SelectedTheme].Second,
 
 Position = UDim2.new(0, 0, 0, 4),
 
@@ -680,8 +666,6 @@ Size = UDim2.new(1, 0, 0, 34),
 })
 
 bottom.Parent = main
-
-AddThemeObject(bottom, "Second")
 
 local shadow3 = SetProps(MakeElement("Frame"), {
 
@@ -701,7 +685,7 @@ Size = UDim2.new(1, 0, 0, 8),
 
 shadow3.Parent = bottom
 
-local title = AddThemeObject(SetProps(MakeElement("Label", "Gamer Lib", 14), {
+local title = SetProps(MakeElement("Label", "Gamer Lib", 14), {
 
 Name = "Title",
 
@@ -711,15 +695,13 @@ Size = UDim2.new(0, 70, 0, 24),
 
 Font = Enum.Font.GothamSemibold,
 
-}), "Text")
+TextColor3 = Color3.fromRGB(255, 255, 255),
+
+})
 
 title.Parent = bottom
 
-local grad4 = Instance.new("UIGradient")
-
-grad4.Color = gradientColor
-
-grad4.Parent = title
+Instance.new("UIGradient", title).Color = gradientColor
 
 local topcontainer = SetProps(MakeElement("TFrame"), {
 
@@ -735,15 +717,9 @@ Size = UDim2.new(1, -90, 0.73, 0),
 
 topcontainer.Parent = bottom
 
-SetChildren(topcontainer, {
+MakeElement("List", 0, 2).Parent = topcontainer
 
-MakeElement("List", 0, 2)
-
-})
-
-local modal = Instance.new("TextButton")
-
-modal.Parent = main
+local modal = Instance.new("TextButton", main)
 
 modal.Modal = true
 
@@ -753,13 +729,73 @@ modal.Text = ""
 
 AddDraggingFunctionality(bottom, main)
 
+Search.textbox:GetPropertyChangedSignal("Text"):Connect(function()
+
+local Entry = Search.textbox.Text:lower()
+
+if Entry ~= "" then
+
+for i,v in next, library.currentSection:GetChildren() do
+
+if not v:IsA("UIPadding") and not v:IsA("UIListLayout") then
+
+local label = v:FindFirstChild("Content")
+
+local button = v:FindFirstChild("button")
+
+local find = false
+
+if label and label.Text:lower():sub(1, #Entry) == Entry then
+
+v.Visible = true
+
+find = true
+
+end
+
+if button and button:FindFirstChild("Content") and button.Content.Text:lower():sub(1, #Entry) == Entry then
+
+v.Visible = true
+
+find = true
+
+end
+
+if not find then
+
+v.Visible = false
+
+end
+
+end
+
+end
+
+elseif library.currentSection then
+
+for i,v in next, library.currentSection:GetChildren() do
+
+if not v:IsA("UIPadding") and not v:IsA("UIListLayout") then
+
+v.Visible = true
+
+end
+
+end
+
+end
+
+library.currentSectionObject:Update()
+
+end)
+
 local function GetElements(Container)
 
 local elements = {
 
 Label = function(self, labelName)
 
-local holder = SetChildren(SetProps(MakeElement("RoundFrame", "Second", 0, 5), {
+SetChildren(SetProps(MakeElement("RoundFrame", library.Themes[library.SelectedTheme].Second, 0, 5), {
 
 Name = "holder",
 
@@ -795,7 +831,7 @@ local Toggle = {Value = false, Type = "Toggle", Save = true}
 
 local Click = MakeElement("Button")
 
-local ToggleBox = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
+local ToggleBox = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", library.Themes[library.SelectedTheme].Main, 0, 4), {
 
 Size = UDim2.new(0, 24, 0, 24),
 
@@ -821,7 +857,7 @@ Name = "Ico"
 
 }), "Main")
 
-local ToggleFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
+local ToggleFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", library.Themes[library.SelectedTheme].Second, 0, 5), {
 
 Size = UDim2.new(1, 0, 0, 38),
 
@@ -869,7 +905,7 @@ end)
 
 AddConnection(Click.MouseButton1Down, function()
 
-TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(library.Themes[library.SelectedTheme].Second.R * 255 + 6, library.Themes[library.Themes[library.SelectedTheme].Second.G * 255 + 6, library.Themes[library.SelectedTheme].Second.B * 255 + 6)}):Play()
+TweenService:Create(ToggleFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(library.Themes[library.SelectedTheme].Second.R * 255 + 6, library.Themes[library.SelectedTheme].Second.G * 255 + 6, library.Themes[library.SelectedTheme].Second.B * 255 + 6)}):Play()
 
 end)
 
@@ -921,7 +957,7 @@ ClearTextOnFocus = false
 
 }), "Text")
 
-local TextContainer = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
+local TextContainer = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", library.Themes[library.SelectedTheme].Main, 0, 4), {
 
 Size = UDim2.new(0, 24, 0, 24),
 
@@ -937,7 +973,7 @@ TextboxActual
 
 }), "Main")
 
-local TextboxFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
+local TextboxFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", library.Themes[library.SelectedTheme].Second, 0, 5), {
 
 Size = UDim2.new(1, 0, 0, 38),
 
@@ -1031,7 +1067,7 @@ local Slider = {Value = default, Type = "Slider", Save = true}
 
 local dragging = false
 
-local SliderBar = AddThemeObject(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
+local SliderBar = AddThemeObject(SetProps(MakeElement("RoundFrame", library.Themes[library.SelectedTheme].Second, 0, 5), {
 
 Size = UDim2.new(1, 0, 0, 38),
 
@@ -1039,11 +1075,9 @@ Parent = Container
 
 }), "Second")
 
-local SliderFill = AddThemeObject(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
+local SliderFill = AddThemeObject(SetProps(MakeElement("RoundFrame", library.Themes[library.SelectedTheme].Accent, 0, 5), {
 
 Size = UDim2.new((default or min) / max, 0, 1, 0),
-
-BackgroundColor3 = library.Themes[library.SelectedTheme].Accent
 
 }), "Accent")
 
@@ -1109,7 +1143,7 @@ end)
 
 AddConnection(UserInputService.InputChanged, function(input)
 
-if dragging and input.UserInputType = Enum.UserInputType.MouseMovement then
+if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
 
 local SizeScale = math.clamp((input.Position.X - SliderBar.AbsolutePosition.X) / SliderBar.AbsoluteSize.X, 0, 1)
 
@@ -1143,7 +1177,7 @@ local Holding = false
 
 local Click = MakeElement("Button")
 
-local BindBox = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
+local BindBox = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", library.Themes[library.SelectedTheme].Main, 0, 4), {
 
 Size = UDim2.new(0, 24, 0, 24),
 
@@ -1169,7 +1203,7 @@ Name = "Value"
 
 }), "Main")
 
-local BindFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
+local BindFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", library.Themes[library.SelectedTheme].Second, 0, 5), {
 
 Size = UDim2.new(1, 0, 0, 38),
 
@@ -1223,7 +1257,7 @@ if UserInputService:GetFocusedTextBox() then return end
 
 if (Input.KeyCode.Name == Bind.Value or Input.UserInputType.Name == Bind.Value) and not Bind.Binding then
 
-if false then -- Hold = false
+if false then
 
 Holding = true
 
@@ -1335,7 +1369,7 @@ local callback = callback or function() end
 
 local Click = MakeElement("Button")
 
-local ButtonFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
+local ButtonFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", library.Themes[library.SelectedTheme].Second, 0, 5), {
 
 Size = UDim2.new(1, 0, 0, 38),
 
@@ -1397,7 +1431,7 @@ local Dropdown = {Value = list[1], Options = list, Toggled = false, Type = "Drop
 
 local Click = MakeElement("Button")
 
-local DropdownBox = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
+local DropdownBox = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", library.Themes[library.SelectedTheme].Main, 0, 4), {
 
 Size = UDim2.new(0, 24, 0, 24),
 
@@ -1421,7 +1455,7 @@ Name = "Ico"
 
 }), "Main")
 
-local DropdownFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
+local DropdownFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", library.Themes[library.SelectedTheme].Second, 0, 5), {
 
 Size = UDim2.new(1, 0, 0, 38),
 
@@ -1495,7 +1529,7 @@ for _, v in next, Dropdown.Options do
 
 local Button = MakeElement("Button")
 
-local ButtonFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
+local ButtonFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", library.Themes[library.SelectedTheme].Second, 0, 5), {
 
 Size = UDim2.new(1, 0, 0, 28),
 
@@ -1525,7 +1559,7 @@ AddConnection(Button.MouseButton1Click, function()
 
 Dropdown.Value = v
 
-Dropdown:Togg le(false)
+Dropdown:Toggle(false)
 
 callback(v)
 
@@ -1537,7 +1571,7 @@ end
 
 end
 
-function Dropdown:Togg le(Bool)
+function Dropdown:Toggle(Bool)
 
 Dropdown.Toggled = Bool
 
@@ -1701,7 +1735,7 @@ PaddingTop = UDim.new(0, 17)
 
 local Click = MakeElement("Button")
 
-local ColorpickerBox = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
+local ColorpickerBox = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", library.Themes[library.SelectedTheme].Main, 0, 4), {
 
 Size = UDim2.new(0, 24, 0, 24),
 
@@ -1715,7 +1749,7 @@ AddThemeObject(MakeElement("Stroke"), "Stroke")
 
 }), "Main")
 
-local ColorpickerFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
+local ColorpickerFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", library.Themes[library.SelectedTheme].Second, 0, 5), {
 
 Size = UDim2.new(1, 0, 0, 38),
 
@@ -1769,7 +1803,7 @@ AddThemeObject(MakeElement("Stroke"), "Stroke"),
 
 }), "Second")
 
-local RainbowFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
+local RainbowFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", library.Themes[library.SelectedTheme].Second, 0, 4), {
 
 Size = UDim2.new(1, 0, 0, 24),
 
@@ -1793,13 +1827,9 @@ Name = "label"
 
 RainbowFrame.Parent = ColorpickerContainer
 
-local grad5 = Instance.new("UIGradient")
+Instance.new("UIGradient", RainbowFrame).Rotation = -90
 
-grad5.Rotation = -90
-
-grad5.Color = gradientSection
-
-grad5.Parent = RainbowFrame
+Instance.new("UIGradient", RainbowFrame).Color = gradientSection
 
 local function UpdateColorPicker()
 
@@ -1863,7 +1893,7 @@ end)
 
 AddConnection(Color.InputEnded, function(input)
 
-if input.UserInputType = Enum.UserInputType.MouseButton1 then
+if input.UserInputType == Enum.UserInputType.MouseButton1 then
 
 if ColorInput then
 
@@ -1977,41 +2007,47 @@ end
 
 local function CreateSection(name)
 
-local sectionSelector = SetChildren(SetProps(MakeElement("Button"), {
+local sectionSelector = Create("ImageButton", {
+
+Parent = main.bar.bottom.topcontainer,
 
 BackgroundTransparency = 1,
 
 Size = UDim2.new(0, 60, 1, 0),
 
-}), {
+Image = "rbxassetid://4641155773",
 
-AddThemeObject(SetProps(MakeElement("RoundFrame", "Divider", 0, 4), {
+ImageColor3 = Color3.fromRGB(255, 255, 255),
 
-Size = UDim2.new(1, 0, 1, 0),
+ScaleType = Enum.ScaleType.Slice,
 
-}), "Divider"),
+SliceCenter = Rect.new(4, 4, 296, 296),
 
-AddThemeObject(MakeElement("Stroke"), "Stroke"),
-
-AddThemeObject(SetProps(MakeElement("Label", name, 12), {
-
-Size = UDim2.new(1, 0, 1, 0),
-
-Font = Enum.Font.Gotham,
-
-}), "Text")
+SliceScale = 1,
 
 })
-
-sectionSelector.Parent = main.bar.bottom.topcontainer
 
 local grad = Instance.new("UIGradient")
 
 grad.Color = gradientSection
 
-grad.Parent = sectionSelector.RoundFrame
+grad.Parent = sectionSelector
 
-local boxContainer = SetProps(MakeElement("ScrollFrame", "Divider", 4), {
+Create("TextLabel", {
+
+Parent = sectionSelector,
+
+BackgroundTransparency = 1,
+
+Text = name,
+
+Size = UDim2.new(1, 0, 1, 0),
+
+TextColor3 = Color3.fromRGB(255, 255, 255),
+
+})
+
+local boxContainer = SetProps(MakeElement("ScrollFrame", library.Themes[library.SelectedTheme].Divider, 4), {
 
 Name = "box",
 
@@ -2019,7 +2055,7 @@ Parent = main.border,
 
 BorderSizePixel = 0,
 
-BackgroundColor3 = "Second",
+BackgroundColor3 = library.Themes[library.SelectedTheme].Second,
 
 Position = UDim2.new(0, 1, 0, 1),
 
@@ -2073,13 +2109,13 @@ sectionSelector.MouseButton1Click:Connect(function()
 
 if library.currentSection then
 
-library.currentSectionSelector.grad.Color = gradientSection
+library.currentSectionSelector:FindFirstChild("UIGradient").Color = gradientSection
 
 library.currentSection.Visible = false
 
 end
 
-grad.Color = ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(150, 150, 150)), ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 150, 150))}
+sectionSelector:FindFirstChild("UIGradient").Color = ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(150, 150, 150)), ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 150, 150))}
 
 library.currentSection = boxContainer
 
@@ -2099,13 +2135,37 @@ library.currentSectionSelector = sectionSelector
 
 boxContainer.Visible = true
 
-grad.Color = ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(150, 150, 150)), ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 150, 150))}
+sectionSelector:FindFirstChild("UIGradient").Color = ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(150, 150, 150)), ColorSequenceKeypoint.new(1, Color3.fromRGB(150, 150, 150))}
 
 library.currentSectionObject = section
 
 end
 
 return section
+
+end
+
+function library:Init()
+
+if library.SaveConfig then    
+
+    pcall(function()
+
+        if isfile(library.Folder .. "/" .. game.GameId .. ".txt") then
+
+            LoadCfg(readfile(library.Folder .. "/" .. game.GameId .. ".txt"))
+
+        end
+
+    end)        
+
+end    
+
+end
+
+function library:Ready()
+
+gui.Enabled = true
 
 end
 
