@@ -519,7 +519,7 @@ Size = UDim2.new(1, -8, 0, 26),
 
 AddThemeObject(MakeElement("Stroke"), "Stroke"),
 
-SetProps(MakeElement("TextBox"), {
+AddThemeObject(SetProps(Create("TextBox", {
 
 Name = "textbox",
 
@@ -535,13 +535,11 @@ PlaceholderText = "Search",
 
 Text = "",
 
-TextColor3 = library.Themes[library.SelectedTheme].Text,
-
 TextSize = 14,
 
 TextXAlignment = Enum.TextXAlignment.Left,
 
-}),
+}), {}), "Text"),
 
 SetChildren(SetProps(MakeElement("Image", "http://www.roblox.com/asset/?id=4645651350"), {
 
@@ -940,8 +938,6 @@ local TextboxActual = AddThemeObject(Create("TextBox", {
 Size = UDim2.new(1, 0, 1, 0),
 
 BackgroundTransparency = 1,
-
-TextColor3 = Color3.fromRGB(255, 255, 255),
 
 PlaceholderColor3 = Color3.fromRGB(210,210,210),
 
