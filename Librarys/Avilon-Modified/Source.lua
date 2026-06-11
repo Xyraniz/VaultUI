@@ -631,12 +631,14 @@ do
         return Success, Result
     end
 
-    Library.Round = function(Self, Number, Float)
+    Library.Round = function(Self, Number, Decimals)
         if type(Number) ~= "number" or not (Number == Number) then
             return 0
         end
-        local Multiplier = 1 / (Float or 1)
-        return math.floor(Number * Multiplier) / Multiplier
+
+        local Multiplier = 10 ^ (Decimals or 0)
+
+        return math.floor((Number * Multiplier) + 0.5) / Multiplier
     end
 
     Library.GetConfig = function(Self)
