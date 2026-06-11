@@ -632,6 +632,9 @@ do
     end
 
     Library.Round = function(Self, Number, Float)
+        if type(Number) ~= "number" or not (Number == Number) then
+            return 0
+        end
         local Multiplier = 1 / (Float or 1)
         return math.floor(Number * Multiplier) / Multiplier
     end
@@ -1163,8 +1166,8 @@ do
                     AutoButtonColor = false,
                     AnchorPoint = Vector2.new(0, 1),
                     Position = UDim2.new(0, 10, 1, -10),
-                    BackgroundColor3 = Library.Theme["Accent 4"],
                     Size = UDim2.new(1, -20, 0, 10),
+                    BackgroundColor3 = Library.Theme["Accent 4"],
                     BorderSizePixel = 0
                 })
 
@@ -3843,22 +3846,23 @@ do
             end
 
             function Slider:Set(Value)
+                if type(Value) ~= "number" or Value ~= Value then
+                    Value = Slider.Default
+                end
                 Slider.Value = Library:Round(math.clamp(Value, Slider.Min, Slider.Max), Slider.Decimals)
 
                 local barWidth = Items["RealSlider"].Instance.AbsoluteSize.X
-                if barWidth > 0 then
-                    local ratio = (Slider.Value - Slider.Min) / (Slider.Max - Slider.Min)
-                    Items["Accent"]:Tween({Size = UDim2.new(ratio, 0, 1, 0)}, TweenInfo.new(Library.Animation.Time, Enum.EasingStyle.Quart, Enum.EasingDirection.Out))
-                else
-                    Items["Accent"]:Tween({Size = UDim2.new(0, 0, 1, 0)}, TweenInfo.new(Library.Animation.Time, Enum.EasingStyle.Quart, Enum.EasingDirection.Out))
+                local ratio = 0
+                if barWidth > 0 and Slider.Max > Slider.Min then
+                    ratio = (Slider.Value - Slider.Min) / (Slider.Max - Slider.Min)
+                    ratio = math.clamp(ratio, 0, 1)
                 end
-                Items["Value"].Instance.Text = string.format("%s%s", Slider.Value, Slider.Suffix)
+                Items["Accent"]:Tween({Size = UDim2.new(ratio, 0, 1, 0)}, TweenInfo.new(Library.Animation.Time, Enum.EasingStyle.Quart, Enum.EasingDirection.Out))
 
-                if Slider.Value == Slider.Min then
-                    Items["Dragger"]:Tween({Position = UDim2.new(1, 10, 0.5, 0)})
-                else
-                    Items["Dragger"]:Tween({Position = UDim2.new(1, 5, 0.5, 0)})
-                end
+                local draggerOffset = (ratio == 0) and 10 or 5
+                Items["Dragger"]:Tween({Position = UDim2.new(ratio, draggerOffset, 0.5, 0)}, TweenInfo.new(Library.Animation.Time, Enum.EasingStyle.Quart, Enum.EasingDirection.Out))
+
+                Items["Value"].Instance.Text = string.format("%s%s", Slider.Value, Slider.Suffix)
 
                 Flags[Slider.Flag] = Slider.Value
                 Library:SafeCall(Slider.Callback, Slider.Value)
@@ -3871,10 +3875,16 @@ do
             function Slider:GetSize(Input)
                 local sliderBar = Items["RealSlider"].Instance
                 local barWidth = sliderBar.AbsoluteSize.X
-                if barWidth <= 0 then return Slider.Value end
+                if barWidth <= 0 then
+                    return Slider.Value
+                end
                 local relativeX = Input.Position.X - sliderBar.AbsolutePosition.X
                 local t = math.clamp(relativeX / barWidth, 0, 1)
-                return Slider.Min + (Slider.Max - Slider.Min) * t
+                local newValue = Slider.Min + (Slider.Max - Slider.Min) * t
+                if newValue ~= newValue then
+                    return Slider.Value
+                end
+                return newValue
             end
 
             function Slider:SetText(Text)
