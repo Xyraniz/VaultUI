@@ -23,39 +23,29 @@ local IsMobile = UserInputService.TouchEnabled or false
 
 local Library = {
     Flags = { },
-    MenuKeybind = tostring(Enum.KeyCode.X),
-
+    MenuKeybind = "None",
     Directory = "Avilon",
     Folders = {
         Assets = "/Assets",
         Configs = "/Configs"
     },
-
     FontSize = 14,
-
     Animation = {
         Time = 0.25,
         Style = "Quart",
         Direction = "Out"
     },
-
     Theme = nil,
-
     Threads = { },
     Connections = { },
     SetFlags = { },
-
     ThemingStuff = { },
     ThemeMap = { },
-
     OpenFrames = { },
-
     Holder = nil,
     UnusedHolder = nil,
-
     SearchItems = { },
     CurrentPage = nil,
-
     Font = nil
 }
 do
@@ -4938,7 +4928,7 @@ do
                     end
                 })
 
-                ConfigsSection:Label({Name = "UI Bind"}):Keybind({Flag = "UIBind", Mode = "Toggle", Default = Enum.KeyCode.RightShift, Callback = function(Value)
+                ConfigsSection:Label({Name = "UI Bind"}):Keybind({Flag = "UIBind", Mode = "Toggle", Default = "None", Callback = function(Value)
                     Library.MenuKeybind = Flags["UIBind"].Key
                 end})
 
