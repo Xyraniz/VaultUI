@@ -302,9 +302,46 @@ do
         if Self.Instance then
             if Self.Instance[Signal] then
                 if IsMobile and Signal == "MouseButton1Down" then
+                    local TouchStart
+                    local Moved = false
+                    local ChangedConnection
+
+                    local DragThreshold = 8
+
                     Connection = Self.Instance.InputBegan:Connect(function(Input)
                         if Input.UserInputType == Enum.UserInputType.Touch or Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                            Callback(Input)
+                            TouchStart = Input.Position
+                            Moved = false
+
+                            if ChangedConnection then
+                                ChangedConnection:Disconnect()
+                                ChangedConnection = nil
+                            end
+
+                            ChangedConnection = Input.Changed:Connect(function()
+                                if Input.UserInputState == Enum.UserInputState.Change then
+                                    if TouchStart and (Input.Position - TouchStart).Magnitude > DragThreshold then
+                                        Moved = true
+                                    end
+                                elseif Input.UserInputState == Enum.UserInputState.End then
+                                    if ChangedConnection then
+                                        ChangedConnection:Disconnect()
+                                        ChangedConnection = nil
+                                    end
+
+                                    local AbsPosition = Self.Instance.AbsolutePosition
+                                    local AbsSize = Self.Instance.AbsoluteSize
+
+                                    local WithinBounds = Input.Position.X >= AbsPosition.X and Input.Position.X <= AbsPosition.X + AbsSize.X
+                                        and Input.Position.Y >= AbsPosition.Y and Input.Position.Y <= AbsPosition.Y + AbsSize.Y
+
+                                    if not Moved and WithinBounds then
+                                        Callback(Input)
+                                    end
+
+                                    TouchStart = nil
+                                end
+                            end)
                         end
                     end)
                     table.insert(Library.Connections, Connection)
@@ -3096,11 +3133,9 @@ do
                 end)
             end
 
-            Items["Inactive"]:Connect("InputBegan", function(Input)
-                if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
-                    for Index, Value in Page.Window.Pages do
-                        Value:Turn(Value == Page)
-                    end
+            Items["Inactive"]:Connect("MouseButton1Down", function(Input)
+                for Index, Value in Page.Window.Pages do
+                    Value:Turn(Value == Page)
                 end
             end)
 
@@ -3343,11 +3378,9 @@ do
                 end)
             end
 
-            Items["Inactive"]:Connect("InputBegan", function(Input)
-                if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
-                    for Index, Value in Page.Page.Pages do
-                        Value:Turn(Value == Page)
-                    end
+            Items["Inactive"]:Connect("MouseButton1Down", function(Input)
+                for Index, Value in Page.Page.Pages do
+                    Value:Turn(Value == Page)
                 end
             end)
 
@@ -3917,7 +3950,7 @@ do
                     Name = "\0",
                     Parent = Items["Accent"].Instance,
                     AnchorPoint = Vector2.new(1, 0.5),
-                    Position = UDim2.new(1, 5, 0.5, 0),
+                    Position = UDim2.new(1, 0, 0.5, 0),
                     Size = UDim2.new(0, 15, 0, 15),
                     BorderSizePixel = 0,
                     BackgroundColor3 = Library.Theme["Accent 3"]
@@ -3986,8 +4019,7 @@ do
                 end
                 Items["Accent"]:Tween({Size = UDim2.new(ratio, 0, 1, 0)}, TweenInfo.new(Library.Animation.Time, Enum.EasingStyle.Quart, Enum.EasingDirection.Out))
 
-                local draggerOffset = (ratio == 0) and 10 or 5
-                Items["Dragger"]:Tween({Position = UDim2.new(ratio, draggerOffset, 0.5, 0)}, TweenInfo.new(Library.Animation.Time, Enum.EasingStyle.Quart, Enum.EasingDirection.Out))
+                Items["Dragger"]:Tween({Position = UDim2.new(ratio, 0, 0.5, 0)}, TweenInfo.new(Library.Animation.Time, Enum.EasingStyle.Quart, Enum.EasingDirection.Out))
 
                 Items["Value"].Instance.Text = string.format("%s%s", Slider.Value, Slider.Suffix)
 
