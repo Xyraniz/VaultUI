@@ -3096,9 +3096,20 @@ do
                 end)
             end
 
-            Items["Inactive"]:Connect("MouseButton1Click", function()
-                for Index, Value in Page.Window.Pages do
-                    Value:Turn(Value == Page)
+            Items["Inactive"]:Connect("InputBegan", function(Input)
+                if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
+                    local startPos = Input.Position
+                    local connection
+                    connection = UserInputService.InputEnded:Connect(function(EndInput)
+                        if EndInput.UserInputType == Input.UserInputType then
+                            if (EndInput.Position - startPos).Magnitude < 10 then
+                                for Index, Value in Page.Window.Pages do
+                                    Value:Turn(Value == Page)
+                                end
+                            end
+                            connection:Disconnect()
+                        end
+                    end)
                 end
             end)
 
@@ -3913,7 +3924,7 @@ do
                     Name = "\0",
                     Parent = Items["Accent"].Instance,
                     AnchorPoint = Vector2.new(1, 0.5),
-                    Position = UDim2.new(1, 5, 0.5, 0),
+                    Position = UDim2.new(1, 0, 0.5, 0),
                     Size = UDim2.new(0, 15, 0, 15),
                     BorderSizePixel = 0,
                     BackgroundColor3 = Library.Theme["Accent 3"]
