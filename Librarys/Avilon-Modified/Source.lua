@@ -177,6 +177,28 @@ do
             ["TextPrimary"] = Color3.fromRGB(255, 247, 250),
             ["TextSecondary"] = Color3.fromRGB(201, 172, 183),
             ["Border"] = Color3.fromRGB(63, 45, 53)
+        },
+        ["Dark"] = {
+            ["Accent"] = Color3.fromRGB(0, 120, 212),
+            ["Accent 2"] = Color3.fromRGB(20, 20, 25),
+            ["Accent 3"] = Color3.fromRGB(180, 180, 200),
+            ["Accent 4"] = Color3.fromRGB(220, 220, 230),
+            ["Background"] = Color3.fromRGB(10, 10, 12),
+            ["Foreground"] = Color3.fromRGB(18, 18, 22),
+            ["TextPrimary"] = Color3.fromRGB(255, 255, 255),
+            ["TextSecondary"] = Color3.fromRGB(170, 170, 180),
+            ["Border"] = Color3.fromRGB(30, 30, 35)
+        },
+        ["Ruby"] = {
+            ["Accent"] = Color3.fromRGB(200, 30, 30),
+            ["Accent 2"] = Color3.fromRGB(40, 18, 18),
+            ["Accent 3"] = Color3.fromRGB(255, 150, 150),
+            ["Accent 4"] = Color3.fromRGB(255, 220, 220),
+            ["Background"] = Color3.fromRGB(15, 10, 10),
+            ["Foreground"] = Color3.fromRGB(25, 16, 16),
+            ["TextPrimary"] = Color3.fromRGB(255, 240, 240),
+            ["TextSecondary"] = Color3.fromRGB(200, 170, 170),
+            ["Border"] = Color3.fromRGB(55, 30, 30)
         }
     }
 
@@ -2087,7 +2109,7 @@ do
                     Parent = Items["MainFrame"].Instance,
                     AnchorPoint = Vector2.new(0.5, 0.5),
                     Position = UDim2.new(0.5, 0, 0.5, 0),
-                    Size = UDim2.new(1, 42, 1, 42),
+                    Size = UDim2.new(1, 42, 0, 42),
                     ZIndex = 0,
                     Image = "http://www.roblox.com/asset/?id=18245826428",
                     ImageTransparency = 0.84,
