@@ -23,6 +23,7 @@ local IsMobile = UserInputService.TouchEnabled or false
 
 local Library = {
     Flags = { },
+    RemoteAssetCache = { },
     MenuKeybind = "None",
     Directory = "Avilon",
     Folders = {
@@ -136,6 +137,11 @@ do
         if not isfolder(Library.Directory .. Folder) then
             makefolder(Library.Directory .. Folder)
         end
+    end
+
+    local RemoteAssetsFolder = string.format("%s%s/RemoteAssets", Library.Directory, Library.Folders.Assets)
+    if not isfolder(RemoteAssetsFolder) then
+        pcall(makefolder, RemoteAssetsFolder)
     end
 
     local Themes = {
@@ -762,7 +768,58 @@ do
 
         Library:Connect(Object.MouseEnter, OnHoverEnter)
         Library:Connect(Object.MouseLeave, OnHoverLeave)
+    end    Library.SanitizeAssetName = function(Self, Value)
+        Value = tostring(Value or "")
+
+        if Value == "" then
+            return "asset"
+        end
+
+        Value = Value:gsub("^https?://", "")
+        Value = Value:gsub("[^%w%._%-]", "_")
+
+        if #Value > 120 then
+            Value = Value:sub(1, 120)
+        end
+
+        return Value
     end
+
+    Library.CacheRemoteAsset = function(Self, Asset)
+        if type(Asset) ~= "string" or Asset == "" then
+            return nil
+        end
+
+        if Library.RemoteAssetCache[Asset] then
+            return Library.RemoteAssetCache[Asset]
+        end
+
+        if not (isfile and writefile and getcustomasset and game and game.HttpGet) then
+            return Asset
+        end
+
+        local CachedPath = string.format("%s%s/RemoteAssets/%s.png", Library.Directory, Library.Folders.Assets, Library:SanitizeAssetName(Asset))
+
+        if not isfile(CachedPath) then
+            local Success, Content = pcall(function()
+                return game:HttpGet(Asset)
+            end)
+
+            if Success and type(Content) == "string" and Content ~= "" then
+                pcall(writefile, CachedPath, Content)
+            end
+        end
+
+        if isfile(CachedPath) then
+            local CustomAsset = getcustomasset(CachedPath)
+            Library.RemoteAssetCache[Asset] = CustomAsset
+            return CustomAsset
+        end
+
+        return Asset
+    end
+
+
 
     Library.NormalizeAsset = function(Self, Asset)
         if type(Asset) == "number" then
@@ -773,8 +830,15 @@ do
             return nil
         end
 
-        if string.find(Asset, "rbxassetid://", 1, true) or string.find(Asset, "http", 1, true) or string.find(Asset, "rbxthumb://", 1, true) then
+        if string.find(Asset, "rbxassetid://", 1, true) or string.find(Asset, "rbxthumb://", 1, true) then
             return Asset
+        end
+
+        if string.find(string.lower(Asset), "http", 1, true) == 1 then
+            local CachedAsset = Library:CacheRemoteAsset(Asset)
+            if CachedAsset then
+                return CachedAsset
+            end
         end
 
         local Digits = Asset:match("%d+")
@@ -2516,7 +2580,7 @@ do
 
             function Window:SetBackground(BackgroundData)
                 local Data = type(BackgroundData) == "table" and BackgroundData or {Image = BackgroundData}
-                local Asset = Library:NormalizeAsset(Data.Image or Data.Asset or Data.Id or Data.Background)
+                local Asset = Library:NormalizeAsset(Data.Image or Data.Asset or Data.Id or Data.Background or Data.BackgroundImage or Data.BackgroundAsset or Data.BackgroundId)
                 local Strength = Library:NormalizeUnitInterval(Data.Strength or Data.BackgroundStrength or Data.Visibility or Data.BackgroundVisibility, nil)
                 local SideStrength = Library:NormalizeUnitInterval(Data.SideStrength or Data.TabsStrength or Data.TabsBackgroundStrength or Data.SideBackgroundStrength, nil)
 
@@ -2652,6 +2716,12 @@ do
                     Strength = Strength,
                     TabsStrength = TabsStrength
                 })
+            end
+
+            function Window:SetBackgroundImage(Image, Options)
+                local Data = type(Options) == "table" and Options or { }
+                Data.Image = Image
+                return Window:SetBackground(Data)
             end
 
             function Window:SetGrid(Bool, Transparency)
