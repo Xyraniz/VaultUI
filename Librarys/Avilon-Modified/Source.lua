@@ -3096,11 +3096,9 @@ do
                 end)
             end
 
-            Items["Inactive"]:Connect("InputBegan", function(Input)
-                if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
-                    for Index, Value in Page.Window.Pages do
-                        Value:Turn(Value == Page)
-                    end
+            Items["Inactive"]:Connect("MouseButton1Click", function()
+                for Index, Value in Page.Window.Pages do
+                    Value:Turn(Value == Page)
                 end
             end)
 
@@ -3343,11 +3341,9 @@ do
                 end)
             end
 
-            Items["Inactive"]:Connect("InputBegan", function(Input)
-                if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
-                    for Index, Value in Page.Page.Pages do
-                        Value:Turn(Value == Page)
-                    end
+            Items["Inactive"]:Connect("MouseButton1Click", function()
+                for Index, Value in Page.Page.Pages do
+                    Value:Turn(Value == Page)
                 end
             end)
 
@@ -3986,7 +3982,7 @@ do
                 end
                 Items["Accent"]:Tween({Size = UDim2.new(ratio, 0, 1, 0)}, TweenInfo.new(Library.Animation.Time, Enum.EasingStyle.Quart, Enum.EasingDirection.Out))
 
-                local draggerOffset = (ratio == 0) and 10 or 5
+                local draggerOffset = 0
                 Items["Dragger"]:Tween({Position = UDim2.new(ratio, draggerOffset, 0.5, 0)}, TweenInfo.new(Library.Animation.Time, Enum.EasingStyle.Quart, Enum.EasingDirection.Out))
 
                 Items["Value"].Instance.Text = string.format("%s%s", Slider.Value, Slider.Suffix)
@@ -4894,8 +4890,8 @@ do
                     FontFace = Library.Font,
                     TextSize = Library.FontSize,
                     Parent = Items["Background"].Instance,
-                    Active = false,
-                    Selectable = false,
+                    Active = true,
+                    Selectable = true,
                     AnchorPoint = Vector2.new(0, 0.5),
                     PlaceholderColor3 = Library.Theme["TextSecondary"],
                     PlaceholderText = Textbox.Placeholder,
