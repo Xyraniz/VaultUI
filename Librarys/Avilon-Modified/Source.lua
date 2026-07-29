@@ -768,7 +768,9 @@ do
 
         Library:Connect(Object.MouseEnter, OnHoverEnter)
         Library:Connect(Object.MouseLeave, OnHoverLeave)
-    end    Library.SanitizeAssetName = function(Self, Value)
+    end
+
+    Library.SanitizeAssetName = function(Self, Value)
         Value = tostring(Value or "")
 
         if Value == "" then
@@ -784,7 +786,7 @@ do
 
         return Value
     end
-
+                    
     Library.CacheRemoteAsset = function(Self, Asset)
         if type(Asset) ~= "string" or Asset == "" then
             return nil
@@ -794,20 +796,62 @@ do
             return Library.RemoteAssetCache[Asset]
         end
 
-        if not (isfile and writefile and getcustomasset and game and game.HttpGet) then
-            return Asset
+        if not (isfile and writefile and getcustomasset) then
+            return nil
         end
 
         local CachedPath = string.format("%s%s/RemoteAssets/%s.png", Library.Directory, Library.Folders.Assets, Library:SanitizeAssetName(Asset))
 
-        if not isfile(CachedPath) then
-            local Success, Content = pcall(function()
+        if isfile(CachedPath) then
+            local CustomAsset = getcustomasset(CachedPath)
+            Library.RemoteAssetCache[Asset] = CustomAsset
+            return CustomAsset
+        end
+
+        local Content = nil
+        local Success = false
+
+        if not Success and game and game.HttpGet then
+            Success, Content = pcall(function()
                 return game:HttpGet(Asset)
             end)
+        end
 
-            if Success and type(Content) == "string" and Content ~= "" then
-                pcall(writefile, CachedPath, Content)
-            end
+        if not Success and syn and syn.request then
+            Success, Content = pcall(function()
+                local resp = syn.request({
+                    Url = Asset,
+                    Method = "GET",
+                    Headers = { ["Content-Type"] = "application/octet-stream" }
+                })
+                return resp.Body
+            end)
+        end
+
+        if not Success and http_request then
+            Success, Content = pcall(function()
+                local resp = http_request({
+                    Url = Asset,
+                    Method = "GET",
+                    Headers = { ["Content-Type"] = "application/octet-stream" }
+                })
+                return resp.Body
+            end)
+        end
+
+        if not Success and HttpService then
+            Success, Content = pcall(function()
+                local resp = HttpService:RequestAsync({
+                    Url = Asset,
+                    Method = "GET",
+                    Headers = { ["Content-Type"] = "application/octet-stream" }
+                })
+                return resp.Body
+            end)
+        end
+
+        if Success and type(Content) == "string" and Content ~= "" then
+            pcall(writefile, CachedPath, Content)
         end
 
         if isfile(CachedPath) then
@@ -816,10 +860,8 @@ do
             return CustomAsset
         end
 
-        return Asset
+        return nil
     end
-
-
 
     Library.NormalizeAsset = function(Self, Asset)
         if type(Asset) == "number" then
@@ -839,16 +881,17 @@ do
             if CachedAsset then
                 return CachedAsset
             end
+            return nil
         end
-
+                        
         local Digits = Asset:match("%d+")
         if Digits then
             return "rbxassetid://" .. Digits
         end
 
-        return Asset
+        return nil
     end
-
+                    
     Library.ResolveScaleType = function(Self, ScaleType)
         if typeof(ScaleType) == "EnumItem" then
             return ScaleType
