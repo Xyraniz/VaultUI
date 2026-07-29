@@ -296,56 +296,64 @@ do
         return NewThread
     end
 
+    Library.ConnectTapSafe = function(Self, Instance, Callback)
+        local TouchStart
+        local Moved = false
+        local ChangedConnection
+        local DragThreshold = 8
+
+        local Connection = Instance.InputBegan:Connect(function(Input)
+            if Input.UserInputType == Enum.UserInputType.Touch or Input.UserInputType == Enum.UserInputType.MouseButton1 then
+                TouchStart = Input.Position
+                Moved = false
+
+                if ChangedConnection then
+                    ChangedConnection:Disconnect()
+                    ChangedConnection = nil
+                end
+
+                ChangedConnection = Input.Changed:Connect(function()
+                    if Input.UserInputState == Enum.UserInputState.Change then
+                        if TouchStart and (Input.Position - TouchStart).Magnitude > DragThreshold then
+                            Moved = true
+                        end
+                    elseif Input.UserInputState == Enum.UserInputState.End then
+                        if ChangedConnection then
+                            ChangedConnection:Disconnect()
+                            ChangedConnection = nil
+                        end
+
+                        local AbsPosition = Instance.AbsolutePosition
+                        local AbsSize = Instance.AbsoluteSize
+
+                        local WithinBounds = Input.Position.X >= AbsPosition.X and Input.Position.X <= AbsPosition.X + AbsSize.X
+                            and Input.Position.Y >= AbsPosition.Y and Input.Position.Y <= AbsPosition.Y + AbsSize.Y
+
+                        if not Moved and WithinBounds then
+                            Callback(Input)
+                        end
+
+                        TouchStart = nil
+                    end
+                end)
+            end
+        end)
+
+        table.insert(Library.Connections, Connection)
+        return Connection
+    end
+
     Library.Connect = function(Self, Signal, Callback)
         local Connection
 
         if Self.Instance then
+            if Signal == "MouseButton1Down" and not Self.Instance:IsA("GuiButton") then
+                return Library:ConnectTapSafe(Self.Instance, Callback)
+            end
+
             if Self.Instance[Signal] then
                 if IsMobile and Signal == "MouseButton1Down" then
-                    local TouchStart
-                    local Moved = false
-                    local ChangedConnection
-
-                    local DragThreshold = 8
-
-                    Connection = Self.Instance.InputBegan:Connect(function(Input)
-                        if Input.UserInputType == Enum.UserInputType.Touch or Input.UserInputType == Enum.UserInputType.MouseButton1 then
-                            TouchStart = Input.Position
-                            Moved = false
-
-                            if ChangedConnection then
-                                ChangedConnection:Disconnect()
-                                ChangedConnection = nil
-                            end
-
-                            ChangedConnection = Input.Changed:Connect(function()
-                                if Input.UserInputState == Enum.UserInputState.Change then
-                                    if TouchStart and (Input.Position - TouchStart).Magnitude > DragThreshold then
-                                        Moved = true
-                                    end
-                                elseif Input.UserInputState == Enum.UserInputState.End then
-                                    if ChangedConnection then
-                                        ChangedConnection:Disconnect()
-                                        ChangedConnection = nil
-                                    end
-
-                                    local AbsPosition = Self.Instance.AbsolutePosition
-                                    local AbsSize = Self.Instance.AbsoluteSize
-
-                                    local WithinBounds = Input.Position.X >= AbsPosition.X and Input.Position.X <= AbsPosition.X + AbsSize.X
-                                        and Input.Position.Y >= AbsPosition.Y and Input.Position.Y <= AbsPosition.Y + AbsSize.Y
-
-                                    if not Moved and WithinBounds then
-                                        Callback(Input)
-                                    end
-
-                                    TouchStart = nil
-                                end
-                            end)
-                        end
-                    end)
-                    table.insert(Library.Connections, Connection)
-                    return Connection
+                    return Library:ConnectTapSafe(Self.Instance, Callback)
                 end
 
                 Connection = Self.Instance[Signal]:Connect(Callback)
@@ -3133,11 +3141,51 @@ do
                 end)
             end
 
-            Items["Inactive"]:Connect("MouseButton1Down", function(Input)
-                for Index, Value in Page.Window.Pages do
-                    Value:Turn(Value == Page)
-                end
-            end)
+            do
+                local TouchStart
+                local Moved = false
+                local DragThreshold = 8
+                local ChangedConnection
+
+                Items["Inactive"]:Connect("InputBegan", function(Input)
+                    if Input.UserInputType == Enum.UserInputType.MouseButton1 or Input.UserInputType == Enum.UserInputType.Touch then
+                        TouchStart = Input.Position
+                        Moved = false
+
+                        if ChangedConnection then
+                            ChangedConnection:Disconnect()
+                            ChangedConnection = nil
+                        end
+
+                        ChangedConnection = Input.Changed:Connect(function()
+                            if Input.UserInputState == Enum.UserInputState.Change then
+                                if TouchStart and (Input.Position - TouchStart).Magnitude > DragThreshold then
+                                    Moved = true
+                                end
+                            elseif Input.UserInputState == Enum.UserInputState.End then
+                                if ChangedConnection then
+                                    ChangedConnection:Disconnect()
+                                    ChangedConnection = nil
+                                end
+
+                                local AbsPosition = Items["Inactive"].Instance.AbsolutePosition
+                                local AbsSize = Items["Inactive"].Instance.AbsoluteSize
+
+                                local WithinBounds = Input.Position.X >= AbsPosition.X and Input.Position.X <= AbsPosition.X + AbsSize.X
+                                    and Input.Position.Y >= AbsPosition.Y and Input.Position.Y <= AbsPosition.Y + AbsSize.Y
+
+                                if not Moved and WithinBounds then
+                                    for Index, Value in Page.Window.Pages do
+                                        Value:Turn(Value == Page)
+                                    end
+                                end
+
+                                TouchStart = nil
+                            end
+                        end)
+                    end
+                end)
+            end
 
             if #Page.Window.Pages == 0 then
                 Page:Turn(true)
