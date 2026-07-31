@@ -808,7 +808,7 @@ do
 
         return Value
     end
-                    
+
     Library.CacheRemoteAsset = function(Self, Asset)
         if type(Asset) ~= "string" or Asset == "" then
             return nil
@@ -905,7 +905,7 @@ do
             end
             return nil
         end
-                        
+
         local Digits = Asset:match("%d+")
         if Digits then
             return "rbxassetid://" .. Digits
@@ -913,7 +913,7 @@ do
 
         return nil
     end
-                    
+
     Library.ResolveScaleType = function(Self, ScaleType)
         if typeof(ScaleType) == "EnumItem" then
             return ScaleType
@@ -3133,7 +3133,10 @@ do
                 Page = Self,
                 ColumnsData = { },
                 Items = { },
-                Active = false
+                Active = false,
+                IsLocked = false,
+                LockReason = nil,
+                LockOverlay = nil
             }
 
             local Items = { }
@@ -3327,6 +3330,10 @@ do
 
                     Page.Window.Items.ContentTitle.Instance.Text = Page.Name
                     Page.Window.Items.ContentDescription.Instance.Text = Page.Description
+
+                    if Page.IsLocked and Page.LockOverlay then
+                        Page.LockOverlay.Instance.Visible = true
+                    end
                 else
                     Items["Inactive"]:Tween({BackgroundTransparency = 1})
 
@@ -3357,6 +3364,75 @@ do
                     Value:Turn(Value == Page)
                 end
             end)
+
+            function Page:Lock(reason)
+                if Page.IsLocked then return end
+                Page.IsLocked = true
+                Page.LockReason = reason or "Locked"
+
+                local overlay = Library:Create("Frame", {
+                    Name = "\0",
+                    Parent = Items["Page"].Instance,
+                    Size = UDim2.new(1, 0, 1, 0),
+                    BackgroundColor3 = Color3.fromRGB(0, 0, 0),
+                    BackgroundTransparency = 0.55,
+                    ZIndex = 999,
+                    BorderSizePixel = 0,
+                    Visible = false
+                })
+
+                Library:Create("UICorner", {
+                    Name = "\0",
+                    Parent = overlay.Instance,
+                    CornerRadius = UDim.new(0, 8)
+                })
+
+                local blurImage = Library:Create("ImageLabel", {
+                    Name = "\0",
+                    Parent = overlay.Instance,
+                    Size = UDim2.new(1, 0, 1, 0),
+                    Image = "rbxassetid://18245826428",
+                    ImageTransparency = 0.55,
+                    BackgroundTransparency = 1,
+                    ScaleType = Enum.ScaleType.Slice,
+                    SliceCenter = Rect.new(Vector2.new(21, 21), Vector2.new(79, 79)),
+                    BorderSizePixel = 0
+                })
+
+                local lockIcon = Library:Create("ImageLabel", {
+                    Name = "\0",
+                    Parent = overlay.Instance,
+                    ImageColor3 = Library.Theme["Accent 3"],
+                    Image = "rbxassetid://6031098374",
+                    BackgroundTransparency = 1,
+                    AnchorPoint = Vector2.new(0.5, 0.5),
+                    Position = UDim2.new(0.5, 0, 0.4, 0),
+                    Size = UDim2.new(0, 54, 0, 54),
+                    BorderSizePixel = 0
+                }):AddToTheme({ImageColor3 = "Accent 3"})
+
+                local lockText = Library:Create("TextLabel", {
+                    Name = "\0",
+                    FontFace = Library.Font,
+                    TextSize = Library.FontSize + 1,
+                    Parent = overlay.Instance,
+                    TextColor3 = Library.Theme["Accent 3"],
+                    Text = reason or "Locked",
+                    BackgroundTransparency = 1,
+                    AnchorPoint = Vector2.new(0.5, 0.5),
+                    Position = UDim2.new(0.5, 0, 0.55, 0),
+                    Size = UDim2.new(0, 0, 0, 20),
+                    BorderSizePixel = 0,
+                    AutomaticSize = Enum.AutomaticSize.X,
+                    TextXAlignment = Enum.TextXAlignment.Center
+                }):AddToTheme({TextColor3 = "Accent 3"})
+
+                overlay.Instance.Visible = Page.Active
+
+                Page.LockOverlay = overlay
+
+                return overlay
+            end
 
             if #Page.Page.Pages == 0 then
                 Page:Turn(true)
