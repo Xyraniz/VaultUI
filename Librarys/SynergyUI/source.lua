@@ -391,16 +391,34 @@ function ControlFactory:new(parent, theme, updateThemeCallback, configHandler)
 end
 
 function ControlFactory:createLabel(text)
+    local frame = Instance.new("Frame")
+    frame.Parent = self.parent
+    frame.BackgroundColor3 = self.theme.Element
+    frame.Size = UDim2.new(1, 0, 0, self.theme.LabelHeight)
+    addCorner(frame, self.theme.CornerRadius)
+    local stroke = addStroke(frame, self.theme.StrokeColor, 1, 0.82)
+
+    local accent = Instance.new("Frame")
+    accent.Parent = frame
+    accent.BackgroundColor3 = self.theme.Accent
+    accent.BorderSizePixel = 0
+    accent.AnchorPoint = Vector2.new(0, 0.5)
+    accent.Position = UDim2.new(0, self.theme.PaddingHorizontal / 2, 0.5, 0)
+    accent.Size = UDim2.new(0, 3, 0, self.theme.LabelHeight - 20)
+    addCorner(accent, 999)
+
     local label = Instance.new("TextLabel")
-    label.Parent = self.parent
+    label.Parent = frame
     label.BackgroundTransparency = 1
-    label.Size = UDim2.new(1, 0, 0, self.theme.LabelHeight)
+    label.Position = UDim2.new(0, self.theme.PaddingHorizontal + 8, 0, 0)
+    label.Size = UDim2.new(1, -(self.theme.PaddingHorizontal * 2 + 8), 1, 0)
     label.Font = self.theme.Font
     label.Text = text
     label.TextColor3 = self.theme.Text
     label.TextSize = self.theme.TextSizeNormal
+    label.TextWrapped = true
     label.TextXAlignment = Enum.TextXAlignment.Left
-    table.insert(self.createdControls, {type = "label", instance = label})
+    table.insert(self.createdControls, {type = "label", frame = frame, instance = label, stroke = stroke, accent = accent})
     return label
 end
 
@@ -860,7 +878,7 @@ function ControlFactory:createDropdown(options)
     icon.Position = UDim2.new(1, -34, 0.5, -8)
     icon.Size = UDim2.new(0, 20, 0, 20)
     icon.Font = Enum.Font.GothamBold
-    icon.Text = "v"
+    icon.Text = "▾"
     icon.TextColor3 = self.theme.TextMuted
     icon.TextSize = 14
 
@@ -897,6 +915,7 @@ function ControlFactory:createDropdown(options)
 
     local isOpen = false
     local optionButtons = {}
+    local flagObj
 
     local function updateButtonText()
         if multi then
@@ -956,7 +975,7 @@ function ControlFactory:createDropdown(options)
                         isOpen = false
                         createTween(frame, 0.25, {Size = UDim2.new(1, 0, 0, self.theme.DropdownHeight)})
                         container.Size = UDim2.new(1, 0, 0, 0)
-                        icon.Text = "v"
+                        icon.Text = "▾"
                         pcall(options.Callback, opt)
                         if self.configHandler then self.configHandler:Set(flag, selected) end
                     end
@@ -984,15 +1003,15 @@ function ControlFactory:createDropdown(options)
             local targetHeight = self.theme.DropdownHeight + expandedHeight
             createTween(frame, 0.25, {Size = UDim2.new(1, 0, 0, targetHeight)})
             container.Size = UDim2.new(1, 0, 0, expandedHeight)
-            icon.Text = "^"
+            icon.Text = "▴"
         else
             createTween(frame, 0.25, {Size = UDim2.new(1, 0, 0, self.theme.DropdownHeight)})
             container.Size = UDim2.new(1, 0, 0, 0)
-            icon.Text = "v"
+            icon.Text = "▾"
         end
     end)
 
-    local flagObj = {
+    flagObj = {
         GetValue = function()
             if multi then
                 local res = {}
@@ -1105,7 +1124,7 @@ function ControlFactory:createChecklist(options)
     icon.Position = UDim2.new(1, -34, 0.5, -8)
     icon.Size = UDim2.new(0, 20, 0, 20)
     icon.Font = Enum.Font.GothamBold
-    icon.Text = "v"
+    icon.Text = "▾"
     icon.TextColor3 = self.theme.TextMuted
     icon.TextSize = 14
 
@@ -1203,11 +1222,11 @@ function ControlFactory:createChecklist(options)
             local targetHeight = self.theme.ChecklistHeight + expandedHeight
             createTween(frame, 0.25, {Size = UDim2.new(1, 0, 0, targetHeight)})
             container.Size = UDim2.new(1, 0, 0, expandedHeight)
-            icon.Text = "^"
+            icon.Text = "▴"
         else
             createTween(frame, 0.25, {Size = UDim2.new(1, 0, 0, self.theme.ChecklistHeight)})
             container.Size = UDim2.new(1, 0, 0, 0)
-            icon.Text = "v"
+            icon.Text = "▾"
         end
     end)
 
@@ -1923,7 +1942,7 @@ function ControlFactory:createImage(options)
     arrow.Position = UDim2.new(1, -34, 0.5, -8)
     arrow.Size = UDim2.new(0, 20, 0, 20)
     arrow.Font = Enum.Font.GothamBold
-    arrow.Text = "v"
+    arrow.Text = "▾"
     arrow.TextColor3 = self.theme.TextMuted
     arrow.TextSize = 14
 
@@ -1971,11 +1990,11 @@ function ControlFactory:createImage(options)
         if expanded then
             createTween(frame, 0.25, {Size = UDim2.new(1, 0, 0, 44 + container.Size.Y.Offset)})
             container.Visible = true
-            arrow.Text = "^"
+            arrow.Text = "▴"
         else
             createTween(frame, 0.25, {Size = UDim2.new(1, 0, 0, 44)})
             container.Visible = false
-            arrow.Text = "v"
+            arrow.Text = "▾"
         end
     end)
 
@@ -2009,7 +2028,7 @@ function ControlFactory:createVideo(options)
     arrow.Position = UDim2.new(1, -34, 0.5, -8)
     arrow.Size = UDim2.new(0, 20, 0, 20)
     arrow.Font = Enum.Font.GothamBold
-    arrow.Text = "v"
+    arrow.Text = "▾"
     arrow.TextColor3 = self.theme.TextMuted
     arrow.TextSize = 14
 
@@ -2073,11 +2092,11 @@ function ControlFactory:createVideo(options)
         if expanded then
             createTween(frame, 0.25, {Size = UDim2.new(1, 0, 0, 44 + container.Size.Y.Offset)})
             container.Visible = true
-            arrow.Text = "^"
+            arrow.Text = "▴"
         else
             createTween(frame, 0.25, {Size = UDim2.new(1, 0, 0, 44)})
             container.Visible = false
-            arrow.Text = "v"
+            arrow.Text = "▾"
         end
     end)
 
@@ -2102,7 +2121,7 @@ local Themes = {
         PaddingVertical = 8,
         TextSizeNormal = 14,
         TextSizeSmall = 13,
-        LabelHeight = 24,
+        LabelHeight = 38,
         ButtonHeight = 42,
         ToggleHeight = 34,
         ToggleWidth = 50,
@@ -2137,7 +2156,7 @@ local Themes = {
         PaddingVertical = 8,
         TextSizeNormal = 14,
         TextSizeSmall = 13,
-        LabelHeight = 24,
+        LabelHeight = 38,
         ButtonHeight = 42,
         ToggleHeight = 34,
         ToggleWidth = 50,
@@ -2172,7 +2191,7 @@ local Themes = {
         PaddingVertical = 8,
         TextSizeNormal = 14,
         TextSizeSmall = 13,
-        LabelHeight = 24,
+        LabelHeight = 38,
         ButtonHeight = 42,
         ToggleHeight = 34,
         ToggleWidth = 50,
@@ -2207,7 +2226,7 @@ local Themes = {
         PaddingVertical = 8,
         TextSizeNormal = 14,
         TextSizeSmall = 13,
-        LabelHeight = 24,
+        LabelHeight = 38,
         ButtonHeight = 42,
         ToggleHeight = 34,
         ToggleWidth = 50,
@@ -2242,7 +2261,7 @@ local Themes = {
         PaddingVertical = 8,
         TextSizeNormal = 14,
         TextSizeSmall = 13,
-        LabelHeight = 24,
+        LabelHeight = 38,
         ButtonHeight = 42,
         ToggleHeight = 34,
         ToggleWidth = 50,
@@ -2277,7 +2296,7 @@ local Themes = {
         PaddingVertical = 8,
         TextSizeNormal = 14,
         TextSizeSmall = 13,
-        LabelHeight = 24,
+        LabelHeight = 38,
         ButtonHeight = 42,
         ToggleHeight = 34,
         ToggleWidth = 50,
@@ -2312,7 +2331,7 @@ local Themes = {
         PaddingVertical = 8,
         TextSizeNormal = 14,
         TextSizeSmall = 13,
-        LabelHeight = 24,
+        LabelHeight = 38,
         ButtonHeight = 42,
         ToggleHeight = 34,
         ToggleWidth = 50,
@@ -2347,7 +2366,7 @@ local Themes = {
         PaddingVertical = 8,
         TextSizeNormal = 14,
         TextSizeSmall = 13,
-        LabelHeight = 24,
+        LabelHeight = 38,
         ButtonHeight = 42,
         ToggleHeight = 34,
         ToggleWidth = 50,
@@ -2382,7 +2401,7 @@ local Themes = {
         PaddingVertical = 8,
         TextSizeNormal = 14,
         TextSizeSmall = 13,
-        LabelHeight = 24,
+        LabelHeight = 38,
         ButtonHeight = 42,
         ToggleHeight = 34,
         ToggleWidth = 50,
@@ -2417,7 +2436,7 @@ local Themes = {
         PaddingVertical = 8,
         TextSizeNormal = 14,
         TextSizeSmall = 13,
-        LabelHeight = 24,
+        LabelHeight = 38,
         ButtonHeight = 42,
         ToggleHeight = 34,
         ToggleWidth = 50,
@@ -2452,7 +2471,7 @@ local Themes = {
         PaddingVertical = 8,
         TextSizeNormal = 14,
         TextSizeSmall = 13,
-        LabelHeight = 24,
+        LabelHeight = 38,
         ButtonHeight = 42,
         ToggleHeight = 34,
         ToggleWidth = 50,
@@ -2487,7 +2506,7 @@ local Themes = {
         PaddingVertical = 8,
         TextSizeNormal = 14,
         TextSizeSmall = 13,
-        LabelHeight = 24,
+        LabelHeight = 38,
         ButtonHeight = 42,
         ToggleHeight = 34,
         ToggleWidth = 50,
@@ -2522,7 +2541,7 @@ local Themes = {
         PaddingVertical = 8,
         TextSizeNormal = 14,
         TextSizeSmall = 13,
-        LabelHeight = 24,
+        LabelHeight = 38,
         ButtonHeight = 42,
         ToggleHeight = 34,
         ToggleWidth = 50,
@@ -2557,7 +2576,7 @@ local Themes = {
         PaddingVertical = 8,
         TextSizeNormal = 14,
         TextSizeSmall = 13,
-        LabelHeight = 24,
+        LabelHeight = 38,
         ButtonHeight = 42,
         ToggleHeight = 34,
         ToggleWidth = 50,
@@ -2592,7 +2611,7 @@ local Themes = {
         PaddingVertical = 8,
         TextSizeNormal = 14,
         TextSizeSmall = 13,
-        LabelHeight = 24,
+        LabelHeight = 38,
         ButtonHeight = 42,
         ToggleHeight = 34,
         ToggleWidth = 50,
@@ -2627,7 +2646,7 @@ local Themes = {
         PaddingVertical = 8,
         TextSizeNormal = 14,
         TextSizeSmall = 13,
-        LabelHeight = 24,
+        LabelHeight = 38,
         ButtonHeight = 42,
         ToggleHeight = 34,
         ToggleWidth = 50,
@@ -2771,6 +2790,15 @@ function SynergyUI:CreateWindow(options)
     addCorner(topBar, window.Theme.CornerRadius)
     topBar.ZIndex = 10
 
+    local topBarMask = Instance.new("Frame")
+    topBarMask.Name = "TopBarMask"
+    topBarMask.Parent = topBar
+    topBarMask.BackgroundColor3 = window.Theme.Sidebar
+    topBarMask.BorderSizePixel = 0
+    topBarMask.Position = UDim2.new(0, 0, 1, -window.Theme.CornerRadius)
+    topBarMask.Size = UDim2.new(1, 0, 0, window.Theme.CornerRadius)
+    topBarMask.ZIndex = 9
+
     local topBarSep = Instance.new("Frame")
     topBarSep.Parent = topBar
     topBarSep.BackgroundColor3 = window.Theme.StrokeColor
@@ -2792,6 +2820,7 @@ function SynergyUI:CreateWindow(options)
     titleLabel.ZIndex = 10
 
     local controlContainer = Instance.new("Frame")
+    controlContainer.Name = "ControlContainer"
     controlContainer.Parent = topBar
     controlContainer.BackgroundTransparency = 1
     controlContainer.Position = UDim2.new(1, -88, 0, 0)
@@ -2799,32 +2828,36 @@ function SynergyUI:CreateWindow(options)
     controlContainer.ZIndex = 10
 
     local minBtn = Instance.new("TextButton")
+    minBtn.Name = "MinimizeButton"
     minBtn.Parent = controlContainer
-    minBtn.BackgroundColor3 = Color3.fromRGB(255, 180, 50)
-    minBtn.BackgroundTransparency = 0.72
+    minBtn.BackgroundColor3 = window.Theme.ElementDark
+    minBtn.BackgroundTransparency = 0.35
     minBtn.Position = UDim2.new(0, 14, 0.5, -10)
     minBtn.Size = UDim2.new(0, 20, 0, 20)
     minBtn.Font = Enum.Font.GothamBold
     minBtn.Text = "-"
-    minBtn.TextColor3 = Color3.fromRGB(255, 210, 120)
+    minBtn.TextColor3 = window.Theme.TextMuted
     minBtn.TextSize = 16
     minBtn.ZIndex = 10
     addCorner(minBtn, 999)
-    addHoverEffect(minBtn, minBtn.BackgroundColor3, Color3.fromRGB(255, 200, 100), false)
+    addStroke(minBtn, window.Theme.StrokeColor, 1, 0.6)
+    addHoverEffect(minBtn, minBtn.BackgroundColor3, window.Theme.HoverColor, false)
 
     local closeBtn = Instance.new("TextButton")
+    closeBtn.Name = "CloseButton"
     closeBtn.Parent = controlContainer
-    closeBtn.BackgroundColor3 = Color3.fromRGB(255, 85, 85)
-    closeBtn.BackgroundTransparency = 0.72
+    closeBtn.BackgroundColor3 = window.Theme.ElementDark
+    closeBtn.BackgroundTransparency = 0.35
     closeBtn.Position = UDim2.new(0, 50, 0.5, -10)
     closeBtn.Size = UDim2.new(0, 20, 0, 20)
     closeBtn.Font = Enum.Font.GothamBold
     closeBtn.Text = "X"
-    closeBtn.TextColor3 = Color3.fromRGB(255, 160, 160)
+    closeBtn.TextColor3 = window.Theme.TextMuted
     closeBtn.TextSize = 11
     closeBtn.ZIndex = 10
     addCorner(closeBtn, 999)
-    addHoverEffect(closeBtn, closeBtn.BackgroundColor3, Color3.fromRGB(255, 120, 120), false)
+    addStroke(closeBtn, window.Theme.StrokeColor, 1, 0.6)
+    addHoverEffect(closeBtn, closeBtn.BackgroundColor3, window.Theme.HoverColor, false)
 
     local sidebar = Instance.new("ScrollingFrame")
     sidebar.Name = "Sidebar"
@@ -2842,6 +2875,15 @@ function SynergyUI:CreateWindow(options)
     sidebar.ElasticBehavior = Enum.ElasticBehavior.WhenScrollable
     sidebar.ClipsDescendants = true
     addCorner(sidebar, window.Theme.CornerRadius)
+
+    local sidebarMask = Instance.new("Frame")
+    sidebarMask.Name = "SidebarMask"
+    sidebarMask.Parent = sidebar
+    sidebarMask.BackgroundColor3 = window.Theme.Sidebar
+    sidebarMask.BorderSizePixel = 0
+    sidebarMask.Position = UDim2.new(1, -window.Theme.CornerRadius, 0, 0)
+    sidebarMask.Size = UDim2.new(0, window.Theme.CornerRadius, 1, 0)
+    sidebarMask.ZIndex = 4
 
     local sidebarLayout = Instance.new("UIListLayout")
     sidebarLayout.Parent = sidebar
@@ -3026,8 +3068,26 @@ function SynergyUI:CreateWindow(options)
         self.MainFrame.BackgroundColor3 = newTheme.Background
         local stroke = self.MainFrame:FindFirstChild("UIStroke")
         if stroke then stroke.Color = newTheme.Accent end
-        self.MainFrame:FindFirstChild("TopBar").BackgroundColor3 = newTheme.Sidebar
-        self.MainFrame:FindFirstChild("TopBar"):FindFirstChild("TextLabel").TextColor3 = newTheme.Accent
+        local topBarRef = self.MainFrame:FindFirstChild("TopBar")
+        topBarRef.BackgroundColor3 = newTheme.Sidebar
+        topBarRef:FindFirstChild("TextLabel").TextColor3 = newTheme.Accent
+        local controlContainerRef = topBarRef:FindFirstChild("ControlContainer")
+        if controlContainerRef then
+            local minBtnRef = controlContainerRef:FindFirstChild("MinimizeButton")
+            local closeBtnRef = controlContainerRef:FindFirstChild("CloseButton")
+            if minBtnRef then
+                minBtnRef.BackgroundColor3 = newTheme.ElementDark
+                minBtnRef.TextColor3 = newTheme.TextMuted
+                local minStroke = minBtnRef:FindFirstChild("UIStroke")
+                if minStroke then minStroke.Color = newTheme.StrokeColor end
+            end
+            if closeBtnRef then
+                closeBtnRef.BackgroundColor3 = newTheme.ElementDark
+                closeBtnRef.TextColor3 = newTheme.TextMuted
+                local closeStroke = closeBtnRef:FindFirstChild("UIStroke")
+                if closeStroke then closeStroke.Color = newTheme.StrokeColor end
+            end
+        end
         self.MainFrame:FindFirstChild("Sidebar").BackgroundColor3 = newTheme.Sidebar
         self.MainFrame:FindFirstChild("Sidebar").ScrollBarImageColor3 = newTheme.Accent
         self.MainFrame:FindFirstChild("ContentArea").BackgroundColor3 = newTheme.Background
@@ -3053,6 +3113,9 @@ function SynergyUI:CreateWindow(options)
             for _, control in ipairs(tab.Controls) do
                 if control.type == "label" then
                     control.instance.TextColor3 = newTheme.Text
+                    if control.frame then control.frame.BackgroundColor3 = newTheme.Element end
+                    if control.stroke then control.stroke.Color = newTheme.StrokeColor end
+                    if control.accent then control.accent.BackgroundColor3 = newTheme.Accent end
                 elseif control.type == "section" then
                     control.instance.TextColor3 = newTheme.Accent
                     control.instance.Font = newTheme.Font
