@@ -3209,20 +3209,42 @@ function SynergyUI:CreateWindow(options)
     end
 
     local iconMap = {}
-    if options.IconSet then
-        local baseUrl = "https://raw.githubusercontent.com/Synergy-Team-Official/SynergyUI-Lib/refs/heads/main/Icons/"
-        local iconUrl = baseUrl .. options.IconSet .. "/dist/Icons.lua"
-        local iconData = nil
-        if request then
-            local s, r = pcall(function() return request({Url = iconUrl, Method = "GET"}).Body end)
-            if s then iconData = r end
+    if options.IconSet ~= false then
+        local commitRef = "46d30c19ba7bc601d6ec794a48dc3a89568b1eec"
+        local baseUrl = "https://raw.githubusercontent.com/Footagesus/Icons/" .. commitRef .. "/"
+        local fetch = request or (syn and syn.request) or (http and http.request) or http_request
+
+        local function fetchIconSet(setName)
+            local iconUrl = baseUrl .. setName .. "/dist/Icons.lua"
+            local body = nil
+            if fetch then
+                local ok, res = pcall(function() return fetch({Url = iconUrl, Method = "GET"}) end)
+                if ok and res and res.Body then body = res.Body end
+            end
+            if not body then
+                local ok, res = pcall(game.HttpGet, game, iconUrl)
+                if ok then body = res end
+            end
+            if not body then return nil end
+            local loadFunc = loadstring(body)
+            if not loadFunc then return nil end
+            local ok, loadedMap = pcall(loadFunc)
+            if ok and type(loadedMap) == "table" then return loadedMap end
+            return nil
         end
-        if iconData then
-            local loadFunc = loadstring(iconData)
-            if loadFunc then
-                local loadedMap = loadFunc()
-                if type(loadedMap) == "table" then
-                    iconMap = loadedMap
+
+        local setsToLoad = {"lucide", "gravity"}
+        if type(options.IconSet) == "string" then
+            setsToLoad = {options.IconSet}
+        end
+
+        for _, setName in ipairs(setsToLoad) do
+            local loadedMap = fetchIconSet(setName)
+            if loadedMap then
+                for iconName, assetId in pairs(loadedMap) do
+                    if iconMap[iconName] == nil then
+                        iconMap[iconName] = assetId
+                    end
                 end
             end
         end
