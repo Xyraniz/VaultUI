@@ -2878,11 +2878,11 @@ function SynergyUI:CreateWindow(options)
 
     local sidebarMask = Instance.new("Frame")
     sidebarMask.Name = "SidebarMask"
-    sidebarMask.Parent = sidebar
+    sidebarMask.Parent = mainFrame
     sidebarMask.BackgroundColor3 = window.Theme.Sidebar
     sidebarMask.BorderSizePixel = 0
-    sidebarMask.Position = UDim2.new(1, -window.Theme.CornerRadius, 0, 0)
-    sidebarMask.Size = UDim2.new(0, window.Theme.CornerRadius, 1, 0)
+    sidebarMask.Position = UDim2.new(0, 150 - window.Theme.CornerRadius, 0, 42)
+    sidebarMask.Size = UDim2.new(0, window.Theme.CornerRadius, 1, -42 - strokeThickness)
     sidebarMask.ZIndex = 4
 
     local sidebarLayout = Instance.new("UIListLayout")
