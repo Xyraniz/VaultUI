@@ -60,6 +60,50 @@ local function addHoverEffect(button, originalColor, hoverColor, useScale)
     end)
 end
 
+local function createChevron(parent, color)
+    local holder = Instance.new("Frame")
+    holder.Name = "Chevron"
+    holder.Parent = parent
+    holder.BackgroundTransparency = 1
+    holder.AnchorPoint = Vector2.new(0.5, 0.5)
+    holder.Position = UDim2.new(1, -24, 0.5, 0)
+    holder.Size = UDim2.new(0, 20, 0, 20)
+    holder.Rotation = 0
+
+    local left = Instance.new("Frame")
+    left.Name = "Left"
+    left.Parent = holder
+    left.AnchorPoint = Vector2.new(0.5, 0.5)
+    left.BackgroundColor3 = color
+    left.BackgroundTransparency = 0
+    left.BorderSizePixel = 0
+    left.Position = UDim2.new(0.5, -4, 0.5, -1)
+    left.Rotation = 45
+    left.Size = UDim2.new(0, 9, 0, 2)
+    addCorner(left, 2)
+
+    local right = Instance.new("Frame")
+    right.Name = "Right"
+    right.Parent = holder
+    right.AnchorPoint = Vector2.new(0.5, 0.5)
+    right.BackgroundColor3 = color
+    right.BackgroundTransparency = 0
+    right.BorderSizePixel = 0
+    right.Position = UDim2.new(0.5, 4, 0.5, -1)
+    right.Rotation = -45
+    right.Size = UDim2.new(0, 9, 0, 2)
+    addCorner(right, 2)
+
+    return holder
+end
+
+local function setChevronColor(chevron, color)
+    local left = chevron:FindFirstChild("Left")
+    local right = chevron:FindFirstChild("Right")
+    if left then left.BackgroundColor3 = color end
+    if right then right.BackgroundColor3 = color end
+end
+
 local function ripple(button, x, y)
     task.spawn(function()
         local circle = Instance.new("ImageLabel")
@@ -884,15 +928,7 @@ function ControlFactory:createDropdown(options)
     btn.TextXAlignment = Enum.TextXAlignment.Left
     btn.Position = UDim2.new(0, self.theme.PaddingHorizontal, 0, 0)
 
-    local icon = Instance.new("TextLabel")
-    icon.Parent = frame
-    icon.BackgroundTransparency = 1
-    icon.Position = UDim2.new(1, -34, 0.5, -8)
-    icon.Size = UDim2.new(0, 20, 0, 20)
-    icon.Font = Enum.Font.GothamBold
-    icon.Text = "▾"
-    icon.TextColor3 = self.theme.TextMuted
-    icon.TextSize = 14
+    local icon = createChevron(frame, self.theme.TextMuted)
 
     local container = Instance.new("ScrollingFrame")
     container.Parent = frame
@@ -990,7 +1026,7 @@ function ControlFactory:createDropdown(options)
                         isOpen = false
                         createTween(frame, 0.25, {Size = UDim2.new(1, 0, 0, self.theme.DropdownHeight)})
                         container.Size = UDim2.new(1, 0, 0, 0)
-                        icon.Text = "▾"
+                        createTween(icon, 0.18, {Rotation = 0})
                         pcall(options.Callback, opt)
                         if self.configHandler then self.configHandler:Set(flag, selected) end
                     end
@@ -1018,11 +1054,11 @@ function ControlFactory:createDropdown(options)
             local targetHeight = self.theme.DropdownHeight + expandedHeight
             createTween(frame, 0.25, {Size = UDim2.new(1, 0, 0, targetHeight)})
             container.Size = UDim2.new(1, 0, 0, expandedHeight)
-            icon.Text = "▴"
+            createTween(icon, 0.18, {Rotation = 180})
         else
             createTween(frame, 0.25, {Size = UDim2.new(1, 0, 0, self.theme.DropdownHeight)})
             container.Size = UDim2.new(1, 0, 0, 0)
-            icon.Text = "▾"
+            createTween(icon, 0.18, {Rotation = 0})
         end
     end)
 
@@ -1134,15 +1170,7 @@ function ControlFactory:createChecklist(options)
     countLabel.TextSize = self.theme.TextSizeSmall
     countLabel.TextXAlignment = Enum.TextXAlignment.Right
 
-    local icon = Instance.new("TextLabel")
-    icon.Parent = frame
-    icon.BackgroundTransparency = 1
-    icon.Position = UDim2.new(1, -34, 0.5, -8)
-    icon.Size = UDim2.new(0, 20, 0, 20)
-    icon.Font = Enum.Font.GothamBold
-    icon.Text = "▾"
-    icon.TextColor3 = self.theme.TextMuted
-    icon.TextSize = 14
+    local icon = createChevron(frame, self.theme.TextMuted)
 
     local container = Instance.new("ScrollingFrame")
     container.Parent = frame
@@ -1241,11 +1269,11 @@ function ControlFactory:createChecklist(options)
             local targetHeight = self.theme.ChecklistHeight + expandedHeight
             createTween(frame, 0.25, {Size = UDim2.new(1, 0, 0, targetHeight)})
             container.Size = UDim2.new(1, 0, 0, expandedHeight)
-            icon.Text = "▴"
+            createTween(icon, 0.18, {Rotation = 180})
         else
             createTween(frame, 0.25, {Size = UDim2.new(1, 0, 0, self.theme.ChecklistHeight)})
             container.Size = UDim2.new(1, 0, 0, 0)
-            icon.Text = "▾"
+            createTween(icon, 0.18, {Rotation = 0})
         end
     end)
 
@@ -1969,15 +1997,7 @@ function ControlFactory:createImage(options)
     title.TextSize = self.theme.TextSizeNormal
     title.TextXAlignment = Enum.TextXAlignment.Left
 
-    local arrow = Instance.new("TextLabel")
-    arrow.Parent = frame
-    arrow.BackgroundTransparency = 1
-    arrow.Position = UDim2.new(1, -34, 0.5, -8)
-    arrow.Size = UDim2.new(0, 20, 0, 20)
-    arrow.Font = Enum.Font.GothamBold
-    arrow.Text = "▾"
-    arrow.TextColor3 = self.theme.TextMuted
-    arrow.TextSize = 14
+    local arrow = createChevron(frame, self.theme.TextMuted)
 
     local container = Instance.new("Frame")
     container.Parent = frame
@@ -2025,11 +2045,11 @@ function ControlFactory:createImage(options)
         if expanded then
             createTween(frame, 0.25, {Size = UDim2.new(1, 0, 0, 44 + container.Size.Y.Offset)})
             container.Visible = true
-            arrow.Text = "▴"
+            createTween(arrow, 0.18, {Rotation = 180})
         else
             createTween(frame, 0.25, {Size = UDim2.new(1, 0, 0, 44)})
             container.Visible = false
-            arrow.Text = "▾"
+            createTween(arrow, 0.18, {Rotation = 0})
         end
     end)
 
@@ -2058,15 +2078,7 @@ function ControlFactory:createVideo(options)
     title.TextSize = self.theme.TextSizeNormal
     title.TextXAlignment = Enum.TextXAlignment.Left
 
-    local arrow = Instance.new("TextLabel")
-    arrow.Parent = frame
-    arrow.BackgroundTransparency = 1
-    arrow.Position = UDim2.new(1, -34, 0.5, -8)
-    arrow.Size = UDim2.new(0, 20, 0, 20)
-    arrow.Font = Enum.Font.GothamBold
-    arrow.Text = "▾"
-    arrow.TextColor3 = self.theme.TextMuted
-    arrow.TextSize = 14
+    local arrow = createChevron(frame, self.theme.TextMuted)
 
     local container = Instance.new("Frame")
     container.Parent = frame
@@ -2131,11 +2143,11 @@ function ControlFactory:createVideo(options)
         if expanded then
             createTween(frame, 0.25, {Size = UDim2.new(1, 0, 0, 44 + container.Size.Y.Offset)})
             container.Visible = true
-            arrow.Text = "▴"
+            createTween(arrow, 0.18, {Rotation = 180})
         else
             createTween(frame, 0.25, {Size = UDim2.new(1, 0, 0, 44)})
             container.Visible = false
-            arrow.Text = "▾"
+            createTween(arrow, 0.18, {Rotation = 0})
         end
     end)
 
@@ -2178,10 +2190,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.08,
-        ElementDarkTransparency = 0.15,
-        SidebarTransparency = 0.1,
-        BackgroundTransparency = 0.06,
+        ElementTransparency = 0.22,
+        ElementDarkTransparency = 0.32,
+        SidebarTransparency = 0.28,
+        BackgroundTransparency = 0.14,
         StrokeTransparency = 0.78,
     },
     Dark = {
@@ -2218,10 +2230,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.08,
-        ElementDarkTransparency = 0.15,
-        SidebarTransparency = 0.1,
-        BackgroundTransparency = 0.06,
+        ElementTransparency = 0.22,
+        ElementDarkTransparency = 0.32,
+        SidebarTransparency = 0.28,
+        BackgroundTransparency = 0.14,
         StrokeTransparency = 0.78,
     },
     Cyberpunk = {
@@ -2258,10 +2270,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.08,
-        ElementDarkTransparency = 0.15,
-        SidebarTransparency = 0.1,
-        BackgroundTransparency = 0.06,
+        ElementTransparency = 0.22,
+        ElementDarkTransparency = 0.32,
+        SidebarTransparency = 0.28,
+        BackgroundTransparency = 0.14,
         StrokeTransparency = 0.78,
     },
     TokyoNight = {
@@ -2298,10 +2310,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.08,
-        ElementDarkTransparency = 0.15,
-        SidebarTransparency = 0.1,
-        BackgroundTransparency = 0.06,
+        ElementTransparency = 0.22,
+        ElementDarkTransparency = 0.32,
+        SidebarTransparency = 0.28,
+        BackgroundTransparency = 0.14,
         StrokeTransparency = 0.78,
     },
     Red = {
@@ -2338,10 +2350,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.08,
-        ElementDarkTransparency = 0.15,
-        SidebarTransparency = 0.1,
-        BackgroundTransparency = 0.06,
+        ElementTransparency = 0.22,
+        ElementDarkTransparency = 0.32,
+        SidebarTransparency = 0.28,
+        BackgroundTransparency = 0.14,
         StrokeTransparency = 0.78,
     },
     BloodRed = {
@@ -2378,10 +2390,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.08,
-        ElementDarkTransparency = 0.15,
-        SidebarTransparency = 0.1,
-        BackgroundTransparency = 0.06,
+        ElementTransparency = 0.22,
+        ElementDarkTransparency = 0.32,
+        SidebarTransparency = 0.28,
+        BackgroundTransparency = 0.14,
         StrokeTransparency = 0.78,
     },
     White = {
@@ -2418,10 +2430,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.08,
-        ElementDarkTransparency = 0.15,
-        SidebarTransparency = 0.1,
-        BackgroundTransparency = 0.06,
+        ElementTransparency = 0.22,
+        ElementDarkTransparency = 0.32,
+        SidebarTransparency = 0.28,
+        BackgroundTransparency = 0.14,
         StrokeTransparency = 0.78,
     },
     Ubuntu = {
@@ -2458,10 +2470,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.08,
-        ElementDarkTransparency = 0.15,
-        SidebarTransparency = 0.1,
-        BackgroundTransparency = 0.06,
+        ElementTransparency = 0.22,
+        ElementDarkTransparency = 0.32,
+        SidebarTransparency = 0.28,
+        BackgroundTransparency = 0.14,
         StrokeTransparency = 0.78,
     },
     Glacier = {
@@ -2498,10 +2510,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.08,
-        ElementDarkTransparency = 0.15,
-        SidebarTransparency = 0.1,
-        BackgroundTransparency = 0.06,
+        ElementTransparency = 0.22,
+        ElementDarkTransparency = 0.32,
+        SidebarTransparency = 0.28,
+        BackgroundTransparency = 0.14,
         StrokeTransparency = 0.78,
     },
     Midnight = {
@@ -2538,10 +2550,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.08,
-        ElementDarkTransparency = 0.15,
-        SidebarTransparency = 0.1,
-        BackgroundTransparency = 0.06,
+        ElementTransparency = 0.22,
+        ElementDarkTransparency = 0.32,
+        SidebarTransparency = 0.28,
+        BackgroundTransparency = 0.14,
         StrokeTransparency = 0.78,
     },
     Anime = {
@@ -2578,10 +2590,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.08,
-        ElementDarkTransparency = 0.15,
-        SidebarTransparency = 0.1,
-        BackgroundTransparency = 0.06,
+        ElementTransparency = 0.22,
+        ElementDarkTransparency = 0.32,
+        SidebarTransparency = 0.28,
+        BackgroundTransparency = 0.14,
         StrokeTransparency = 0.78,
     },
     Femboy = {
@@ -2618,10 +2630,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.08,
-        ElementDarkTransparency = 0.15,
-        SidebarTransparency = 0.1,
-        BackgroundTransparency = 0.06,
+        ElementTransparency = 0.22,
+        ElementDarkTransparency = 0.32,
+        SidebarTransparency = 0.28,
+        BackgroundTransparency = 0.14,
         StrokeTransparency = 0.78,
     },
     Hanki = {
@@ -2658,10 +2670,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.08,
-        ElementDarkTransparency = 0.15,
-        SidebarTransparency = 0.1,
-        BackgroundTransparency = 0.06,
+        ElementTransparency = 0.22,
+        ElementDarkTransparency = 0.32,
+        SidebarTransparency = 0.28,
+        BackgroundTransparency = 0.14,
         StrokeTransparency = 0.78,
     },
     Ocean = {
@@ -2698,10 +2710,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.08,
-        ElementDarkTransparency = 0.15,
-        SidebarTransparency = 0.1,
-        BackgroundTransparency = 0.06,
+        ElementTransparency = 0.22,
+        ElementDarkTransparency = 0.32,
+        SidebarTransparency = 0.28,
+        BackgroundTransparency = 0.14,
         StrokeTransparency = 0.78,
     },
     Forest = {
@@ -2738,10 +2750,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.08,
-        ElementDarkTransparency = 0.15,
-        SidebarTransparency = 0.1,
-        BackgroundTransparency = 0.06,
+        ElementTransparency = 0.22,
+        ElementDarkTransparency = 0.32,
+        SidebarTransparency = 0.28,
+        BackgroundTransparency = 0.14,
         StrokeTransparency = 0.78,
     },
     Sunset = {
@@ -2778,10 +2790,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.08,
-        ElementDarkTransparency = 0.15,
-        SidebarTransparency = 0.1,
-        BackgroundTransparency = 0.06,
+        ElementTransparency = 0.22,
+        ElementDarkTransparency = 0.32,
+        SidebarTransparency = 0.28,
+        BackgroundTransparency = 0.14,
         StrokeTransparency = 0.78,
     },
 }
@@ -2887,7 +2899,15 @@ function SynergyUI:CreateWindow(options)
     mainFrame.BorderSizePixel = 0
     mainFrame.ClipsDescendants = true
     addCorner(mainFrame, window.Theme.CornerRadius)
-    addStroke(mainFrame, window.Theme.Accent, strokeThickness, 0.4)
+    local mainStroke = addStroke(mainFrame, window.Theme.Accent, strokeThickness, 0.4)
+    local mainStrokeGradient = Instance.new("UIGradient")
+    mainStrokeGradient.Parent = mainStroke
+    mainStrokeGradient.Rotation = 90
+    mainStrokeGradient.Transparency = NumberSequence.new({
+        NumberSequenceKeypoint.new(0, 0),
+        NumberSequenceKeypoint.new(0.5, 0.55),
+        NumberSequenceKeypoint.new(1, 0.15)
+    })
     window.MainFrame = mainFrame
 
     if savedConfig.__size then
@@ -2928,6 +2948,16 @@ function SynergyUI:CreateWindow(options)
     topBarSep.Position = UDim2.new(0, 0, 1, -1)
     topBarSep.Size = UDim2.new(1, 0, 0, 1)
     topBarSep.ZIndex = 10
+
+    local topBarSheen = Instance.new("Frame")
+    topBarSheen.Name = "TopBarSheen"
+    topBarSheen.Parent = topBar
+    topBarSheen.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    topBarSheen.BackgroundTransparency = 0.9
+    topBarSheen.BorderSizePixel = 0
+    topBarSheen.Position = UDim2.new(0, 0, 0, 0)
+    topBarSheen.Size = UDim2.new(1, 0, 0, 1)
+    topBarSheen.ZIndex = 11
 
     local titleLabel = Instance.new("TextLabel")
     titleLabel.Parent = topBar
@@ -3309,7 +3339,7 @@ function SynergyUI:CreateWindow(options)
                     control.frame.BackgroundColor3 = newTheme.Element
                     control.frame.BackgroundTransparency = newTheme.ElementTransparency
                     control.btn.TextColor3 = newTheme.Text
-                    control.icon.TextColor3 = newTheme.TextMuted
+                    setChevronColor(control.icon, newTheme.TextMuted)
                     control.container.BackgroundColor3 = newTheme.ElementDark
                     control.container.BackgroundTransparency = newTheme.ElementDarkTransparency
                     control.container.ScrollBarImageColor3 = newTheme.Accent
@@ -3318,7 +3348,7 @@ function SynergyUI:CreateWindow(options)
                     control.frame.BackgroundTransparency = newTheme.ElementTransparency
                     control.btn.TextColor3 = newTheme.Text
                     control.countLabel.TextColor3 = newTheme.Accent
-                    control.icon.TextColor3 = newTheme.TextMuted
+                    setChevronColor(control.icon, newTheme.TextMuted)
                     control.container.BackgroundColor3 = newTheme.ElementDark
                     control.container.BackgroundTransparency = newTheme.ElementDarkTransparency
                     control.container.ScrollBarImageColor3 = newTheme.Accent
@@ -3377,7 +3407,7 @@ function SynergyUI:CreateWindow(options)
                     control.frame.BackgroundColor3 = newTheme.Element
                     control.frame.BackgroundTransparency = newTheme.ElementTransparency
                     control.title.TextColor3 = newTheme.Text
-                    control.arrow.TextColor3 = newTheme.TextMuted
+                    setChevronColor(control.arrow, newTheme.TextMuted)
                     if control.container then
                         control.container.BackgroundColor3 = newTheme.ElementDark
                         control.container.BackgroundTransparency = newTheme.ElementDarkTransparency
@@ -3386,7 +3416,7 @@ function SynergyUI:CreateWindow(options)
                     control.frame.BackgroundColor3 = newTheme.Element
                     control.frame.BackgroundTransparency = newTheme.ElementTransparency
                     control.title.TextColor3 = newTheme.Text
-                    control.arrow.TextColor3 = newTheme.TextMuted
+                    setChevronColor(control.arrow, newTheme.TextMuted)
                     if control.container then
                         control.container.BackgroundColor3 = newTheme.ElementDark
                         control.container.BackgroundTransparency = newTheme.ElementDarkTransparency
