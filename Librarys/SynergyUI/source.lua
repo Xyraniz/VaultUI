@@ -928,7 +928,7 @@ function ControlFactory:createDropdown(options)
     btn.TextXAlignment = Enum.TextXAlignment.Left
     btn.Position = UDim2.new(0, self.theme.PaddingHorizontal, 0, 0)
 
-    local icon = createChevron(frame, self.theme.TextMuted)
+    local icon = createChevron(btn, self.theme.TextMuted)
 
     local container = Instance.new("ScrollingFrame")
     container.Parent = frame
@@ -1170,7 +1170,7 @@ function ControlFactory:createChecklist(options)
     countLabel.TextSize = self.theme.TextSizeSmall
     countLabel.TextXAlignment = Enum.TextXAlignment.Right
 
-    local icon = createChevron(frame, self.theme.TextMuted)
+    local icon = createChevron(btn, self.theme.TextMuted)
 
     local container = Instance.new("ScrollingFrame")
     container.Parent = frame
@@ -1998,6 +1998,7 @@ function ControlFactory:createImage(options)
     title.TextXAlignment = Enum.TextXAlignment.Left
 
     local arrow = createChevron(frame, self.theme.TextMuted)
+    arrow.Position = UDim2.new(1, -24, 0, 22)
 
     local container = Instance.new("Frame")
     container.Parent = frame
@@ -2079,6 +2080,7 @@ function ControlFactory:createVideo(options)
     title.TextXAlignment = Enum.TextXAlignment.Left
 
     local arrow = createChevron(frame, self.theme.TextMuted)
+    arrow.Position = UDim2.new(1, -24, 0, 22)
 
     local container = Instance.new("Frame")
     container.Parent = frame
@@ -2190,10 +2192,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.22,
-        ElementDarkTransparency = 0.32,
+        ElementTransparency = 0.35,
+        ElementDarkTransparency = 0.45,
         SidebarTransparency = 0.28,
-        BackgroundTransparency = 0.14,
+        BackgroundTransparency = 0.22,
         StrokeTransparency = 0.78,
     },
     Dark = {
@@ -2230,10 +2232,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.22,
-        ElementDarkTransparency = 0.32,
+        ElementTransparency = 0.35,
+        ElementDarkTransparency = 0.45,
         SidebarTransparency = 0.28,
-        BackgroundTransparency = 0.14,
+        BackgroundTransparency = 0.22,
         StrokeTransparency = 0.78,
     },
     Cyberpunk = {
@@ -2270,10 +2272,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.22,
-        ElementDarkTransparency = 0.32,
+        ElementTransparency = 0.35,
+        ElementDarkTransparency = 0.45,
         SidebarTransparency = 0.28,
-        BackgroundTransparency = 0.14,
+        BackgroundTransparency = 0.22,
         StrokeTransparency = 0.78,
     },
     TokyoNight = {
@@ -2310,10 +2312,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.22,
-        ElementDarkTransparency = 0.32,
+        ElementTransparency = 0.35,
+        ElementDarkTransparency = 0.45,
         SidebarTransparency = 0.28,
-        BackgroundTransparency = 0.14,
+        BackgroundTransparency = 0.22,
         StrokeTransparency = 0.78,
     },
     Red = {
@@ -2350,10 +2352,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.22,
-        ElementDarkTransparency = 0.32,
+        ElementTransparency = 0.35,
+        ElementDarkTransparency = 0.45,
         SidebarTransparency = 0.28,
-        BackgroundTransparency = 0.14,
+        BackgroundTransparency = 0.22,
         StrokeTransparency = 0.78,
     },
     BloodRed = {
@@ -2390,10 +2392,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.22,
-        ElementDarkTransparency = 0.32,
+        ElementTransparency = 0.35,
+        ElementDarkTransparency = 0.45,
         SidebarTransparency = 0.28,
-        BackgroundTransparency = 0.14,
+        BackgroundTransparency = 0.22,
         StrokeTransparency = 0.78,
     },
     White = {
@@ -2430,10 +2432,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.22,
-        ElementDarkTransparency = 0.32,
+        ElementTransparency = 0.35,
+        ElementDarkTransparency = 0.45,
         SidebarTransparency = 0.28,
-        BackgroundTransparency = 0.14,
+        BackgroundTransparency = 0.22,
         StrokeTransparency = 0.78,
     },
     Ubuntu = {
@@ -2470,10 +2472,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.22,
-        ElementDarkTransparency = 0.32,
+        ElementTransparency = 0.35,
+        ElementDarkTransparency = 0.45,
         SidebarTransparency = 0.28,
-        BackgroundTransparency = 0.14,
+        BackgroundTransparency = 0.22,
         StrokeTransparency = 0.78,
     },
     Glacier = {
@@ -2510,10 +2512,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.22,
-        ElementDarkTransparency = 0.32,
+        ElementTransparency = 0.35,
+        ElementDarkTransparency = 0.45,
         SidebarTransparency = 0.28,
-        BackgroundTransparency = 0.14,
+        BackgroundTransparency = 0.22,
         StrokeTransparency = 0.78,
     },
     Midnight = {
@@ -2550,10 +2552,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.22,
-        ElementDarkTransparency = 0.32,
+        ElementTransparency = 0.35,
+        ElementDarkTransparency = 0.45,
         SidebarTransparency = 0.28,
-        BackgroundTransparency = 0.14,
+        BackgroundTransparency = 0.22,
         StrokeTransparency = 0.78,
     },
     Anime = {
@@ -2590,10 +2592,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.22,
-        ElementDarkTransparency = 0.32,
+        ElementTransparency = 0.35,
+        ElementDarkTransparency = 0.45,
         SidebarTransparency = 0.28,
-        BackgroundTransparency = 0.14,
+        BackgroundTransparency = 0.22,
         StrokeTransparency = 0.78,
     },
     Femboy = {
@@ -2630,10 +2632,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.22,
-        ElementDarkTransparency = 0.32,
+        ElementTransparency = 0.35,
+        ElementDarkTransparency = 0.45,
         SidebarTransparency = 0.28,
-        BackgroundTransparency = 0.14,
+        BackgroundTransparency = 0.22,
         StrokeTransparency = 0.78,
     },
     Hanki = {
@@ -2670,10 +2672,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.22,
-        ElementDarkTransparency = 0.32,
+        ElementTransparency = 0.35,
+        ElementDarkTransparency = 0.45,
         SidebarTransparency = 0.28,
-        BackgroundTransparency = 0.14,
+        BackgroundTransparency = 0.22,
         StrokeTransparency = 0.78,
     },
     Ocean = {
@@ -2710,10 +2712,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.22,
-        ElementDarkTransparency = 0.32,
+        ElementTransparency = 0.35,
+        ElementDarkTransparency = 0.45,
         SidebarTransparency = 0.28,
-        BackgroundTransparency = 0.14,
+        BackgroundTransparency = 0.22,
         StrokeTransparency = 0.78,
     },
     Forest = {
@@ -2750,10 +2752,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.22,
-        ElementDarkTransparency = 0.32,
+        ElementTransparency = 0.35,
+        ElementDarkTransparency = 0.45,
         SidebarTransparency = 0.28,
-        BackgroundTransparency = 0.14,
+        BackgroundTransparency = 0.22,
         StrokeTransparency = 0.78,
     },
     Sunset = {
@@ -2790,10 +2792,10 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
-        ElementTransparency = 0.22,
-        ElementDarkTransparency = 0.32,
+        ElementTransparency = 0.35,
+        ElementDarkTransparency = 0.45,
         SidebarTransparency = 0.28,
-        BackgroundTransparency = 0.14,
+        BackgroundTransparency = 0.22,
         StrokeTransparency = 0.78,
     },
 }
