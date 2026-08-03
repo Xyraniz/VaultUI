@@ -394,9 +394,10 @@ function ControlFactory:createLabel(text)
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
     frame.BackgroundColor3 = self.theme.Element
+    frame.BackgroundTransparency = self.theme.ElementTransparency
     frame.Size = UDim2.new(1, 0, 0, self.theme.LabelHeight)
     addCorner(frame, self.theme.CornerRadius)
-    local stroke = addStroke(frame, self.theme.StrokeColor, 1, 0.82)
+    local stroke = addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
 
     local accent = Instance.new("Frame")
     accent.Parent = frame
@@ -436,9 +437,10 @@ function ControlFactory:createButton(options)
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
     frame.BackgroundColor3 = self.theme.Element
+    frame.BackgroundTransparency = self.theme.ElementTransparency
     frame.Size = UDim2.new(1, 0, 0, self.theme.ButtonHeight)
     addCorner(frame, self.theme.CornerRadius)
-    addStroke(frame, self.theme.StrokeColor, 1, 0.82)
+    addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
 
     local btn = Instance.new("TextButton")
     btn.Parent = frame
@@ -466,6 +468,7 @@ function ControlFactory:createButton(options)
         tooltip.Name = "Tooltip"
         tooltip.Parent = btn
         tooltip.BackgroundColor3 = self.theme.ElementDark
+        tooltip.BackgroundTransparency = self.theme.ElementDarkTransparency
         tooltip.BorderSizePixel = 0
         tooltip.Position = UDim2.new(0, 0, 1, 4)
         tooltip.Size = UDim2.new(0, 0, 0, 24)
@@ -506,9 +509,10 @@ function ControlFactory:createToggle(options)
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
     frame.BackgroundColor3 = self.theme.Element
+    frame.BackgroundTransparency = self.theme.ElementTransparency
     frame.Size = UDim2.new(1, 0, 0, self.theme.ToggleHeight)
     addCorner(frame, self.theme.CornerRadius)
-    addStroke(frame, self.theme.StrokeColor, 1, 0.82)
+    addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
 
     local label = Instance.new("TextLabel")
     label.Parent = frame
@@ -524,6 +528,7 @@ function ControlFactory:createToggle(options)
     local outer = Instance.new("Frame")
     outer.Parent = frame
     outer.BackgroundColor3 = self.theme.ElementDark
+    outer.BackgroundTransparency = self.theme.ElementDarkTransparency
     outer.Position = UDim2.new(1, -self.theme.ToggleWidth - self.theme.PaddingHorizontal, 0.5, -self.theme.ToggleHeight/2 + 1)
     outer.Size = UDim2.new(0, self.theme.ToggleWidth, 0, self.theme.ToggleHeight - 8)
     addCorner(outer, 999)
@@ -574,9 +579,10 @@ function ControlFactory:createCheckBox(options)
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
     frame.BackgroundColor3 = self.theme.Element
+    frame.BackgroundTransparency = self.theme.ElementTransparency
     frame.Size = UDim2.new(1, 0, 0, self.theme.ToggleHeight)
     addCorner(frame, self.theme.CornerRadius)
-    addStroke(frame, self.theme.StrokeColor, 1, 0.82)
+    addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
 
     local label = Instance.new("TextLabel")
     label.Parent = frame
@@ -592,6 +598,7 @@ function ControlFactory:createCheckBox(options)
     local checkFrame = Instance.new("Frame")
     checkFrame.Parent = frame
     checkFrame.BackgroundColor3 = self.theme.ElementDark
+    checkFrame.BackgroundTransparency = self.theme.ElementDarkTransparency
     checkFrame.Position = UDim2.new(1, -self.theme.ToggleWidth - self.theme.PaddingHorizontal, 0.5, -12)
     checkFrame.Size = UDim2.new(0, 24, 0, 24)
     addCorner(checkFrame, 6)
@@ -648,9 +655,10 @@ function ControlFactory:createSlider(options)
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
     frame.BackgroundColor3 = self.theme.Element
+    frame.BackgroundTransparency = self.theme.ElementTransparency
     frame.Size = UDim2.new(1, 0, 0, self.theme.SliderHeight)
     addCorner(frame, self.theme.CornerRadius)
-    addStroke(frame, self.theme.StrokeColor, 1, 0.82)
+    addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
 
     local label = Instance.new("TextLabel")
     label.Parent = frame
@@ -677,10 +685,11 @@ function ControlFactory:createSlider(options)
     local bg = Instance.new("Frame")
     bg.Parent = frame
     bg.BackgroundColor3 = self.theme.ElementDark
+    bg.BackgroundTransparency = self.theme.ElementDarkTransparency
     bg.Position = UDim2.new(0, self.theme.PaddingHorizontal, 0, self.theme.PaddingVertical + self.theme.TextSizeNormal + 8)
     bg.Size = UDim2.new(1, -2 * self.theme.PaddingHorizontal - 130, 0, self.theme.SliderBarHeight)
     addCorner(bg, self.theme.SliderBarHeight / 2)
-    addStroke(bg, self.theme.StrokeColor, 1, 0.9)
+    addStroke(bg, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
 
     local fill = Instance.new("Frame")
     fill.Parent = bg
@@ -707,6 +716,7 @@ function ControlFactory:createSlider(options)
     local tooltip = Instance.new("Frame")
     tooltip.Parent = bg
     tooltip.BackgroundColor3 = self.theme.ElementDark
+    tooltip.BackgroundTransparency = self.theme.ElementDarkTransparency
     tooltip.BorderSizePixel = 0
     tooltip.Position = UDim2.new(0, 0, 0, -28)
     tooltip.Size = UDim2.new(0, 40, 0, 22)
@@ -725,6 +735,7 @@ function ControlFactory:createSlider(options)
     local inputBg = Instance.new("Frame")
     inputBg.Parent = frame
     inputBg.BackgroundColor3 = self.theme.ElementDark
+    inputBg.BackgroundTransparency = self.theme.ElementDarkTransparency
     inputBg.Position = UDim2.new(1, -68 - self.theme.PaddingHorizontal, 0, self.theme.PaddingVertical + self.theme.TextSizeNormal + 6)
     inputBg.Size = UDim2.new(0, 60, 0, 22)
     addCorner(inputBg, 8)
@@ -856,10 +867,11 @@ function ControlFactory:createDropdown(options)
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
     frame.BackgroundColor3 = self.theme.Element
+    frame.BackgroundTransparency = self.theme.ElementTransparency
     frame.Size = UDim2.new(1, 0, 0, self.theme.DropdownHeight)
     frame.ClipsDescendants = true
     addCorner(frame, self.theme.CornerRadius)
-    addStroke(frame, self.theme.StrokeColor, 1, 0.82)
+    addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
 
     local btn = Instance.new("TextButton")
     btn.Parent = frame
@@ -885,6 +897,7 @@ function ControlFactory:createDropdown(options)
     local container = Instance.new("ScrollingFrame")
     container.Parent = frame
     container.BackgroundColor3 = self.theme.ElementDark
+    container.BackgroundTransparency = self.theme.ElementDarkTransparency
     container.BorderSizePixel = 0
     container.Position = UDim2.new(0, 0, 0, self.theme.DropdownHeight)
     container.Size = UDim2.new(1, 0, 0, 0)
@@ -896,6 +909,7 @@ function ControlFactory:createDropdown(options)
         local searchBox = Instance.new("TextBox")
         searchBox.Parent = container
         searchBox.BackgroundColor3 = self.theme.Element
+        searchBox.BackgroundTransparency = self.theme.ElementTransparency
         searchBox.Size = UDim2.new(1, -12, 0, 28)
         searchBox.Position = UDim2.new(0, 6, 0, 4)
         searchBox.Font = self.theme.Font
@@ -935,6 +949,7 @@ function ControlFactory:createDropdown(options)
                 local optFrame = Instance.new("Frame")
                 optFrame.Parent = container
                 optFrame.BackgroundColor3 = self.theme.ElementDark
+                optFrame.BackgroundTransparency = self.theme.ElementDarkTransparency
                 optFrame.Size = UDim2.new(1, 0, 0, self.theme.DropdownItemHeight)
                 optFrame.BorderSizePixel = 0
 
@@ -1091,10 +1106,11 @@ function ControlFactory:createChecklist(options)
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
     frame.BackgroundColor3 = self.theme.Element
+    frame.BackgroundTransparency = self.theme.ElementTransparency
     frame.Size = UDim2.new(1, 0, 0, self.theme.ChecklistHeight)
     frame.ClipsDescendants = true
     addCorner(frame, self.theme.CornerRadius)
-    addStroke(frame, self.theme.StrokeColor, 1, 0.82)
+    addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
 
     local btn = Instance.new("TextButton")
     btn.Parent = frame
@@ -1131,6 +1147,7 @@ function ControlFactory:createChecklist(options)
     local container = Instance.new("ScrollingFrame")
     container.Parent = frame
     container.BackgroundColor3 = self.theme.ElementDark
+    container.BackgroundTransparency = self.theme.ElementDarkTransparency
     container.BorderSizePixel = 0
     container.Position = UDim2.new(0, 0, 0, self.theme.ChecklistHeight)
     container.Size = UDim2.new(1, 0, 0, 0)
@@ -1165,12 +1182,14 @@ function ControlFactory:createChecklist(options)
             local row = Instance.new("Frame")
             row.Parent = container
             row.BackgroundColor3 = self.theme.ElementDark
+            row.BackgroundTransparency = self.theme.ElementDarkTransparency
             row.BorderSizePixel = 0
             row.Size = UDim2.new(1, 0, 0, self.theme.ChecklistItemHeight)
 
             local toggleOuter = Instance.new("Frame")
             toggleOuter.Parent = row
             toggleOuter.BackgroundColor3 = self.theme.Element
+            toggleOuter.BackgroundTransparency = self.theme.ElementTransparency
             toggleOuter.Position = UDim2.new(0, self.theme.PaddingHorizontal, 0.5, -10)
             toggleOuter.Size = UDim2.new(0, 20, 0, 20)
             addCorner(toggleOuter, 6)
@@ -1269,9 +1288,10 @@ function ControlFactory:createTextInput(options)
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
     frame.BackgroundColor3 = self.theme.Element
+    frame.BackgroundTransparency = self.theme.ElementTransparency
     frame.Size = UDim2.new(1, 0, 0, self.theme.TextInputHeight)
     addCorner(frame, self.theme.CornerRadius)
-    addStroke(frame, self.theme.StrokeColor, 1, 0.82)
+    addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
 
     local label = Instance.new("TextLabel")
     label.Parent = frame
@@ -1287,6 +1307,7 @@ function ControlFactory:createTextInput(options)
     local input = Instance.new("TextBox")
     input.Parent = frame
     input.BackgroundColor3 = self.theme.ElementDark
+    input.BackgroundTransparency = self.theme.ElementDarkTransparency
     input.ClearTextOnFocus = false
     input.Position = UDim2.new(0, self.theme.PaddingHorizontal, 0, self.theme.PaddingVertical + self.theme.TextSizeNormal + 10)
     input.Size = UDim2.new(1, -2 * self.theme.PaddingHorizontal, 0, self.theme.TextInputFieldHeight)
@@ -1328,9 +1349,10 @@ function ControlFactory:createNumberInput(options)
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
     frame.BackgroundColor3 = self.theme.Element
+    frame.BackgroundTransparency = self.theme.ElementTransparency
     frame.Size = UDim2.new(1, 0, 0, self.theme.TextInputHeight)
     addCorner(frame, self.theme.CornerRadius)
-    addStroke(frame, self.theme.StrokeColor, 1, 0.82)
+    addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
 
     local label = Instance.new("TextLabel")
     label.Parent = frame
@@ -1346,6 +1368,7 @@ function ControlFactory:createNumberInput(options)
     local input = Instance.new("TextBox")
     input.Parent = frame
     input.BackgroundColor3 = self.theme.ElementDark
+    input.BackgroundTransparency = self.theme.ElementDarkTransparency
     input.ClearTextOnFocus = false
     input.Position = UDim2.new(0, self.theme.PaddingHorizontal, 0, self.theme.PaddingVertical + self.theme.TextSizeNormal + 10)
     input.Size = UDim2.new(1, -2 * self.theme.PaddingHorizontal, 0, self.theme.TextInputFieldHeight)
@@ -1404,9 +1427,10 @@ function ControlFactory:createKeybind(options)
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
     frame.BackgroundColor3 = self.theme.Element
+    frame.BackgroundTransparency = self.theme.ElementTransparency
     frame.Size = UDim2.new(1, 0, 0, self.theme.KeybindHeight)
     addCorner(frame, self.theme.CornerRadius)
-    addStroke(frame, self.theme.StrokeColor, 1, 0.82)
+    addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
 
     local label = Instance.new("TextLabel")
     label.Parent = frame
@@ -1422,6 +1446,7 @@ function ControlFactory:createKeybind(options)
     local bindBtn = Instance.new("TextButton")
     bindBtn.Parent = frame
     bindBtn.BackgroundColor3 = self.theme.ElementDark
+    bindBtn.BackgroundTransparency = self.theme.ElementDarkTransparency
     bindBtn.Position = UDim2.new(1, -self.theme.KeybindWidth - self.theme.PaddingHorizontal, 0.5, -self.theme.KeybindHeight/2)
     bindBtn.Size = UDim2.new(0, self.theme.KeybindWidth, 0, self.theme.KeybindHeight)
     bindBtn.Font = self.theme.Font
@@ -1500,10 +1525,11 @@ function ControlFactory:createColorPicker(options)
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
     frame.BackgroundColor3 = self.theme.Element
+    frame.BackgroundTransparency = self.theme.ElementTransparency
     frame.Size = UDim2.new(1, 0, 0, self.theme.ColorPickerHeight)
     frame.ClipsDescendants = true
     addCorner(frame, self.theme.CornerRadius)
-    addStroke(frame, self.theme.StrokeColor, 1, 0.82)
+    addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
 
     local label = Instance.new("TextLabel")
     label.Parent = frame
@@ -1533,6 +1559,7 @@ function ControlFactory:createColorPicker(options)
     local container = Instance.new("Frame")
     container.Parent = frame
     container.BackgroundColor3 = self.theme.ElementDark
+    container.BackgroundTransparency = self.theme.ElementDarkTransparency
     container.Position = UDim2.new(0, 0, 0, self.theme.ColorPickerHeight)
     container.Size = UDim2.new(1, 0, 0, self.theme.ColorPickerExpandedHeight - self.theme.ColorPickerHeight)
     container.Visible = false
@@ -1583,6 +1610,7 @@ function ControlFactory:createColorPicker(options)
     local rainbowBtn = Instance.new("TextButton")
     rainbowBtn.Parent = container
     rainbowBtn.BackgroundColor3 = self.theme.Element
+    rainbowBtn.BackgroundTransparency = self.theme.ElementTransparency
     rainbowBtn.Size = UDim2.new(0, 80, 0, 26)
     rainbowBtn.Position = UDim2.new(0.5, -40, 0, 165)
     rainbowBtn.Text = "Rainbow"
@@ -1725,9 +1753,10 @@ function ControlFactory:createRadioGroup(options)
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
     frame.BackgroundColor3 = self.theme.Element
+    frame.BackgroundTransparency = self.theme.ElementTransparency
     frame.Size = UDim2.new(1, 0, 0, #options.Options * self.theme.RadioItemHeight + 16)
     addCorner(frame, self.theme.CornerRadius)
-    addStroke(frame, self.theme.StrokeColor, 1, 0.82)
+    addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
 
     local label = Instance.new("TextLabel")
     label.Parent = frame
@@ -1752,6 +1781,7 @@ function ControlFactory:createRadioGroup(options)
         local outer = Instance.new("Frame")
         outer.Parent = row
         outer.BackgroundColor3 = self.theme.ElementDark
+        outer.BackgroundTransparency = self.theme.ElementDarkTransparency
         outer.Position = UDim2.new(0, self.theme.PaddingHorizontal, 0.5, -10)
         outer.Size = UDim2.new(0, 20, 0, 20)
         addCorner(outer, 999)
@@ -1818,10 +1848,11 @@ function ControlFactory:createParagraph(options)
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
     frame.BackgroundColor3 = self.theme.Element
+    frame.BackgroundTransparency = self.theme.ElementTransparency
     frame.Size = UDim2.new(1, 0, 0, 0)
     frame.ClipsDescendants = true
     addCorner(frame, self.theme.CornerRadius)
-    addStroke(frame, self.theme.StrokeColor, 1, 0.82)
+    addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
 
     local title = Instance.new("TextLabel")
     title.Parent = frame
@@ -1847,6 +1878,7 @@ function ControlFactory:createParagraph(options)
         imageLabel = Instance.new("ImageLabel")
         imageLabel.Parent = imageContainer
         imageLabel.BackgroundColor3 = self.theme.ElementDark
+        imageLabel.BackgroundTransparency = self.theme.ElementDarkTransparency
         imageLabel.Size = UDim2.new(1, 0, 0, 120)
         imageLabel.Image = options.Image
         imageLabel.ScaleType = Enum.ScaleType.Fit
@@ -1920,10 +1952,11 @@ function ControlFactory:createImage(options)
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
     frame.BackgroundColor3 = self.theme.Element
+    frame.BackgroundTransparency = self.theme.ElementTransparency
     frame.Size = UDim2.new(1, 0, 0, 44)
     frame.ClipsDescendants = true
     addCorner(frame, self.theme.CornerRadius)
-    addStroke(frame, self.theme.StrokeColor, 1, 0.82)
+    addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
 
     local title = Instance.new("TextLabel")
     title.Parent = frame
@@ -1949,6 +1982,7 @@ function ControlFactory:createImage(options)
     local container = Instance.new("Frame")
     container.Parent = frame
     container.BackgroundColor3 = self.theme.ElementDark
+    container.BackgroundTransparency = self.theme.ElementDarkTransparency
     container.Position = UDim2.new(0, 0, 0, 44)
     container.Size = UDim2.new(1, 0, 0, 0)
     container.Visible = false
@@ -1956,6 +1990,7 @@ function ControlFactory:createImage(options)
     local image = Instance.new("ImageLabel")
     image.Parent = container
     image.BackgroundColor3 = self.theme.Element
+    image.BackgroundTransparency = self.theme.ElementTransparency
     image.Size = UDim2.new(1, -20, 0, 120)
     image.Position = UDim2.new(0, 10, 0, 10)
     image.Image = options.Image or ""
@@ -2006,10 +2041,11 @@ function ControlFactory:createVideo(options)
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
     frame.BackgroundColor3 = self.theme.Element
+    frame.BackgroundTransparency = self.theme.ElementTransparency
     frame.Size = UDim2.new(1, 0, 0, 44)
     frame.ClipsDescendants = true
     addCorner(frame, self.theme.CornerRadius)
-    addStroke(frame, self.theme.StrokeColor, 1, 0.82)
+    addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
 
     local title = Instance.new("TextLabel")
     title.Parent = frame
@@ -2035,6 +2071,7 @@ function ControlFactory:createVideo(options)
     local container = Instance.new("Frame")
     container.Parent = frame
     container.BackgroundColor3 = self.theme.ElementDark
+    container.BackgroundTransparency = self.theme.ElementDarkTransparency
     container.Position = UDim2.new(0, 0, 0, 44)
     container.Size = UDim2.new(1, 0, 0, 0)
     container.Visible = false
@@ -2058,6 +2095,7 @@ function ControlFactory:createVideo(options)
     local playBtn = Instance.new("TextButton")
     playBtn.Parent = controlsFrame
     playBtn.BackgroundColor3 = self.theme.Element
+    playBtn.BackgroundTransparency = self.theme.ElementTransparency
     playBtn.Size = UDim2.new(0, 60, 0, 30)
     playBtn.Position = UDim2.new(0, 0, 0, 5)
     playBtn.Text = "Play"
@@ -2068,6 +2106,7 @@ function ControlFactory:createVideo(options)
     local pauseBtn = Instance.new("TextButton")
     pauseBtn.Parent = controlsFrame
     pauseBtn.BackgroundColor3 = self.theme.Element
+    pauseBtn.BackgroundTransparency = self.theme.ElementTransparency
     pauseBtn.Size = UDim2.new(0, 60, 0, 30)
     pauseBtn.Position = UDim2.new(0, 70, 0, 5)
     pauseBtn.Text = "Pause"
@@ -2139,6 +2178,11 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
+        ElementTransparency = 0.08,
+        ElementDarkTransparency = 0.15,
+        SidebarTransparency = 0.1,
+        BackgroundTransparency = 0.06,
+        StrokeTransparency = 0.78,
     },
     Dark = {
         Accent = Color3.fromRGB(100, 100, 255),
@@ -2174,6 +2218,11 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
+        ElementTransparency = 0.08,
+        ElementDarkTransparency = 0.15,
+        SidebarTransparency = 0.1,
+        BackgroundTransparency = 0.06,
+        StrokeTransparency = 0.78,
     },
     Cyberpunk = {
         Accent = Color3.fromRGB(0, 255, 255),
@@ -2209,6 +2258,11 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
+        ElementTransparency = 0.08,
+        ElementDarkTransparency = 0.15,
+        SidebarTransparency = 0.1,
+        BackgroundTransparency = 0.06,
+        StrokeTransparency = 0.78,
     },
     TokyoNight = {
         Accent = Color3.fromRGB(122, 162, 247),
@@ -2244,6 +2298,11 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
+        ElementTransparency = 0.08,
+        ElementDarkTransparency = 0.15,
+        SidebarTransparency = 0.1,
+        BackgroundTransparency = 0.06,
+        StrokeTransparency = 0.78,
     },
     Red = {
         Accent = Color3.fromRGB(255, 60, 80),
@@ -2279,6 +2338,11 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
+        ElementTransparency = 0.08,
+        ElementDarkTransparency = 0.15,
+        SidebarTransparency = 0.1,
+        BackgroundTransparency = 0.06,
+        StrokeTransparency = 0.78,
     },
     BloodRed = {
         Accent = Color3.fromRGB(255, 0, 0),
@@ -2314,6 +2378,11 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
+        ElementTransparency = 0.08,
+        ElementDarkTransparency = 0.15,
+        SidebarTransparency = 0.1,
+        BackgroundTransparency = 0.06,
+        StrokeTransparency = 0.78,
     },
     White = {
         Accent = Color3.fromRGB(0, 122, 255),
@@ -2349,6 +2418,11 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
+        ElementTransparency = 0.08,
+        ElementDarkTransparency = 0.15,
+        SidebarTransparency = 0.1,
+        BackgroundTransparency = 0.06,
+        StrokeTransparency = 0.78,
     },
     Ubuntu = {
         Accent = Color3.fromRGB(233, 84, 32),
@@ -2384,6 +2458,11 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
+        ElementTransparency = 0.08,
+        ElementDarkTransparency = 0.15,
+        SidebarTransparency = 0.1,
+        BackgroundTransparency = 0.06,
+        StrokeTransparency = 0.78,
     },
     Glacier = {
         Accent = Color3.fromRGB(0, 191, 255),
@@ -2419,6 +2498,11 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
+        ElementTransparency = 0.08,
+        ElementDarkTransparency = 0.15,
+        SidebarTransparency = 0.1,
+        BackgroundTransparency = 0.06,
+        StrokeTransparency = 0.78,
     },
     Midnight = {
         Accent = Color3.fromRGB(147, 112, 219),
@@ -2454,6 +2538,11 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
+        ElementTransparency = 0.08,
+        ElementDarkTransparency = 0.15,
+        SidebarTransparency = 0.1,
+        BackgroundTransparency = 0.06,
+        StrokeTransparency = 0.78,
     },
     Anime = {
         Accent = Color3.fromRGB(255, 105, 180),
@@ -2489,6 +2578,11 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
+        ElementTransparency = 0.08,
+        ElementDarkTransparency = 0.15,
+        SidebarTransparency = 0.1,
+        BackgroundTransparency = 0.06,
+        StrokeTransparency = 0.78,
     },
     Femboy = {
         Accent = Color3.fromRGB(255, 105, 180),
@@ -2524,6 +2618,11 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
+        ElementTransparency = 0.08,
+        ElementDarkTransparency = 0.15,
+        SidebarTransparency = 0.1,
+        BackgroundTransparency = 0.06,
+        StrokeTransparency = 0.78,
     },
     Hanki = {
         Accent = Color3.fromRGB(255, 140, 0),
@@ -2559,6 +2658,11 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
+        ElementTransparency = 0.08,
+        ElementDarkTransparency = 0.15,
+        SidebarTransparency = 0.1,
+        BackgroundTransparency = 0.06,
+        StrokeTransparency = 0.78,
     },
     Ocean = {
         Accent = Color3.fromRGB(0, 180, 255),
@@ -2594,6 +2698,11 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
+        ElementTransparency = 0.08,
+        ElementDarkTransparency = 0.15,
+        SidebarTransparency = 0.1,
+        BackgroundTransparency = 0.06,
+        StrokeTransparency = 0.78,
     },
     Forest = {
         Accent = Color3.fromRGB(100, 255, 120),
@@ -2629,6 +2738,11 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
+        ElementTransparency = 0.08,
+        ElementDarkTransparency = 0.15,
+        SidebarTransparency = 0.1,
+        BackgroundTransparency = 0.06,
+        StrokeTransparency = 0.78,
     },
     Sunset = {
         Accent = Color3.fromRGB(255, 130, 90),
@@ -2664,6 +2778,11 @@ local Themes = {
         ColorPickerPreviewSize = 26,
         ColorPickerExpandedHeight = 200,
         RadioItemHeight = 34,
+        ElementTransparency = 0.08,
+        ElementDarkTransparency = 0.15,
+        SidebarTransparency = 0.1,
+        BackgroundTransparency = 0.06,
+        StrokeTransparency = 0.78,
     },
 }
 
@@ -2764,6 +2883,7 @@ function SynergyUI:CreateWindow(options)
     mainFrame.Name = "MainFrame"
     mainFrame.Parent = gui
     mainFrame.BackgroundColor3 = window.Theme.Background
+    mainFrame.BackgroundTransparency = window.Theme.BackgroundTransparency
     mainFrame.BorderSizePixel = 0
     mainFrame.ClipsDescendants = true
     addCorner(mainFrame, window.Theme.CornerRadius)
@@ -2785,6 +2905,7 @@ function SynergyUI:CreateWindow(options)
     topBar.Name = "TopBar"
     topBar.Parent = mainFrame
     topBar.BackgroundColor3 = window.Theme.Sidebar
+    topBar.BackgroundTransparency = window.Theme.SidebarTransparency
     topBar.BorderSizePixel = 0
     topBar.Size = UDim2.new(1, 0, 0, 42)
     addCorner(topBar, window.Theme.CornerRadius)
@@ -2794,6 +2915,7 @@ function SynergyUI:CreateWindow(options)
     topBarMask.Name = "TopBarMask"
     topBarMask.Parent = topBar
     topBarMask.BackgroundColor3 = window.Theme.Sidebar
+    topBarMask.BackgroundTransparency = window.Theme.SidebarTransparency
     topBarMask.BorderSizePixel = 0
     topBarMask.Position = UDim2.new(0, 0, 1, -window.Theme.CornerRadius)
     topBarMask.Size = UDim2.new(1, 0, 0, window.Theme.CornerRadius)
@@ -2856,13 +2978,22 @@ function SynergyUI:CreateWindow(options)
     closeBtn.TextSize = 11
     closeBtn.ZIndex = 10
     addCorner(closeBtn, 999)
-    addStroke(closeBtn, window.Theme.StrokeColor, 1, 0.6)
-    addHoverEffect(closeBtn, closeBtn.BackgroundColor3, window.Theme.HoverColor, false)
+    local closeBtnStroke = addStroke(closeBtn, window.Theme.StrokeColor, 1, 0.6)
+    local closeDangerColor = Color3.fromRGB(232, 68, 68)
+    closeBtn.MouseEnter:Connect(function()
+        createTween(closeBtn, 0.18, {BackgroundColor3 = closeDangerColor, BackgroundTransparency = 0.1, TextColor3 = Color3.fromRGB(255,255,255)})
+        createTween(closeBtnStroke, 0.18, {Color = closeDangerColor, Transparency = 0.2})
+    end)
+    closeBtn.MouseLeave:Connect(function()
+        createTween(closeBtn, 0.18, {BackgroundColor3 = window.Theme.ElementDark, BackgroundTransparency = 0.35, TextColor3 = window.Theme.TextMuted})
+        createTween(closeBtnStroke, 0.18, {Color = window.Theme.StrokeColor, Transparency = 0.6})
+    end)
 
     local sidebar = Instance.new("ScrollingFrame")
     sidebar.Name = "Sidebar"
     sidebar.Parent = mainFrame
     sidebar.BackgroundColor3 = window.Theme.Sidebar
+    sidebar.BackgroundTransparency = window.Theme.SidebarTransparency
     sidebar.BorderSizePixel = 0
     sidebar.Position = UDim2.new(0, 0, 0, 42)
     sidebar.Size = UDim2.new(0, 150, 1, -42 - strokeThickness)
@@ -2880,6 +3011,7 @@ function SynergyUI:CreateWindow(options)
     sidebarMask.Name = "SidebarMask"
     sidebarMask.Parent = mainFrame
     sidebarMask.BackgroundColor3 = window.Theme.Sidebar
+    sidebarMask.BackgroundTransparency = window.Theme.SidebarTransparency
     sidebarMask.BorderSizePixel = 0
     sidebarMask.Position = UDim2.new(0, 150 - window.Theme.CornerRadius, 0, 42)
     sidebarMask.Size = UDim2.new(0, window.Theme.CornerRadius, 1, -42 - strokeThickness)
@@ -2903,6 +3035,7 @@ function SynergyUI:CreateWindow(options)
     contentArea.Name = "ContentArea"
     contentArea.Parent = mainFrame
     contentArea.BackgroundColor3 = window.Theme.Background
+    contentArea.BackgroundTransparency = window.Theme.BackgroundTransparency
     contentArea.BorderSizePixel = 0
     contentArea.Position = UDim2.new(0, 150, 0, 42)
     contentArea.Size = UDim2.new(1, -150 - strokeThickness, 1, -42 - strokeThickness)
@@ -3066,10 +3199,12 @@ function SynergyUI:CreateWindow(options)
     function window:RefreshTheme()
         local newTheme = self.Theme
         self.MainFrame.BackgroundColor3 = newTheme.Background
+        self.MainFrame.BackgroundTransparency = newTheme.BackgroundTransparency
         local stroke = self.MainFrame:FindFirstChild("UIStroke")
         if stroke then stroke.Color = newTheme.Accent end
         local topBarRef = self.MainFrame:FindFirstChild("TopBar")
         topBarRef.BackgroundColor3 = newTheme.Sidebar
+        topBarRef.BackgroundTransparency = newTheme.SidebarTransparency
         topBarRef:FindFirstChild("TextLabel").TextColor3 = newTheme.Accent
         local controlContainerRef = topBarRef:FindFirstChild("ControlContainer")
         if controlContainerRef then
@@ -3077,26 +3212,32 @@ function SynergyUI:CreateWindow(options)
             local closeBtnRef = controlContainerRef:FindFirstChild("CloseButton")
             if minBtnRef then
                 minBtnRef.BackgroundColor3 = newTheme.ElementDark
+                minBtnRef.BackgroundTransparency = newTheme.ElementDarkTransparency
                 minBtnRef.TextColor3 = newTheme.TextMuted
                 local minStroke = minBtnRef:FindFirstChild("UIStroke")
                 if minStroke then minStroke.Color = newTheme.StrokeColor end
             end
             if closeBtnRef then
                 closeBtnRef.BackgroundColor3 = newTheme.ElementDark
+                closeBtnRef.BackgroundTransparency = newTheme.ElementDarkTransparency
                 closeBtnRef.TextColor3 = newTheme.TextMuted
                 local closeStroke = closeBtnRef:FindFirstChild("UIStroke")
                 if closeStroke then closeStroke.Color = newTheme.StrokeColor end
             end
         end
         self.MainFrame:FindFirstChild("Sidebar").BackgroundColor3 = newTheme.Sidebar
+        self.MainFrame:FindFirstChild("Sidebar").BackgroundTransparency = newTheme.SidebarTransparency
         self.MainFrame:FindFirstChild("Sidebar").ScrollBarImageColor3 = newTheme.Accent
         self.MainFrame:FindFirstChild("ContentArea").BackgroundColor3 = newTheme.Background
+        self.MainFrame:FindFirstChild("ContentArea").BackgroundTransparency = newTheme.BackgroundTransparency
         self.resizeHandle.BackgroundColor3 = newTheme.Accent
 
         for _, tab in ipairs(self.Tabs) do
             tab.Content.BackgroundColor3 = newTheme.Background
+            tab.Content.BackgroundTransparency = newTheme.BackgroundTransparency
             tab.Content.ScrollBarImageColor3 = newTheme.Accent
             tab.Button.BackgroundColor3 = newTheme.Sidebar
+            tab.Button.BackgroundTransparency = newTheme.SidebarTransparency
             local tabLabel = tab.Button:FindFirstChild("TabLabel")
             if tabLabel then
                 tabLabel.TextColor3 = (tab.Content.Visible) and newTheme.Accent or newTheme.TextMuted
@@ -3123,24 +3264,31 @@ function SynergyUI:CreateWindow(options)
                     control.instance.BackgroundColor3 = newTheme.StrokeColor
                 elseif control.type == "button" then
                     control.frame.BackgroundColor3 = newTheme.Element
+                    control.frame.BackgroundTransparency = newTheme.ElementTransparency
                     local strokeBtn = control.frame:FindFirstChild("UIStroke")
                     if strokeBtn then strokeBtn.Color = newTheme.StrokeColor end
                     control.btn.TextColor3 = newTheme.Text
                 elseif control.type == "toggle" then
                     control.frame.BackgroundColor3 = newTheme.Element
+                    control.frame.BackgroundTransparency = newTheme.ElementTransparency
                     control.label.TextColor3 = control.stateVar and newTheme.Accent or newTheme.Text
                     control.outer.BackgroundColor3 = newTheme.ElementDark
+                    control.outer.BackgroundTransparency = newTheme.ElementDarkTransparency
                     control.inner.BackgroundColor3 = control.stateVar and newTheme.Accent or newTheme.TextMuted
                 elseif control.type == "checkbox" then
                     control.frame.BackgroundColor3 = newTheme.Element
+                    control.frame.BackgroundTransparency = newTheme.ElementTransparency
                     control.label.TextColor3 = control.stateVar and newTheme.Accent or newTheme.Text
                     control.checkFrame.BackgroundColor3 = newTheme.ElementDark
+                    control.checkFrame.BackgroundTransparency = newTheme.ElementDarkTransparency
                     control.checkIcon.ImageColor3 = newTheme.Accent
                 elseif control.type == "slider" then
                     control.frame.BackgroundColor3 = newTheme.Element
+                    control.frame.BackgroundTransparency = newTheme.ElementTransparency
                     control.label.TextColor3 = newTheme.Text
                     control.valLabel.TextColor3 = newTheme.Accent
                     control.bg.BackgroundColor3 = newTheme.ElementDark
+                    control.bg.BackgroundTransparency = newTheme.ElementDarkTransparency
                     control.fill.BackgroundColor3 = newTheme.Accent
                     if control.fillGradient then
                         control.fillGradient.Color = ColorSequence.new({
@@ -3150,57 +3298,75 @@ function SynergyUI:CreateWindow(options)
                     end
                     control.thumb.BackgroundColor3 = newTheme.Accent
                     control.tooltip.BackgroundColor3 = newTheme.ElementDark
+                    control.tooltip.BackgroundTransparency = newTheme.ElementDarkTransparency
                     local tooltipStroke = control.tooltip:FindFirstChild("UIStroke")
                     if tooltipStroke then tooltipStroke.Color = newTheme.Accent end
                     control.tooltipLabel.TextColor3 = newTheme.Text
                     control.inputBg.BackgroundColor3 = newTheme.ElementDark
+                    control.inputBg.BackgroundTransparency = newTheme.ElementDarkTransparency
                     control.numInput.TextColor3 = newTheme.Text
                 elseif control.type == "dropdown" then
                     control.frame.BackgroundColor3 = newTheme.Element
+                    control.frame.BackgroundTransparency = newTheme.ElementTransparency
                     control.btn.TextColor3 = newTheme.Text
                     control.icon.TextColor3 = newTheme.TextMuted
                     control.container.BackgroundColor3 = newTheme.ElementDark
+                    control.container.BackgroundTransparency = newTheme.ElementDarkTransparency
                     control.container.ScrollBarImageColor3 = newTheme.Accent
                 elseif control.type == "checklist" then
                     control.frame.BackgroundColor3 = newTheme.Element
+                    control.frame.BackgroundTransparency = newTheme.ElementTransparency
                     control.btn.TextColor3 = newTheme.Text
                     control.countLabel.TextColor3 = newTheme.Accent
                     control.icon.TextColor3 = newTheme.TextMuted
                     control.container.BackgroundColor3 = newTheme.ElementDark
+                    control.container.BackgroundTransparency = newTheme.ElementDarkTransparency
                     control.container.ScrollBarImageColor3 = newTheme.Accent
                 elseif control.type == "textinput" then
                     control.frame.BackgroundColor3 = newTheme.Element
+                    control.frame.BackgroundTransparency = newTheme.ElementTransparency
                     control.label.TextColor3 = newTheme.Text
                     control.input.BackgroundColor3 = newTheme.ElementDark
+                    control.input.BackgroundTransparency = newTheme.ElementDarkTransparency
                     control.input.TextColor3 = newTheme.Text
                     control.input.PlaceholderColor3 = newTheme.TextMuted
                 elseif control.type == "numberinput" then
                     control.frame.BackgroundColor3 = newTheme.Element
+                    control.frame.BackgroundTransparency = newTheme.ElementTransparency
                     control.label.TextColor3 = newTheme.Text
                     control.input.BackgroundColor3 = newTheme.ElementDark
+                    control.input.BackgroundTransparency = newTheme.ElementDarkTransparency
                     control.input.TextColor3 = newTheme.Text
                 elseif control.type == "keybind" then
                     control.frame.BackgroundColor3 = newTheme.Element
+                    control.frame.BackgroundTransparency = newTheme.ElementTransparency
                     control.label.TextColor3 = newTheme.Text
                     control.bindBtn.BackgroundColor3 = newTheme.ElementDark
+                    control.bindBtn.BackgroundTransparency = newTheme.ElementDarkTransparency
                     control.bindBtn.TextColor3 = newTheme.Accent
                 elseif control.type == "colorpicker" then
                     control.frame.BackgroundColor3 = newTheme.Element
+                    control.frame.BackgroundTransparency = newTheme.ElementTransparency
                     control.label.TextColor3 = newTheme.Text
                     control.container.BackgroundColor3 = newTheme.ElementDark
+                    control.container.BackgroundTransparency = newTheme.ElementDarkTransparency
                     control.rainbowBtn.BackgroundColor3 = newTheme.Element
+                    control.rainbowBtn.BackgroundTransparency = newTheme.ElementTransparency
                     control.rainbowBtn.TextColor3 = newTheme.Text
                 elseif control.type == "radiogroup" then
                     control.frame.BackgroundColor3 = newTheme.Element
+                    control.frame.BackgroundTransparency = newTheme.ElementTransparency
                     control.label.TextColor3 = newTheme.Text
                     for _, rb in ipairs(control.radioButtons) do
                         local outer = rb.Inner.Parent
                         outer.BackgroundColor3 = newTheme.ElementDark
+                        outer.BackgroundTransparency = newTheme.ElementDarkTransparency
                         local optLabel = outer.Parent:FindFirstChildWhichIsA("TextLabel")
                         if optLabel then optLabel.TextColor3 = newTheme.TextMuted end
                     end
                 elseif control.type == "paragraph" then
                     control.frame.BackgroundColor3 = newTheme.Element
+                    control.frame.BackgroundTransparency = newTheme.ElementTransparency
                     control.title.TextColor3 = newTheme.Accent
                     control.content.TextColor3 = newTheme.TextMuted
                     if control.imageLabel then
@@ -3209,17 +3375,21 @@ function SynergyUI:CreateWindow(options)
                     end
                 elseif control.type == "image" then
                     control.frame.BackgroundColor3 = newTheme.Element
+                    control.frame.BackgroundTransparency = newTheme.ElementTransparency
                     control.title.TextColor3 = newTheme.Text
                     control.arrow.TextColor3 = newTheme.TextMuted
                     if control.container then
                         control.container.BackgroundColor3 = newTheme.ElementDark
+                        control.container.BackgroundTransparency = newTheme.ElementDarkTransparency
                     end
                 elseif control.type == "video" then
                     control.frame.BackgroundColor3 = newTheme.Element
+                    control.frame.BackgroundTransparency = newTheme.ElementTransparency
                     control.title.TextColor3 = newTheme.Text
                     control.arrow.TextColor3 = newTheme.TextMuted
                     if control.container then
                         control.container.BackgroundColor3 = newTheme.ElementDark
+                        control.container.BackgroundTransparency = newTheme.ElementDarkTransparency
                     end
                 end
             end
@@ -3271,6 +3441,7 @@ function SynergyUI:CreateWindow(options)
         local tabBtn = Instance.new("TextButton")
         tabBtn.Parent = sidebar
         tabBtn.BackgroundColor3 = window.Theme.Sidebar
+        tabBtn.BackgroundTransparency = window.Theme.SidebarTransparency
         tabBtn.BorderSizePixel = 0
         tabBtn.Size = UDim2.new(1, 0, 0, 42)
         tabBtn.Text = ""
@@ -3286,6 +3457,18 @@ function SynergyUI:CreateWindow(options)
         tabLabel.TextSize = 14
         tabLabel.TextXAlignment = Enum.TextXAlignment.Left
         tabLabel.Text = name
+
+        local tabState = {Active = false}
+        tabBtn.MouseEnter:Connect(function()
+            if not tabState.Active then
+                createTween(tabBtn, 0.15, {BackgroundTransparency = math.max(window.Theme.SidebarTransparency - 0.35, 0)})
+            end
+        end)
+        tabBtn.MouseLeave:Connect(function()
+            if not tabState.Active then
+                createTween(tabBtn, 0.15, {BackgroundTransparency = window.Theme.SidebarTransparency})
+            end
+        end)
 
         local activeIndicator = Instance.new("Frame")
         activeIndicator.Parent = tabBtn
@@ -3317,6 +3500,7 @@ function SynergyUI:CreateWindow(options)
         scrollFrame.Parent = contentArea
         scrollFrame.Active = true
         scrollFrame.BackgroundColor3 = window.Theme.Background
+        scrollFrame.BackgroundTransparency = window.Theme.BackgroundTransparency
         scrollFrame.BorderSizePixel = 0
         scrollFrame.Size = UDim2.new(1, 0, 1, 0)
         scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
@@ -3341,7 +3525,7 @@ function SynergyUI:CreateWindow(options)
             scrollFrame.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + window.Theme.PaddingVertical * 2)
         end))
 
-        local tabData = {Button = tabBtn, Content = scrollFrame, ActiveIndicator = activeIndicator, Controls = {}}
+        local tabData = {Button = tabBtn, Content = scrollFrame, ActiveIndicator = activeIndicator, Controls = {}, State = tabState}
         table.insert(window.Tabs, tabData)
 
         if #window.Tabs == 1 then
@@ -3349,6 +3533,8 @@ function SynergyUI:CreateWindow(options)
             if lbl then lbl.TextColor3 = window.Theme.Accent end
             tabBtn.TextColor3 = window.Theme.Accent
             activeIndicator.Visible = true
+            tabState.Active = true
+            tabBtn.BackgroundTransparency = math.max(window.Theme.SidebarTransparency - 0.5, 0)
             if iconAsset and iconAsset ~= "" then
                 local img = tabBtn:FindFirstChild("ImageLabel")
                 if img then img.ImageColor3 = window.Theme.Accent end
@@ -3363,6 +3549,8 @@ function SynergyUI:CreateWindow(options)
                 t.Button.TextColor3 = window.Theme.TextMuted
                 t.Content.Visible = false
                 if t.ActiveIndicator then t.ActiveIndicator.Visible = false end
+                if t.State then t.State.Active = false end
+                createTween(t.Button, 0.15, {BackgroundTransparency = window.Theme.SidebarTransparency})
                 local img = t.Button:FindFirstChild("ImageLabel")
                 if img then img.ImageColor3 = window.Theme.TextMuted end
             end
@@ -3370,6 +3558,8 @@ function SynergyUI:CreateWindow(options)
             if lbl then lbl.TextColor3 = window.Theme.Accent end
             tabBtn.TextColor3 = window.Theme.Accent
             activeIndicator.Visible = true
+            tabState.Active = true
+            createTween(tabBtn, 0.15, {BackgroundTransparency = math.max(window.Theme.SidebarTransparency - 0.5, 0)})
             scrollFrame.Visible = true
             window.CurrentTab = scrollFrame
             local img = tabBtn:FindFirstChild("ImageLabel")
