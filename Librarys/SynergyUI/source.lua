@@ -548,7 +548,14 @@ end
 function ControlFactory:createToggle(options)
     local flag = options.Flag or options.Name
     local savedVal = self.configHandler and self.configHandler:Get(flag)
-    local state = (savedVal ~= nil and type(savedVal) == "boolean") and savedVal or (options.CurrentValue or false)
+    local state
+    if savedVal ~= nil and type(savedVal) == "boolean" then
+        state = savedVal
+    elseif options.CurrentValue ~= nil then
+        state = options.CurrentValue
+    else
+        state = false
+    end
 
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
@@ -618,7 +625,14 @@ end
 function ControlFactory:createCheckBox(options)
     local flag = options.Flag or options.Name
     local savedVal = self.configHandler and self.configHandler:Get(flag)
-    local state = (savedVal ~= nil and type(savedVal) == "boolean") and savedVal or (options.CurrentValue or false)
+    local state
+    if savedVal ~= nil and type(savedVal) == "boolean" then
+        state = savedVal
+    elseif options.CurrentValue ~= nil then
+        state = options.CurrentValue
+    else
+        state = false
+    end
 
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
@@ -895,16 +909,18 @@ function ControlFactory:createDropdown(options)
     local savedVal = self.configHandler and self.configHandler:Get(flag)
     local selected = {}
     if multi then
-        if savedVal and type(savedVal) == "table" then
-            for _, v in ipairs(savedVal) do selected[v] = true end
-        elseif options.CurrentSelected and type(options.CurrentSelected) == "table" then
+        if options.CurrentSelected and type(options.CurrentSelected) == "table" then
             for _, v in ipairs(options.CurrentSelected) do selected[v] = true end
+        elseif savedVal and type(savedVal) == "table" then
+            for _, v in ipairs(savedVal) do selected[v] = true end
         end
     else
-        if savedVal and type(savedVal) == "string" and table.find(optionsList, savedVal) then
+        if options.CurrentOption and table.find(optionsList, options.CurrentOption) then
+            selected = options.CurrentOption
+        elseif savedVal and type(savedVal) == "string" and table.find(optionsList, savedVal) then
             selected = savedVal
         else
-            selected = options.CurrentOption or optionsList[1] or ""
+            selected = optionsList[1] or ""
         end
     end
 
@@ -1772,10 +1788,12 @@ function ControlFactory:createRadioGroup(options)
     local flag = options.Flag or options.Name
     local savedVal = self.configHandler and self.configHandler:Get(flag)
     local selected
-    if savedVal ~= nil and type(savedVal) == "string" and table.find(options.Options, savedVal) then
+    if options.CurrentValue and table.find(options.Options, options.CurrentValue) then
+        selected = options.CurrentValue
+    elseif savedVal ~= nil and type(savedVal) == "string" and table.find(options.Options, savedVal) then
         selected = savedVal
     else
-        selected = options.CurrentValue or options.Options[1] or ""
+        selected = options.Options[1] or ""
     end
 
     local frame = Instance.new("Frame")
