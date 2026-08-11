@@ -1,4 +1,4 @@
-local library = loadstring(game:HttpGet('https://raw.githubusercontent.com/Xyraniz/VaultUI/refs/heads/main/Libraries/Criminality%20Lib/source.lua'))()
+local library = loadstring(game:HttpGet('https://raw.githubusercontent.com/Xyraniz/VaultUI/refs/heads/main/Libraries/Criminality-Lib/source.lua'))()
 
 -- // Window \\ --
 local window = library.new('leadmarker is so hot', 'leadmarker')
