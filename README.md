@@ -20,9 +20,9 @@ Whether you are prototyping a hub, learning how GUI libraries are structured in 
 
 - **Everything in one place.** 15+ UI libraries from different original authors, archived and organized by name.
 
-- **Full source included.** Every `Source.lua` is stored in this repository, so a library never disappears if the original repo goes down.
+- **Full source included.** Every `source.lua` is stored in this repository, so a library never disappears if the original repo goes down.
 
-- **Ready-to-use loadstrings.** Each `Example.lua` shows how to load and use the library with a single `game:HttpGet` call.
+- **Ready-to-use loadstrings.** Each `example.lua` shows how to load and use the library with a single `game:HttpGet` call.
 
 - **Visual previews.** Screenshot of each library's default appearance so you can pick the look you want before loading anything.
 
@@ -32,24 +32,24 @@ Whether you are prototyping a hub, learning how GUI libraries are structured in 
 
 | # | Library | Type | Source | Example | Preview |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 0x37 | Loadstring + backup | [Source](Libraries/0x37/Source.lua) | [Example](Libraries/0x37/Example.lua) | Preview |
-| 2 | Apple Library | Source | [Source](Libraries/Apple/Source.lua) | [Example](Libraries/Apple/Example.lua) | Preview |
-| 3 | Avilon (Modified) | Source | [Source](Libraries/Avilon-Modified/Source.lua) | — | — |
-| 4 | Aztup | Loadstring + source | [Source](Libraries/Aztup/Source.lua) | [Example](Libraries/Aztup/Example.lua) | Preview |
-| 5 | BaconLib | Source | [Source](Libraries/Bacon/Source.lua) | [Example](Libraries/Bacon/Example.lua) | Preview |
-| 6 | BlekLib | Loadstring + source | [Source](Libraries/Blek/Source.lua) | [Example](Libraries/Blek/Example.lua) | Preview |
-| 7 | Criminality UI Lib | Loadstring + source | [Source](Libraries/Criminality%20Lib/Source.lua) | [Example](Libraries/Criminality%20Lib/Example.lua) | Preview |
-| 8 | Daino | Loadstring | [Source](Libraries/Daino/Source.lua) | [Example](Libraries/Daino/Example.lua) | Preview |
-| 9 | DarkraiX | Source | [Source](Libraries/DarkraiX/Source.lua) | [Example](Libraries/DarkraiX/Example.lua) | Preview |
-| 10 | Dirt | Loadstring + source | [Source](Libraries/Dirt/Source.lua) | [Example](Libraries/Dirt/Example.lua) | Preview |
-| 11 | Discord Lib | Loadstring | [Source](Libraries/Discord%20Lib/Source.lua) | [Example](Libraries/Discord%20Lib/Example.lua) | Preview |
-| 12 | Essential Lib | Loadstring + source | [Source](Libraries/Essential/Source.lua) | [Example](Libraries/Essential/Example.lua) | Preview |
-| 13 | Flux UI | Loadstring + source | [Source](Libraries/Flux/Source.lua) | [Example](Libraries/Flux/Example.lua) | Preview |
-| 14 | FriseX | Loadstring + source | [Source](Libraries/FriseX/Source.lua) | [Example](Libraries/FriseX/Example.lua) | Preview |
-| 15 | Fuzki | Loadstring + source | [Source](Libraries/Fuzki/Source.lua) | [Example](Libraries/Fuzki/Example.lua) | Preview |
-| 16 | Gostmi | Source | [Source](Libraries/Gostmi/Source.lua) | [Example](Libraries/Gostmi/Example.lua) | Preview |
-| 17 | Hook GUI | Source | [Source](Libraries/Hook/Source.lua) | [Example](Libraries/Hook/Example.lua) | Preview |
-| 18 | NexusLib | Source | [Source](Libraries/NexusLib/Source.lua) | [Example](Libraries/NexusLib/Example.lua) | — |
+| 1 | 0x37 | Loadstring + backup | [Source](Libraries/0x37/source.lua) | [Example](Libraries/0x37/example.lua) | Preview |
+| 2 | Apple Library | Source | [Source](Libraries/Apple/source.lua) | [Example](Libraries/Apple/example.lua) | Preview |
+| 3 | Avilon (Modified) | Source | [Source](Libraries/Avilon-Modified/source.lua) | — | — |
+| 4 | Aztup | Loadstring + source | [Source](Libraries/Aztup/source.lua) | [Example](Libraries/Aztup/example.lua) | Preview |
+| 5 | BaconLib | Source | [Source](Libraries/Bacon/source.lua) | [Example](Libraries/Bacon/example.lua) | Preview |
+| 6 | BlekLib | Loadstring + source | [Source](Libraries/Blek/source.lua) | [Example](Libraries/Blek/example.lua) | Preview |
+| 7 | Criminality UI Lib | Loadstring + source | [Source](Libraries/Criminality%20Lib/source.lua) | [Example](Libraries/Criminality%20Lib/example.lua) | Preview |
+| 8 | Daino | Loadstring | [Source](Libraries/Daino/source.lua) | [Example](Libraries/Daino/example.lua) | Preview |
+| 9 | DarkraiX | Source | [Source](Libraries/DarkraiX/source.lua) | [Example](Libraries/DarkraiX/example.lua) | Preview |
+| 10 | Dirt | Loadstring + source | [Source](Libraries/Dirt/source.lua) | [Example](Libraries/Dirt/example.lua) | Preview |
+| 11 | Discord Lib | Loadstring | [Source](Libraries/Discord%20Lib/source.lua) | [Example](Libraries/Discord%20Lib/example.lua) | Preview |
+| 12 | Essential Lib | Loadstring + source | [Source](Libraries/Essential/source.lua) | [Example](Libraries/Essential/example.lua) | Preview |
+| 13 | Flux UI | Loadstring + source | [Source](Libraries/Flux/source.lua) | [Example](Libraries/Flux/example.lua) | Preview |
+| 14 | FriseX | Loadstring + source | [Source](Libraries/FriseX/source.lua) | [Example](Libraries/FriseX/example.lua) | Preview |
+| 15 | Fuzki | Loadstring + source | [Source](Libraries/Fuzki/source.lua) | [Example](Libraries/Fuzki/example.lua) | Preview |
+| 16 | Gostmi | Source | [Source](Libraries/Gostmi/source.lua) | [Example](Libraries/Gostmi/example.lua) | Preview |
+| 17 | Hook GUI | Source | [Source](Libraries/Hook/source.lua) | [Example](Libraries/Hook/example.lua) | Preview |
+| 18 | NexusLib | Source | [Source](Libraries/NexusLib/source.lua) | [Example](Libraries/NexusLib/example.lua) | — |
 | 19 | SynergyUI | Source | [Source](Libraries/SynergyUI/source.lua) | — | — |
 
 > Preview images are available inside each library folder (e.g., `Libraries/Bacon/Screenshot_*.jpg`) and in each library's `README.md`.
@@ -58,11 +58,11 @@ Whether you are prototyping a hub, learning how GUI libraries are structured in 
 
 ## Quick Start
 
-Loading a library takes a single line. Copy the loadstring from any `Example.lua`, or build your own from the included source:
+Loading a library takes a single line. Copy the loadstring from any `example.lua`, or build your own from the included source:
 
 ```lua
--- Example: loading BaconLib (full source is also stored in Libraries/Bacon/Source.lua)
-local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Xyraniz/UI-Libs/main/Libraries/Bacon/Source.lua" ))()
+-- Example: loading BaconLib (full source is also stored in Libraries/Bacon/source.lua)
+local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Xyraniz/UI-Libs/main/Libraries/Bacon/source.lua" ))()
 local window = lib:CreateWindow("My Hub")
 window:Button("Click me", function()
     print("It works!")
@@ -73,8 +73,8 @@ Each library folder follows the same layout:
 
 ```
 Libraries/<LibraryName>/
-├── Source.lua      # Full library source code
-├── Example.lua     # Minimal working example
+├── source.lua      # Full library source code
+├── example.lua     # Minimal working example
 ├── README.md       # Preview screenshot
 └── Screenshot_*    # Visual preview of the library
 ```
@@ -85,7 +85,7 @@ Libraries/<LibraryName>/
 
 Contributions are welcome! If you want to help grow this collection:
 
-1. **Add a library** — create a folder under `Libraries/` with its `Source.lua`, an `Example.lua`, and a preview screenshot.
+1. **Add a library** — create a folder under `Libraries/` with its `source.lua`, an `example.lua`, and a preview screenshot.
 
 1. **Report broken links** — open an [issue](https://github.com/Xyraniz/UI-Libs/issues) if a loadstring or source no longer works.
 
@@ -107,7 +107,7 @@ If you encounter broken links, missing libraries, or functionality issues, feel 
 
 ## License & Attribution
 
-This repository is a **preservation and archival collection**. The libraries included belong to their original authors (H3x0R, dawid-scripts, bloodball, and others, as credited in each `Source.lua` file) and remain under their respective original licenses. If you are an original author and would like your library removed or updated, please contact me.
+This repository is a **preservation and archival collection**. The libraries included belong to their original authors (H3x0R, dawid-scripts, bloodball, and others, as credited in each `source.lua` file) and remain under their respective original licenses. If you are an original author and would like your library removed or updated, please contact me.
 
 **Maintained by** [xyraniz](https://github.com/Xyraniz) · **Contact:** Discord – `xyraniz` · **Email:** [xyraniz@protonmail.com](mailto:xyraniz@protonmail.com)
 
