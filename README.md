@@ -109,7 +109,7 @@ If you encounter broken links, missing libraries, or functionality issues, feel 
 
 This repository is a **preservation and archival collection**. The libraries included belong to their original authors (H3x0R, dawid-scripts, bloodball, and others, as credited in each `Source.lua` file) and remain under their respective original licenses. If you are an original author and would like your library removed or updated, please contact me.
 
-**Maintained by** [xyraniz](https://github.com/Xyraniz) · **Contact:** Discord – `xyraniz.` · **Email:** [xyraniz@protonmail.com](mailto:xyraniz@protonmail.com)
+**Maintained by** [xyraniz](https://github.com/Xyraniz) · **Contact:** Discord – `xyraniz` · **Email:** [xyraniz@protonmail.com](mailto:xyraniz@protonmail.com)
 
 <div align="center">
 
