@@ -1,4 +1,4 @@
-local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/laagginq/ui-libraries/main/aztup/src.lua"))();
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Xyraniz/VaultUI/refs/heads/main/Libraries/Aztup/source.lua"))();
 
 
 local Gamer = library:CreateSection("A");
