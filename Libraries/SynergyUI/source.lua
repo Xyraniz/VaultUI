@@ -908,17 +908,29 @@ function ControlFactory:createDropdown(options)
     local searchable = options.Searchable or false
     local savedVal = self.configHandler and self.configHandler:Get(flag)
     local selected = {}
+
+    -- Los datos persistidos tienen prioridad sobre los valores iniciales.
+    -- CurrentOption y CurrentSelected se usan Ãºnicamente como fallback
+    -- cuando no existe una selecciÃ³n guardada que siga disponible.
     if multi then
-        if options.CurrentSelected and type(options.CurrentSelected) == "table" then
-            for _, v in ipairs(options.CurrentSelected) do selected[v] = true end
-        elseif savedVal and type(savedVal) == "table" then
-            for _, v in ipairs(savedVal) do selected[v] = true end
+        if type(savedVal) == "table" then
+            for _, v in ipairs(savedVal) do
+                if table.find(optionsList, v) then
+                    selected[v] = true
+                end
+            end
+        elseif type(options.CurrentSelected) == "table" then
+            for _, v in ipairs(options.CurrentSelected) do
+                if table.find(optionsList, v) then
+                    selected[v] = true
+                end
+            end
         end
     else
-        if options.CurrentOption and table.find(optionsList, options.CurrentOption) then
-            selected = options.CurrentOption
-        elseif savedVal and type(savedVal) == "string" and table.find(optionsList, savedVal) then
+        if type(savedVal) == "string" and table.find(optionsList, savedVal) then
             selected = savedVal
+        elseif options.CurrentOption and table.find(optionsList, options.CurrentOption) then
+            selected = options.CurrentOption
         else
             selected = optionsList[1] or ""
         end
