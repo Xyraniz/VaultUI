@@ -1,3 +1,4 @@
+local SynergyUI = {}
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -31,14 +32,6 @@ local function addStroke(frame, color, thickness, transparency)
     stroke.Transparency = transparency or 0.85
     stroke.Parent = frame
     return stroke
-end
-
-local function cloneTheme(theme)
-    local copy = {}
-    for key, value in pairs(theme or {}) do
-        copy[key] = value
-    end
-    return copy
 end
 
 local function createTween(instance, duration, properties, style, direction)
@@ -502,8 +495,7 @@ function ControlFactory:createButton(options)
     btn.TextColor3 = self.theme.Text
     btn.TextSize = self.theme.TextSizeNormal
 
-    -- El botÃ³n es transparente; el hover se aplica a la tarjeta visible.
-    addHoverEffect(frame, self.theme.Element, self.theme.HoverColor, true)
+    addHoverEffect(btn, self.theme.Element, self.theme.HoverColor, true)
 
     local connection = btn.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -626,7 +618,7 @@ function ControlFactory:createToggle(options)
     local connection = btn.MouseButton1Click:Connect(function() update(not state) end)
     if state then pcall(options.Callback, state) end
 
-    table.insert(self.createdControls, {type = "toggle", frame = frame, label = label, outer = outer, inner = inner, btn = btn, stateVar = state, getState = function() return state end, update = update})
+    table.insert(self.createdControls, {type = "toggle", frame = frame, label = label, outer = outer, inner = inner, btn = btn, stateVar = state, update = update})
     return frame, connection
 end
 
@@ -704,7 +696,7 @@ function ControlFactory:createCheckBox(options)
     local connection = btn.MouseButton1Click:Connect(function() update(not state) end)
     if state then pcall(options.Callback, state) end
 
-    table.insert(self.createdControls, {type = "checkbox", frame = frame, label = label, checkFrame = checkFrame, checkIcon = checkIcon, btn = btn, stateVar = state, getState = function() return state end})
+    table.insert(self.createdControls, {type = "checkbox", frame = frame, label = label, checkFrame = checkFrame, checkIcon = checkIcon, btn = btn, stateVar = state})
     return frame, connection
 end
 
@@ -916,23 +908,25 @@ function ControlFactory:createDropdown(options)
     local searchable = options.Searchable or false
     local savedVal = self.configHandler and self.configHandler:Get(flag)
     local selected = {}
+
+    -- Los datos persistidos tienen prioridad sobre los valores iniciales.
+    -- CurrentOption y CurrentSelected se usan Ãºnicamente como fallback
+    -- cuando no existe una selecciÃ³n guardada que siga disponible.
     if multi then
-        -- La configuraciÃ³n persistida debe tener prioridad sobre el valor inicial.
-        local initialValues
         if type(savedVal) == "table" then
-            initialValues = savedVal
+            for _, v in ipairs(savedVal) do
+                if table.find(optionsList, v) then
+                    selected[v] = true
+                end
+            end
         elseif type(options.CurrentSelected) == "table" then
-            initialValues = options.CurrentSelected
-        else
-            initialValues = {}
-        end
-        for _, v in ipairs(initialValues) do
-            if table.find(optionsList, v) then
-                selected[v] = true
+            for _, v in ipairs(options.CurrentSelected) do
+                if table.find(optionsList, v) then
+                    selected[v] = true
+                end
             end
         end
     else
-        -- CurrentOption es un valor por defecto; no reemplaza una opciÃ³n guardada.
         if type(savedVal) == "string" and table.find(optionsList, savedVal) then
             selected = savedVal
         elseif options.CurrentOption and table.find(optionsList, options.CurrentOption) then
@@ -973,8 +967,6 @@ function ControlFactory:createDropdown(options)
     container.Size = UDim2.new(1, 0, 0, 0)
     container.ScrollBarThickness = 4
     container.ScrollBarImageColor3 = self.theme.Accent
-    container.ClipsDescendants = true
-    addCorner(container, math.max(self.theme.CornerRadius - 3, 8))
     container.CanvasSize = UDim2.new(0, 0, 0, 0)
 
     if searchable then
@@ -1024,8 +1016,6 @@ function ControlFactory:createDropdown(options)
                 optFrame.BackgroundTransparency = self.theme.ElementDarkTransparency
                 optFrame.Size = UDim2.new(1, 0, 0, self.theme.DropdownItemHeight)
                 optFrame.BorderSizePixel = 0
-                optFrame.ClipsDescendants = true
-                addCorner(optFrame, math.max(self.theme.CornerRadius - 4, 7))
 
                 local optBtn = Instance.new("TextButton")
                 optBtn.Parent = optFrame
@@ -1036,8 +1026,7 @@ function ControlFactory:createDropdown(options)
                 optBtn.TextColor3 = self.theme.TextMuted
                 optBtn.TextSize = self.theme.TextSizeSmall
                 optBtn.TextXAlignment = Enum.TextXAlignment.Left
-                -- La fila contiene el botÃ³n transparente, por lo que el hover debe teÃ±ir la fila.
-                addHoverEffect(optFrame, self.theme.ElementDark, self.theme.HoverColor, false)
+                addHoverEffect(optBtn, self.theme.ElementDark, self.theme.HoverColor, false)
 
                 if multi then
                     local check = Instance.new("Frame")
@@ -1058,7 +1047,7 @@ function ControlFactory:createDropdown(options)
                         end
                         updateButtonText()
                         pcall(options.Callback, opt, selected[opt])
-                        if self.configHandler then self.configHandler:SetImmediate(flag, flagObj:GetValue()) end
+                        if self.configHandler then self.configHandler:Set(flag, flagObj:GetValue()) end
                     else
                         selected = opt
                         updateButtonText()
@@ -1067,11 +1056,10 @@ function ControlFactory:createDropdown(options)
                         container.Size = UDim2.new(1, 0, 0, 0)
                         createTween(icon, 0.18, {Rotation = 0})
                         pcall(options.Callback, opt)
-                        if self.configHandler then self.configHandler:SetImmediate(flag, selected) end
+                        if self.configHandler then self.configHandler:Set(flag, selected) end
                     end
                 end)
-                -- Guardamos la fila completa para que rebuild no deje contenedores vacÃ­os.
-                table.insert(optionButtons, optFrame)
+                table.insert(optionButtons, optBtn)
             end
         end
         container.CanvasSize = UDim2.new(0, 0, 0, #optionButtons * self.theme.DropdownItemHeight + (searchable and 40 or 8))
@@ -1122,7 +1110,7 @@ function ControlFactory:createDropdown(options)
             updateButtonText()
             rebuild()
             pcall(options.Callback, v)
-            if self.configHandler then self.configHandler:SetImmediate(flag, flagObj:GetValue()) end
+            if self.configHandler then self.configHandler:Set(flag, flagObj:GetValue()) end
         end,
         AddOption = function(_, opt)
             if not table.find(optionsList, opt) then
@@ -1138,7 +1126,7 @@ function ControlFactory:createDropdown(options)
                 elseif selected == opt then selected = "" end
                 rebuild()
                 updateButtonText()
-                if self.configHandler then self.configHandler:SetImmediate(flag, flagObj:GetValue()) end
+                if self.configHandler then self.configHandler:Set(flag, flagObj:GetValue()) end
             end
         end,
         ClearOptions = function()
@@ -1146,7 +1134,7 @@ function ControlFactory:createDropdown(options)
             selected = multi and {} or ""
             rebuild()
             updateButtonText()
-            if self.configHandler then self.configHandler:SetImmediate(flag, flagObj:GetValue()) end
+            if self.configHandler then self.configHandler:Set(flag, flagObj:GetValue()) end
         end,
         Select = function(_, val)
             if multi then
@@ -1159,7 +1147,7 @@ function ControlFactory:createDropdown(options)
             updateButtonText()
             rebuild()
             pcall(options.Callback, val)
-            if self.configHandler then self.configHandler:SetImmediate(flag, flagObj:GetValue()) end
+            if self.configHandler then self.configHandler:Set(flag, flagObj:GetValue()) end
         end
     }
     self.controls[flag] = flagObj
@@ -1202,10 +1190,8 @@ function ControlFactory:createChecklist(options)
     local countLabel = Instance.new("TextLabel")
     countLabel.Parent = frame
     countLabel.BackgroundTransparency = 1
-    -- La etiqueta pertenece a la cabecera; no debe usar el 0.5 del frame expandible.
-    countLabel.Position = UDim2.new(1, -80, 0, (self.theme.ChecklistHeight - 20) / 2)
+    countLabel.Position = UDim2.new(1, -80, 0.5, -10)
     countLabel.Size = UDim2.new(0, 60, 0, 20)
-    countLabel.ZIndex = 2
     countLabel.Font = self.theme.Font
     countLabel.Text = "0 selected"
     countLabel.TextColor3 = self.theme.Accent
@@ -1223,8 +1209,6 @@ function ControlFactory:createChecklist(options)
     container.Size = UDim2.new(1, 0, 0, 0)
     container.ScrollBarThickness = 4
     container.ScrollBarImageColor3 = self.theme.Accent
-    container.ClipsDescendants = true
-    addCorner(container, math.max(self.theme.CornerRadius - 3, 8))
     container.CanvasSize = UDim2.new(0, 0, 0, 0)
 
     local layout = Instance.new("UIListLayout")
@@ -1257,8 +1241,6 @@ function ControlFactory:createChecklist(options)
             row.BackgroundTransparency = self.theme.ElementDarkTransparency
             row.BorderSizePixel = 0
             row.Size = UDim2.new(1, 0, 0, self.theme.ChecklistItemHeight)
-            row.ClipsDescendants = true
-            addCorner(row, math.max(self.theme.CornerRadius - 4, 7))
 
             local toggleOuter = Instance.new("Frame")
             toggleOuter.Parent = row
@@ -2877,17 +2859,6 @@ function ConfigHandler:ScheduleSave()
     end)
 end
 
--- Se usa para controles cuyo valor debe sobrevivir incluso a un cambio de servidor inmediato.
-function ConfigHandler:SaveNow()
-    self.pendingSave = false
-    saveConfigToFile(self.configName, self.data)
-end
-
-function ConfigHandler:SetImmediate(key, value)
-    self.data[key] = value
-    self:SaveNow()
-end
-
 function ConfigHandler:GetAll()
     return self.data
 end
@@ -2904,7 +2875,7 @@ function SynergyUI:CreateWindow(options)
         Tabs = {},
         Connections = {},
         CurrentTab = nil,
-        Theme = cloneTheme(Themes[options.Theme]),
+        Theme = Themes[options.Theme],
         ToggleKey = options.ToggleKey or Enum.KeyCode.RightShift,
         IsVisible = true,
         IsMinimized = false,
@@ -2939,7 +2910,7 @@ function SynergyUI:CreateWindow(options)
     end
 
     if savedConfig.__theme and Themes[savedConfig.__theme] then
-        window.Theme = cloneTheme(Themes[savedConfig.__theme])
+        window.Theme = Themes[savedConfig.__theme]
         if options.AccentColor then window.Theme.Accent = options.AccentColor end
     end
 
@@ -2980,10 +2951,7 @@ function SynergyUI:CreateWindow(options)
         mainFrame.Size = UDim2.new(0, 560, 0, 380)
     end
 
-    -- Se conserva el alto expandido aunque la ventana pase temporalmente a 42 px.
-    local expandedWindowHeight = math.clamp(mainFrame.Size.Y.Offset, 280, 820)
-
-    mainFrame.Position = UDim2.new(0.5, -mainFrame.Size.X.Offset / 2, 0.5, -mainFrame.Size.Y.Offset / 2)
+    mainFrame.Position = UDim2.new(0.5, -280, 0.5, -190)
 
     local topBar = Instance.new("Frame")
     topBar.Name = "TopBar"
@@ -3209,7 +3177,6 @@ function SynergyUI:CreateWindow(options)
             local delta = input.Position - resizeStart
             local newWidth = math.clamp(startSize.X.Offset + delta.X, 460, 1200)
             local newHeight = math.clamp(startSize.Y.Offset + delta.Y, 280, 820)
-            expandedWindowHeight = newHeight
             mainFrame.Size = UDim2.new(0, newWidth, 0, newHeight)
         end
     end))
@@ -3224,14 +3191,12 @@ function SynergyUI:CreateWindow(options)
     addConnection(minBtn.MouseButton1Click:Connect(function()
         window.IsMinimized = not window.IsMinimized
         if window.IsMinimized then
-            expandedWindowHeight = math.clamp(mainFrame.Size.Y.Offset, 280, 820)
             createTween(mainFrame, 0.35, {Size = UDim2.new(0, mainFrame.Size.X.Offset, 0, 42)})
             sidebar.Visible = false
             contentArea.Visible = false
             resizeHandle.Visible = false
         else
-            local restoreHeight = math.clamp(expandedWindowHeight, 280, 820)
-            createTween(mainFrame, 0.35, {Size = UDim2.new(0, mainFrame.Size.X.Offset, 0, restoreHeight)})
+            createTween(mainFrame, 0.35, {Size = UDim2.new(0, mainFrame.Size.X.Offset, 0, 380)})
             sidebar.Visible = true
             contentArea.Visible = true
             resizeHandle.Visible = true
@@ -3388,20 +3353,16 @@ function SynergyUI:CreateWindow(options)
                     if strokeBtn then strokeBtn.Color = newTheme.StrokeColor end
                     control.btn.TextColor3 = newTheme.Text
                 elseif control.type == "toggle" then
-                    local toggleActive = control.stateVar
-                    if control.getState then toggleActive = control.getState() end
                     control.frame.BackgroundColor3 = newTheme.Element
                     control.frame.BackgroundTransparency = newTheme.ElementTransparency
-                    control.label.TextColor3 = toggleActive and newTheme.Accent or newTheme.Text
+                    control.label.TextColor3 = control.stateVar and newTheme.Accent or newTheme.Text
                     control.outer.BackgroundColor3 = newTheme.ElementDark
                     control.outer.BackgroundTransparency = newTheme.ElementDarkTransparency
-                    control.inner.BackgroundColor3 = toggleActive and newTheme.Accent or newTheme.TextMuted
+                    control.inner.BackgroundColor3 = control.stateVar and newTheme.Accent or newTheme.TextMuted
                 elseif control.type == "checkbox" then
-                    local checkboxActive = control.stateVar
-                    if control.getState then checkboxActive = control.getState() end
                     control.frame.BackgroundColor3 = newTheme.Element
                     control.frame.BackgroundTransparency = newTheme.ElementTransparency
-                    control.label.TextColor3 = checkboxActive and newTheme.Accent or newTheme.Text
+                    control.label.TextColor3 = control.stateVar and newTheme.Accent or newTheme.Text
                     control.checkFrame.BackgroundColor3 = newTheme.ElementDark
                     control.checkFrame.BackgroundTransparency = newTheme.ElementDarkTransparency
                     control.checkIcon.ImageColor3 = newTheme.Accent
@@ -3549,9 +3510,6 @@ function SynergyUI:CreateWindow(options)
     end
 
     function window:Destroy()
-        if window.ConfigHandler then
-            window.ConfigHandler:SaveNow()
-        end
         for _, conn in ipairs(window.Connections) do
             if conn and conn.Connected then conn:Disconnect() end
         end
@@ -3571,8 +3529,6 @@ function SynergyUI:CreateWindow(options)
         tabBtn.BorderSizePixel = 0
         tabBtn.Size = UDim2.new(1, 0, 0, 42)
         tabBtn.Text = ""
-        tabBtn.ClipsDescendants = true
-        addCorner(tabBtn, math.max(window.Theme.CornerRadius - 4, 8))
         tabBtn.Position = UDim2.new(0, window.Theme.PaddingHorizontal + 10, 0, 0)
 
         local tabLabel = Instance.new("TextLabel")
