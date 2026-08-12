@@ -1,5 +1,4 @@
 local SynergyUI = {}
-
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
@@ -9,7 +8,6 @@ local HttpService = game:GetService("HttpService")
 local TextService = game:GetService("TextService")
 local Mouse = Players.LocalPlayer and Players.LocalPlayer:GetMouse() or nil
 local _anyKeybindBinding = false
-
 local function getDefaultParent()
     if RunService:IsStudio() then
         local player = Players.LocalPlayer
@@ -17,14 +15,12 @@ local function getDefaultParent()
     end
     return CoreGui
 end
-
 local function addCorner(frame, radius)
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, radius)
     corner.Parent = frame
     return corner
 end
-
 local function addStroke(frame, color, thickness, transparency)
     local stroke = Instance.new("UIStroke")
     stroke.Color = color
@@ -33,7 +29,6 @@ local function addStroke(frame, color, thickness, transparency)
     stroke.Parent = frame
     return stroke
 end
-
 local function createTween(instance, duration, properties, style, direction)
     style = style or Enum.EasingStyle.Quint
     direction = direction or Enum.EasingDirection.Out
@@ -42,7 +37,6 @@ local function createTween(instance, duration, properties, style, direction)
     tween:Play()
     return tween
 end
-
 local function addHoverEffect(button, originalColor, hoverColor, useScale)
     local scale = nil
     if useScale then
@@ -59,7 +53,6 @@ local function addHoverEffect(button, originalColor, hoverColor, useScale)
         if scale then createTween(scale, 0.18, {Scale = 1}) end
     end)
 end
-
 local function createChevron(parent, color)
     local holder = Instance.new("Frame")
     holder.Name = "Chevron"
@@ -69,7 +62,6 @@ local function createChevron(parent, color)
     holder.Position = UDim2.new(1, -24, 0.5, 0)
     holder.Size = UDim2.new(0, 20, 0, 20)
     holder.Rotation = 0
-
     local left = Instance.new("Frame")
     left.Name = "Left"
     left.Parent = holder
@@ -81,7 +73,6 @@ local function createChevron(parent, color)
     left.Rotation = 45
     left.Size = UDim2.new(0, 9, 0, 2)
     addCorner(left, 2)
-
     local right = Instance.new("Frame")
     right.Name = "Right"
     right.Parent = holder
@@ -93,17 +84,14 @@ local function createChevron(parent, color)
     right.Rotation = -45
     right.Size = UDim2.new(0, 9, 0, 2)
     addCorner(right, 2)
-
     return holder
 end
-
 local function setChevronColor(chevron, color)
     local left = chevron:FindFirstChild("Left")
     local right = chevron:FindFirstChild("Right")
     if left then left.BackgroundColor3 = color end
     if right then right.BackgroundColor3 = color end
 end
-
 local function ripple(button, x, y)
     task.spawn(function()
         local circle = Instance.new("ImageLabel")
@@ -117,21 +105,18 @@ local function ripple(button, x, y)
         circle.ZIndex = 100
         circle.Parent = button
         addCorner(circle, 999)
-
         local size = math.max(button.AbsoluteSize.X, button.AbsoluteSize.Y) * 1.2
         createTween(circle, 0.3, {Size = UDim2.new(0, size, 0, size), Position = UDim2.new(0.5, -size/2, 0.5, -size/2), ImageTransparency = 1})
         task.wait(0.3)
         circle:Destroy()
     end)
 end
-
 local function ensureFolder(folderPath)
     if not isfolder then return end
     if not isfolder(folderPath) then
         makefolder(folderPath)
     end
 end
-
 local function loadConfigFromFile(configName)
     local path = "SynergyUI/Settings/" .. configName .. ".json"
     if not isfile(path) then return nil end
@@ -144,7 +129,6 @@ local function loadConfigFromFile(configName)
     end
     return nil
 end
-
 local function saveConfigToFile(configName, data)
     if not writefile then return end
     ensureFolder("SynergyUI")
@@ -155,18 +139,15 @@ local function saveConfigToFile(configName, data)
         pcall(writefile, path, encoded)
     end
 end
-
 local NotificationQueue = {}
 local function showNextNotification()
     if #NotificationQueue == 0 then return end
     local n = table.remove(NotificationQueue, 1)
-
     local gui = Instance.new("ScreenGui")
     gui.Name = "SynergyToast_" .. HttpService:GenerateGUID(false)
     gui.Parent = n.Parent or getDefaultParent()
     gui.ResetOnSpawn = false
     gui.IgnoreGuiInset = true
-
     local colors = {
         info = Color3.fromRGB(0, 170, 255),
         done = Color3.fromRGB(0, 230, 100),
@@ -184,7 +165,6 @@ local function showNextNotification()
         typeColor = colors.info
     end
     local iconId = iconMap[n.Type] or "rbxassetid://7021995683"
-
     local frame = Instance.new("Frame")
     frame.Parent = gui
     frame.BackgroundColor3 = Color3.fromRGB(13, 13, 13)
@@ -192,7 +172,6 @@ local function showNextNotification()
     frame.Size = UDim2.new(0, 320, 0, 68)
     addCorner(frame, 14)
     addStroke(frame, Color3.fromRGB(255,255,255), 1, 0.92)
-
     local pos = n.Position or "TopRight"
     if pos == "TopRight" then
         frame.Position = UDim2.new(1, 330, 0, 25)
@@ -207,7 +186,6 @@ local function showNextNotification()
         frame.Position = UDim2.new(0, -330, 1, -93)
         frame.AnchorPoint = Vector2.new(0, 1)
     end
-
     local icon = Instance.new("ImageLabel")
     icon.Parent = frame
     icon.BackgroundTransparency = 1
@@ -215,13 +193,11 @@ local function showNextNotification()
     icon.Position = UDim2.new(0, 12, 0.5, -12)
     icon.Image = iconId
     icon.ImageColor3 = typeColor
-
     local indicator = Instance.new("Frame")
     indicator.Parent = frame
     indicator.BackgroundColor3 = typeColor
     indicator.Size = UDim2.new(0, 6, 1, 0)
     addCorner(indicator, 14)
-
     local label = Instance.new("TextLabel")
     label.Parent = frame
     label.BackgroundTransparency = 1
@@ -233,14 +209,12 @@ local function showNextNotification()
     label.TextSize = 14.5
     label.TextWrapped = true
     label.TextXAlignment = Enum.TextXAlignment.Left
-
     local targetPos
     if pos == "TopRight" then targetPos = UDim2.new(1, -15, 0, 25)
     elseif pos == "TopLeft" then targetPos = UDim2.new(0, 15, 0, 25)
     elseif pos == "BottomRight" then targetPos = UDim2.new(1, -15, 1, -93)
     else targetPos = UDim2.new(0, 15, 1, -93) end
     createTween(frame, 0.45, {Position = targetPos})
-
     task.spawn(function()
         task.wait(n.Duration or 4.2)
         local exitPos
@@ -255,7 +229,6 @@ local function showNextNotification()
         showNextNotification()
     end)
 end
-
 function SynergyUI:Notify(options)
     if type(options) == "string" then
         options = { Message = options }
@@ -269,14 +242,12 @@ function SynergyUI:Notify(options)
     table.insert(NotificationQueue, options)
     if #NotificationQueue == 1 then showNextNotification() end
 end
-
 function SynergyUI:CreateGameNotification(options)
     local gui = Instance.new("ScreenGui")
     gui.Name = "SynergyGameNotify_" .. HttpService:GenerateGUID(false)
     gui.Parent = options.Parent or getDefaultParent()
     gui.ResetOnSpawn = false
     gui.IgnoreGuiInset = true
-
     local mainFrame = Instance.new("Frame")
     mainFrame.Parent = gui
     mainFrame.BackgroundColor3 = Color3.fromRGB(37, 36, 37)
@@ -286,13 +257,11 @@ function SynergyUI:CreateGameNotification(options)
     mainFrame.ClipsDescendants = true
     addCorner(mainFrame, 10)
     addStroke(mainFrame, Color3.fromRGB(80,80,80), 1, 0.5)
-
     local titleBar = Instance.new("Frame")
     titleBar.Parent = mainFrame
     titleBar.BackgroundColor3 = Color3.fromRGB(37,36,37)
     titleBar.Size = UDim2.new(1, 0, 0, 54)
     titleBar.BackgroundTransparency = 1
-
     local logo = Instance.new("ImageLabel")
     logo.Parent = titleBar
     logo.BackgroundTransparency = 1
@@ -301,7 +270,6 @@ function SynergyUI:CreateGameNotification(options)
     logo.Image = options.Image or "rbxassetid://3926305904"
     logo.ImageTransparency = 1
     addCorner(logo, 5)
-
     local titleLabel = Instance.new("TextLabel")
     titleLabel.Parent = titleBar
     titleLabel.BackgroundTransparency = 1
@@ -313,13 +281,11 @@ function SynergyUI:CreateGameNotification(options)
     titleLabel.TextSize = 16
     titleLabel.TextXAlignment = Enum.TextXAlignment.Left
     titleLabel.TextTransparency = 1
-
     local contentFrame = Instance.new("Frame")
     contentFrame.Parent = mainFrame
     contentFrame.BackgroundTransparency = 1
     contentFrame.Position = UDim2.new(0, 0, 0, 54)
     contentFrame.Size = UDim2.new(1, 0, 0, 0)
-
     local miniTitle = Instance.new("TextLabel")
     miniTitle.Parent = contentFrame
     miniTitle.BackgroundTransparency = 1
@@ -331,7 +297,6 @@ function SynergyUI:CreateGameNotification(options)
     miniTitle.TextSize = 14
     miniTitle.TextXAlignment = Enum.TextXAlignment.Left
     miniTitle.TextTransparency = 1
-
     local descLabel = Instance.new("TextLabel")
     descLabel.Parent = contentFrame
     descLabel.BackgroundTransparency = 1
@@ -345,7 +310,6 @@ function SynergyUI:CreateGameNotification(options)
     descLabel.TextXAlignment = Enum.TextXAlignment.Left
     descLabel.TextYAlignment = Enum.TextYAlignment.Top
     descLabel.TextTransparency = 1
-
     local yesFrame = Instance.new("Frame")
     yesFrame.Parent = contentFrame
     yesFrame.BackgroundColor3 = Color3.fromRGB(1, 68, 50)
@@ -354,7 +318,6 @@ function SynergyUI:CreateGameNotification(options)
     yesFrame.Position = UDim2.new(0, 16, 0, 0)
     addCorner(yesFrame, 10)
     addStroke(yesFrame, Color3.fromRGB(1,124,91), 1, 1)
-
     local yesBtn = Instance.new("TextButton")
     yesBtn.Parent = yesFrame
     yesBtn.BackgroundTransparency = 1
@@ -364,7 +327,6 @@ function SynergyUI:CreateGameNotification(options)
     yesBtn.TextColor3 = Color3.fromRGB(255,255,255)
     yesBtn.TextSize = 18
     yesBtn.TextTransparency = 1
-
     local noFrame = Instance.new("Frame")
     noFrame.Parent = contentFrame
     noFrame.BackgroundColor3 = Color3.fromRGB(75, 34, 36)
@@ -373,7 +335,6 @@ function SynergyUI:CreateGameNotification(options)
     noFrame.Position = UDim2.new(1, -180, 0, 0)
     addCorner(noFrame, 10)
     addStroke(noFrame, Color3.fromRGB(140,63,70), 1, 1)
-
     local noBtn = Instance.new("TextButton")
     noBtn.Parent = noFrame
     noBtn.BackgroundTransparency = 1
@@ -383,7 +344,6 @@ function SynergyUI:CreateGameNotification(options)
     noBtn.TextColor3 = Color3.fromRGB(255,255,255)
     noBtn.TextSize = 18
     noBtn.TextTransparency = 1
-
     createTween(mainFrame, 0.4, {Size = UDim2.new(0, 366, 0, 54), BackgroundTransparency = 0})
     task.wait(0.4)
     createTween(mainFrame, 0.3, {Size = UDim2.new(0, 366, 0, 195)})
@@ -404,7 +364,6 @@ function SynergyUI:CreateGameNotification(options)
     for _, stroke in pairs({yesFrame:FindFirstChild("UIStroke"), noFrame:FindFirstChild("UIStroke")}) do
         if stroke then createTween(stroke, 0.2, {Transparency = 0}) end
     end
-
     local closed = false
     local function close(choice)
         if closed then return end
@@ -415,11 +374,9 @@ function SynergyUI:CreateGameNotification(options)
         if choice == "yes" and options.YesCallback then pcall(options.YesCallback) end
         if choice == "no" and options.NoCallback then pcall(options.NoCallback) end
     end
-
     yesBtn.MouseButton1Click:Connect(function() close("yes") end)
     noBtn.MouseButton1Click:Connect(function() close("no") end)
 end
-
 local ControlFactory = {}
 function ControlFactory:new(parent, theme, updateThemeCallback, configHandler)
     local obj = {}
@@ -433,7 +390,6 @@ function ControlFactory:new(parent, theme, updateThemeCallback, configHandler)
     setmetatable(obj, { __index = ControlFactory })
     return obj
 end
-
 function ControlFactory:createLabel(text)
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
@@ -442,7 +398,6 @@ function ControlFactory:createLabel(text)
     frame.Size = UDim2.new(1, 0, 0, self.theme.LabelHeight)
     addCorner(frame, self.theme.CornerRadius)
     local stroke = addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
-
     local accent = Instance.new("Frame")
     accent.Parent = frame
     accent.BackgroundColor3 = self.theme.Accent
@@ -451,7 +406,6 @@ function ControlFactory:createLabel(text)
     accent.Position = UDim2.new(0, self.theme.PaddingHorizontal / 2, 0.5, 0)
     accent.Size = UDim2.new(0, 3, 0, self.theme.LabelHeight - 20)
     addCorner(accent, 999)
-
     local label = Instance.new("TextLabel")
     label.Parent = frame
     label.BackgroundTransparency = 1
@@ -466,7 +420,6 @@ function ControlFactory:createLabel(text)
     table.insert(self.createdControls, {type = "label", frame = frame, instance = label, stroke = stroke, accent = accent})
     return label
 end
-
 function ControlFactory:createSeparator()
     local sep = Instance.new("Frame")
     sep.Parent = self.parent
@@ -476,7 +429,6 @@ function ControlFactory:createSeparator()
     table.insert(self.createdControls, {type = "separator", instance = sep})
     return sep
 end
-
 function ControlFactory:createButton(options)
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
@@ -485,7 +437,6 @@ function ControlFactory:createButton(options)
     frame.Size = UDim2.new(1, 0, 0, self.theme.ButtonHeight)
     addCorner(frame, self.theme.CornerRadius)
     addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
-
     local btn = Instance.new("TextButton")
     btn.Parent = frame
     btn.BackgroundTransparency = 1
@@ -494,9 +445,7 @@ function ControlFactory:createButton(options)
     btn.Text = options.Name
     btn.TextColor3 = self.theme.Text
     btn.TextSize = self.theme.TextSizeNormal
-
     addHoverEffect(btn, self.theme.Element, self.theme.HoverColor, true)
-
     local connection = btn.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
             local x = input.Position.X - btn.AbsolutePosition.X
@@ -506,7 +455,6 @@ function ControlFactory:createButton(options)
             if not s then SynergyUI:Notify({Message = "Error: " .. tostring(e), Type = "error"}) end
         end
     end)
-
     if options.Tooltip then
         local tooltip = Instance.new("Frame")
         tooltip.Name = "Tooltip"
@@ -518,7 +466,6 @@ function ControlFactory:createButton(options)
         tooltip.Size = UDim2.new(0, 0, 0, 24)
         addCorner(tooltip, 6)
         addStroke(tooltip, self.theme.StrokeColor)
-
         local tipLabel = Instance.new("TextLabel")
         tipLabel.Parent = tooltip
         tipLabel.BackgroundTransparency = 1
@@ -529,7 +476,6 @@ function ControlFactory:createButton(options)
         tipLabel.TextColor3 = self.theme.TextMuted
         tipLabel.TextSize = self.theme.TextSizeSmall
         tipLabel.TextXAlignment = Enum.TextXAlignment.Left
-
         tooltip.Visible = false
         local show = btn.MouseEnter:Connect(function()
             tooltip.Visible = true
@@ -540,11 +486,9 @@ function ControlFactory:createButton(options)
         table.insert(self.connections, show)
         table.insert(self.connections, hide)
     end
-
     table.insert(self.createdControls, {type = "button", frame = frame, btn = btn, tooltip = options.Tooltip})
     return frame, connection
 end
-
 function ControlFactory:createToggle(options)
     local flag = options.Flag or options.Name
     local savedVal = self.configHandler and self.configHandler:Get(flag)
@@ -556,7 +500,6 @@ function ControlFactory:createToggle(options)
     else
         state = false
     end
-
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
     frame.BackgroundColor3 = self.theme.Element
@@ -564,7 +507,6 @@ function ControlFactory:createToggle(options)
     frame.Size = UDim2.new(1, 0, 0, self.theme.ToggleHeight)
     addCorner(frame, self.theme.CornerRadius)
     addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
-
     local label = Instance.new("TextLabel")
     label.Parent = frame
     label.BackgroundTransparency = 1
@@ -575,7 +517,6 @@ function ControlFactory:createToggle(options)
     label.TextColor3 = self.theme.Text
     label.TextSize = self.theme.TextSizeNormal
     label.TextXAlignment = Enum.TextXAlignment.Left
-
     local outer = Instance.new("Frame")
     outer.Parent = frame
     outer.BackgroundColor3 = self.theme.ElementDark
@@ -583,7 +524,6 @@ function ControlFactory:createToggle(options)
     outer.Position = UDim2.new(1, -self.theme.ToggleWidth - self.theme.PaddingHorizontal, 0.5, -self.theme.ToggleHeight/2 + 1)
     outer.Size = UDim2.new(0, self.theme.ToggleWidth, 0, self.theme.ToggleHeight - 8)
     addCorner(outer, 999)
-
     local inner = Instance.new("Frame")
     inner.Parent = outer
     inner.BackgroundColor3 = state and self.theme.Accent or self.theme.TextMuted
@@ -591,13 +531,11 @@ function ControlFactory:createToggle(options)
     inner.Position = state and UDim2.new(1, -innerSize - 4, 0.5, -innerSize/2) or UDim2.new(0, 4, 0.5, -innerSize/2)
     inner.Size = UDim2.new(0, innerSize, 0, innerSize)
     addCorner(inner, 999)
-
     local btn = Instance.new("TextButton")
     btn.Parent = frame
     btn.BackgroundTransparency = 1
     btn.Size = UDim2.new(1, 0, 1, 0)
     btn.Text = ""
-
     local function update(val)
         state = val
         createTween(inner, 0.25, {
@@ -608,20 +546,16 @@ function ControlFactory:createToggle(options)
         pcall(options.Callback, state)
         if self.configHandler then self.configHandler:Set(flag, state) end
     end
-
     local flagObj = {
         GetValue = function() return state end,
         SetValue = function(_, v) update(v) end
     }
     self.controls[flag] = flagObj
-
     local connection = btn.MouseButton1Click:Connect(function() update(not state) end)
     if state then pcall(options.Callback, state) end
-
     table.insert(self.createdControls, {type = "toggle", frame = frame, label = label, outer = outer, inner = inner, btn = btn, stateVar = state, update = update})
     return frame, connection
 end
-
 function ControlFactory:createCheckBox(options)
     local flag = options.Flag or options.Name
     local savedVal = self.configHandler and self.configHandler:Get(flag)
@@ -633,7 +567,6 @@ function ControlFactory:createCheckBox(options)
     else
         state = false
     end
-
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
     frame.BackgroundColor3 = self.theme.Element
@@ -641,7 +574,6 @@ function ControlFactory:createCheckBox(options)
     frame.Size = UDim2.new(1, 0, 0, self.theme.ToggleHeight)
     addCorner(frame, self.theme.CornerRadius)
     addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
-
     local label = Instance.new("TextLabel")
     label.Parent = frame
     label.BackgroundTransparency = 1
@@ -652,7 +584,6 @@ function ControlFactory:createCheckBox(options)
     label.TextColor3 = self.theme.Text
     label.TextSize = self.theme.TextSizeNormal
     label.TextXAlignment = Enum.TextXAlignment.Left
-
     local checkFrame = Instance.new("Frame")
     checkFrame.Parent = frame
     checkFrame.BackgroundColor3 = self.theme.ElementDark
@@ -661,7 +592,6 @@ function ControlFactory:createCheckBox(options)
     checkFrame.Size = UDim2.new(0, 24, 0, 24)
     addCorner(checkFrame, 6)
     addStroke(checkFrame, self.theme.StrokeColor)
-
     local checkIcon = Instance.new("ImageLabel")
     checkIcon.Parent = checkFrame
     checkIcon.BackgroundTransparency = 1
@@ -672,13 +602,11 @@ function ControlFactory:createCheckBox(options)
     checkIcon.ImageRectSize = Vector2.new(36, 36)
     checkIcon.ImageColor3 = self.theme.Accent
     checkIcon.ImageTransparency = state and 0 or 1
-
     local btn = Instance.new("TextButton")
     btn.Parent = frame
     btn.BackgroundTransparency = 1
     btn.Size = UDim2.new(1, 0, 1, 0)
     btn.Text = ""
-
     local function update(val)
         state = val
         createTween(checkIcon, 0.2, {ImageTransparency = state and 0 or 1})
@@ -686,20 +614,16 @@ function ControlFactory:createCheckBox(options)
         pcall(options.Callback, state)
         if self.configHandler then self.configHandler:Set(flag, state) end
     end
-
     local flagObj = {
         GetValue = function() return state end,
         SetValue = function(_, v) update(v) end
     }
     self.controls[flag] = flagObj
-
     local connection = btn.MouseButton1Click:Connect(function() update(not state) end)
     if state then pcall(options.Callback, state) end
-
     table.insert(self.createdControls, {type = "checkbox", frame = frame, label = label, checkFrame = checkFrame, checkIcon = checkIcon, btn = btn, stateVar = state})
     return frame, connection
 end
-
 function ControlFactory:createSlider(options)
     local flag = options.Flag or options.Name
     local savedVal = self.configHandler and self.configHandler:Get(flag)
@@ -709,7 +633,6 @@ function ControlFactory:createSlider(options)
     else
         val = options.CurrentValue or options.Range[1]
     end
-
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
     frame.BackgroundColor3 = self.theme.Element
@@ -717,7 +640,6 @@ function ControlFactory:createSlider(options)
     frame.Size = UDim2.new(1, 0, 0, self.theme.SliderHeight)
     addCorner(frame, self.theme.CornerRadius)
     addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
-
     local label = Instance.new("TextLabel")
     label.Parent = frame
     label.BackgroundTransparency = 1
@@ -728,7 +650,6 @@ function ControlFactory:createSlider(options)
     label.TextColor3 = self.theme.Text
     label.TextSize = self.theme.TextSizeNormal
     label.TextXAlignment = Enum.TextXAlignment.Left
-
     local valLabel = Instance.new("TextLabel")
     valLabel.Parent = frame
     valLabel.BackgroundTransparency = 1
@@ -739,7 +660,6 @@ function ControlFactory:createSlider(options)
     valLabel.TextColor3 = self.theme.Accent
     valLabel.TextSize = self.theme.TextSizeNormal
     valLabel.TextXAlignment = Enum.TextXAlignment.Right
-
     local bg = Instance.new("Frame")
     bg.Parent = frame
     bg.BackgroundColor3 = self.theme.ElementDark
@@ -748,13 +668,11 @@ function ControlFactory:createSlider(options)
     bg.Size = UDim2.new(1, -2 * self.theme.PaddingHorizontal - 130, 0, self.theme.SliderBarHeight)
     addCorner(bg, self.theme.SliderBarHeight / 2)
     addStroke(bg, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
-
     local fill = Instance.new("Frame")
     fill.Parent = bg
     fill.BackgroundColor3 = self.theme.Accent
     fill.Size = UDim2.new((val - options.Range[1]) / (options.Range[2] - options.Range[1]), 0, 1, 0)
     addCorner(fill, self.theme.SliderBarHeight / 2)
-
     local fillGradient = Instance.new("UIGradient")
     fillGradient.Color = ColorSequence.new({
         ColorSequenceKeypoint.new(0, self.theme.Accent),
@@ -762,7 +680,6 @@ function ControlFactory:createSlider(options)
     })
     fillGradient.Rotation = 90
     fillGradient.Parent = fill
-
     local thumb = Instance.new("Frame")
     thumb.Parent = fill
     thumb.BackgroundColor3 = self.theme.Accent
@@ -770,7 +687,6 @@ function ControlFactory:createSlider(options)
     thumb.Size = UDim2.new(0, 16, 0, 16)
     addCorner(thumb, 999)
     addStroke(thumb, Color3.fromRGB(255,255,255), 1.5, 0.4)
-
     local tooltip = Instance.new("Frame")
     tooltip.Parent = bg
     tooltip.BackgroundColor3 = self.theme.ElementDark
@@ -789,7 +705,6 @@ function ControlFactory:createSlider(options)
     tooltipLabel.Text = tostring(val)
     tooltipLabel.TextColor3 = self.theme.Text
     tooltipLabel.TextSize = 12
-
     local inputBg = Instance.new("Frame")
     inputBg.Parent = frame
     inputBg.BackgroundColor3 = self.theme.ElementDark
@@ -798,7 +713,6 @@ function ControlFactory:createSlider(options)
     inputBg.Size = UDim2.new(0, 60, 0, 22)
     addCorner(inputBg, 8)
     addStroke(inputBg, self.theme.StrokeColor)
-
     local numInput = Instance.new("TextBox")
     numInput.Parent = inputBg
     numInput.BackgroundTransparency = 1
@@ -809,13 +723,10 @@ function ControlFactory:createSlider(options)
     numInput.TextColor3 = self.theme.Text
     numInput.TextSize = self.theme.TextSizeSmall
     numInput.TextXAlignment = Enum.TextXAlignment.Center
-
     numInput:GetPropertyChangedSignal("Text"):Connect(function()
         numInput.Text = numInput.Text:gsub("[^%d%.%-]", "")
     end)
-
     local dragging = false
-
     local function move(input)
         local pos = math.clamp((input.Position.X - bg.AbsolutePosition.X) / bg.AbsoluteSize.X, 0, 1)
         local calc = options.Range[1] + pos * (options.Range[2] - options.Range[1])
@@ -830,20 +741,17 @@ function ControlFactory:createSlider(options)
         pcall(options.Callback, val)
         if self.configHandler then self.configHandler:Set(flag, val) end
     end
-
     local btn = Instance.new("TextButton")
     btn.Parent = bg
     btn.BackgroundTransparency = 1
     btn.Size = UDim2.new(1, 0, 1, 0)
     btn.Text = ""
-
     local function showTooltip(pos)
         local percent = (val - options.Range[1]) / (options.Range[2] - options.Range[1])
         local xPos = bg.AbsoluteSize.X * percent - tooltip.AbsoluteSize.X/2
         tooltip.Position = UDim2.new(0, xPos, 0, -28)
         tooltip.Visible = true
     end
-
     local connection1 = btn.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
             dragging = true
@@ -851,21 +759,18 @@ function ControlFactory:createSlider(options)
             showTooltip()
         end
     end)
-
     local connection2 = UserInputService.InputEnded:Connect(function(input)
         if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) and dragging then
             dragging = false
             tooltip.Visible = false
         end
     end)
-
     local connection3 = UserInputService.InputChanged:Connect(function(input)
         if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
             move(input)
             showTooltip()
         end
     end)
-
     local connection4 = numInput.FocusLost:Connect(function()
         local newVal = tonumber(numInput.Text)
         if newVal then
@@ -881,7 +786,6 @@ function ControlFactory:createSlider(options)
             numInput.Text = tostring(val)
         end
     end)
-
     local flagObj = {
         GetValue = function() return val end,
         SetValue = function(_, v)
@@ -896,11 +800,9 @@ function ControlFactory:createSlider(options)
         end
     }
     self.controls[flag] = flagObj
-
     table.insert(self.createdControls, {type = "slider", frame = frame, label = label, valLabel = valLabel, bg = bg, fill = fill, fillGradient = fillGradient, thumb = thumb, tooltip = tooltip, tooltipLabel = tooltipLabel, inputBg = inputBg, numInput = numInput, btn = btn, range = options.Range})
     return frame, {connection1, connection2, connection3, connection4}
 end
-
 function ControlFactory:createDropdown(options)
     local flag = options.Flag or options.Name
     local optionsList = options.Options or {}
@@ -908,10 +810,6 @@ function ControlFactory:createDropdown(options)
     local searchable = options.Searchable or false
     local savedVal = self.configHandler and self.configHandler:Get(flag)
     local selected = {}
-
-    -- Los datos persistidos tienen prioridad sobre los valores iniciales.
-    -- CurrentOption y CurrentSelected se usan Ãºnicamente como fallback
-    -- cuando no existe una selecciÃ³n guardada que siga disponible.
     if multi then
         if type(savedVal) == "table" then
             for _, v in ipairs(savedVal) do
@@ -935,7 +833,6 @@ function ControlFactory:createDropdown(options)
             selected = optionsList[1] or ""
         end
     end
-
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
     frame.BackgroundColor3 = self.theme.Element
@@ -944,7 +841,6 @@ function ControlFactory:createDropdown(options)
     frame.ClipsDescendants = true
     addCorner(frame, self.theme.CornerRadius)
     addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
-
     local btn = Instance.new("TextButton")
     btn.Parent = frame
     btn.BackgroundTransparency = 1
@@ -955,9 +851,7 @@ function ControlFactory:createDropdown(options)
     btn.TextSize = self.theme.TextSizeNormal
     btn.TextXAlignment = Enum.TextXAlignment.Left
     btn.Position = UDim2.new(0, self.theme.PaddingHorizontal, 0, 0)
-
     local icon = createChevron(btn, self.theme.TextMuted)
-
     local container = Instance.new("ScrollingFrame")
     container.Parent = frame
     container.BackgroundColor3 = self.theme.ElementDark
@@ -968,7 +862,6 @@ function ControlFactory:createDropdown(options)
     container.ScrollBarThickness = 4
     container.ScrollBarImageColor3 = self.theme.Accent
     container.CanvasSize = UDim2.new(0, 0, 0, 0)
-
     if searchable then
         local searchBox = Instance.new("TextBox")
         searchBox.Parent = container
@@ -985,16 +878,13 @@ function ControlFactory:createDropdown(options)
         addStroke(searchBox, self.theme.StrokeColor)
         searchBox.ClearTextOnFocus = false
     end
-
     local layout = Instance.new("UIListLayout")
     layout.Parent = container
     layout.SortOrder = Enum.SortOrder.LayoutOrder
     layout.Padding = UDim.new(0, 2)
-
     local isOpen = false
     local optionButtons = {}
     local flagObj
-
     local function updateButtonText()
         if multi then
             local count = 0
@@ -1004,7 +894,6 @@ function ControlFactory:createDropdown(options)
             btn.Text = options.Name .. " : " .. (selected == "" and "None" or selected)
         end
     end
-
     local function rebuild(filter)
         for _, b in ipairs(optionButtons) do if b and b.Parent then b:Destroy() end end
         optionButtons = {}
@@ -1016,7 +905,6 @@ function ControlFactory:createDropdown(options)
                 optFrame.BackgroundTransparency = self.theme.ElementDarkTransparency
                 optFrame.Size = UDim2.new(1, 0, 0, self.theme.DropdownItemHeight)
                 optFrame.BorderSizePixel = 0
-
                 local optBtn = Instance.new("TextButton")
                 optBtn.Parent = optFrame
                 optBtn.BackgroundTransparency = 1
@@ -1027,7 +915,6 @@ function ControlFactory:createDropdown(options)
                 optBtn.TextSize = self.theme.TextSizeSmall
                 optBtn.TextXAlignment = Enum.TextXAlignment.Left
                 addHoverEffect(optBtn, self.theme.ElementDark, self.theme.HoverColor, false)
-
                 if multi then
                     local check = Instance.new("Frame")
                     check.Parent = optFrame
@@ -1037,7 +924,6 @@ function ControlFactory:createDropdown(options)
                     addCorner(check, 6)
                     addStroke(check, self.theme.StrokeColor)
                 end
-
                 optBtn.MouseButton1Click:Connect(function()
                     if multi then
                         selected[opt] = not selected[opt]
@@ -1065,7 +951,6 @@ function ControlFactory:createDropdown(options)
         container.CanvasSize = UDim2.new(0, 0, 0, #optionButtons * self.theme.DropdownItemHeight + (searchable and 40 or 8))
     end
     rebuild()
-
     if searchable then
         local searchBox = container:FindFirstChildWhichIsA("TextBox")
         if searchBox then
@@ -1074,7 +959,6 @@ function ControlFactory:createDropdown(options)
             end)
         end
     end
-
     local connection = btn.MouseButton1Click:Connect(function()
         isOpen = not isOpen
         if isOpen then
@@ -1089,7 +973,6 @@ function ControlFactory:createDropdown(options)
             createTween(icon, 0.18, {Rotation = 0})
         end
     end)
-
     flagObj = {
         GetValue = function()
             if multi then
@@ -1151,11 +1034,24 @@ function ControlFactory:createDropdown(options)
         end
     }
     self.controls[flag] = flagObj
-
+    if options.Callback then
+        if multi then
+            local hasSelected = false
+            for _, v in pairs(selected) do
+                if v then hasSelected = true; break end
+            end
+            if hasSelected then
+                pcall(options.Callback, flagObj:GetValue())
+            end
+        else
+            if selected ~= "" then
+                pcall(options.Callback, selected)
+            end
+        end
+    end
     table.insert(self.createdControls, {type = "dropdown", frame = frame, btn = btn, icon = icon, container = container})
     return flagObj, connection
 end
-
 function ControlFactory:createChecklist(options)
     local flag = options.Flag or options.Name
     local optionsList = options.Options or {}
@@ -1166,7 +1062,6 @@ function ControlFactory:createChecklist(options)
     elseif options.CurrentSelected then
         for _, v in ipairs(options.CurrentSelected) do selected[v] = true end
     end
-
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
     frame.BackgroundColor3 = self.theme.Element
@@ -1175,7 +1070,6 @@ function ControlFactory:createChecklist(options)
     frame.ClipsDescendants = true
     addCorner(frame, self.theme.CornerRadius)
     addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
-
     local btn = Instance.new("TextButton")
     btn.Parent = frame
     btn.BackgroundTransparency = 1
@@ -1186,7 +1080,6 @@ function ControlFactory:createChecklist(options)
     btn.TextSize = self.theme.TextSizeNormal
     btn.TextXAlignment = Enum.TextXAlignment.Left
     btn.Position = UDim2.new(0, self.theme.PaddingHorizontal, 0, 0)
-
     local countLabel = Instance.new("TextLabel")
     countLabel.Parent = frame
     countLabel.BackgroundTransparency = 1
@@ -1197,9 +1090,7 @@ function ControlFactory:createChecklist(options)
     countLabel.TextColor3 = self.theme.Accent
     countLabel.TextSize = self.theme.TextSizeSmall
     countLabel.TextXAlignment = Enum.TextXAlignment.Right
-
     local icon = createChevron(btn, self.theme.TextMuted)
-
     local container = Instance.new("ScrollingFrame")
     container.Parent = frame
     container.BackgroundColor3 = self.theme.ElementDark
@@ -1210,18 +1101,15 @@ function ControlFactory:createChecklist(options)
     container.ScrollBarThickness = 4
     container.ScrollBarImageColor3 = self.theme.Accent
     container.CanvasSize = UDim2.new(0, 0, 0, 0)
-
     local layout = Instance.new("UIListLayout")
     layout.Parent = container
     layout.SortOrder = Enum.SortOrder.LayoutOrder
     layout.Padding = UDim.new(0, 2)
-
     local function getSelectedValues()
         local result = {}
         for k, v in pairs(selected) do if v then table.insert(result, k) end end
         return result
     end
-
     local function updateSelectedCount()
         local count = 0
         for _, v in pairs(selected) do if v then count = count + 1 end end
@@ -1229,7 +1117,6 @@ function ControlFactory:createChecklist(options)
         pcall(options.Callback, selected)
         if self.configHandler then self.configHandler:Set(flag, getSelectedValues()) end
     end
-
     local function rebuild()
         for _, child in ipairs(container:GetChildren()) do
             if child:IsA("Frame") then child:Destroy() end
@@ -1241,7 +1128,6 @@ function ControlFactory:createChecklist(options)
             row.BackgroundTransparency = self.theme.ElementDarkTransparency
             row.BorderSizePixel = 0
             row.Size = UDim2.new(1, 0, 0, self.theme.ChecklistItemHeight)
-
             local toggleOuter = Instance.new("Frame")
             toggleOuter.Parent = row
             toggleOuter.BackgroundColor3 = self.theme.Element
@@ -1250,14 +1136,12 @@ function ControlFactory:createChecklist(options)
             toggleOuter.Size = UDim2.new(0, 20, 0, 20)
             addCorner(toggleOuter, 6)
             addStroke(toggleOuter, self.theme.StrokeColor)
-
             local toggleInner = Instance.new("Frame")
             toggleInner.Parent = toggleOuter
             toggleInner.BackgroundColor3 = selected[opt] and self.theme.Accent or Color3.fromRGB(60,60,60)
             toggleInner.Position = selected[opt] and UDim2.new(0.5, -6, 0.5, -6) or UDim2.new(0, 3, 0.5, -6)
             toggleInner.Size = UDim2.new(0, 12, 0, 12)
             addCorner(toggleInner, 6)
-
             local optLabel = Instance.new("TextLabel")
             optLabel.Parent = row
             optLabel.BackgroundTransparency = 1
@@ -1268,13 +1152,11 @@ function ControlFactory:createChecklist(options)
             optLabel.TextColor3 = self.theme.TextMuted
             optLabel.TextSize = self.theme.TextSizeSmall
             optLabel.TextXAlignment = Enum.TextXAlignment.Left
-
             local clickBtn = Instance.new("TextButton")
             clickBtn.Parent = row
             clickBtn.BackgroundTransparency = 1
             clickBtn.Size = UDim2.new(1, 0, 1, 0)
             clickBtn.Text = ""
-
             clickBtn.MouseButton1Click:Connect(function()
                 selected[opt] = not selected[opt]
                 createTween(toggleInner, 0.2, {
@@ -1288,7 +1170,6 @@ function ControlFactory:createChecklist(options)
         updateSelectedCount()
     end
     rebuild()
-
     local isOpen = false
     local connection = btn.MouseButton1Click:Connect(function()
         isOpen = not isOpen
@@ -1304,7 +1185,6 @@ function ControlFactory:createChecklist(options)
             createTween(icon, 0.18, {Rotation = 0})
         end
     end)
-
     local flagObj = {
         GetValue = function()
             local result = {}
@@ -1332,15 +1212,12 @@ function ControlFactory:createChecklist(options)
         end
     }
     self.controls[flag] = flagObj
-
     table.insert(self.createdControls, {type = "checklist", frame = frame, btn = btn, countLabel = countLabel, icon = icon, container = container})
     return flagObj, connection
 end
-
 function ControlFactory:createTextInput(options)
     local flag = options.Flag or options.Name
     local savedVal = self.configHandler and self.configHandler:Get(flag)
-
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
     frame.BackgroundColor3 = self.theme.Element
@@ -1348,7 +1225,6 @@ function ControlFactory:createTextInput(options)
     frame.Size = UDim2.new(1, 0, 0, self.theme.TextInputHeight)
     addCorner(frame, self.theme.CornerRadius)
     addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
-
     local label = Instance.new("TextLabel")
     label.Parent = frame
     label.BackgroundTransparency = 1
@@ -1359,7 +1235,6 @@ function ControlFactory:createTextInput(options)
     label.TextColor3 = self.theme.Text
     label.TextSize = self.theme.TextSizeNormal
     label.TextXAlignment = Enum.TextXAlignment.Left
-
     local input = Instance.new("TextBox")
     input.Parent = frame
     input.BackgroundColor3 = self.theme.ElementDark
@@ -1376,32 +1251,26 @@ function ControlFactory:createTextInput(options)
     input.TextXAlignment = Enum.TextXAlignment.Left
     addCorner(input, self.theme.CornerRadius)
     addStroke(input, self.theme.StrokeColor)
-
     local inputPad = Instance.new("UIPadding")
     inputPad.Parent = input
     inputPad.PaddingLeft = UDim.new(0, 10)
     inputPad.PaddingRight = UDim.new(0, 10)
-
     local connection = input.FocusLost:Connect(function()
         pcall(options.Callback, input.Text)
         if self.configHandler then self.configHandler:Set(flag, input.Text) end
     end)
-
     local flagObj = {
         GetValue = function() return input.Text end,
         SetValue = function(_, v) input.Text = v end
     }
     self.controls[flag] = flagObj
-
     table.insert(self.createdControls, {type = "textinput", frame = frame, label = label, input = input})
     return flagObj, connection
 end
-
 function ControlFactory:createNumberInput(options)
     local flag = options.Flag or options.Name
     local savedVal = self.configHandler and self.configHandler:Get(flag)
     local currentVal = (savedVal ~= nil and type(savedVal) == "number") and savedVal or (tonumber(options.CurrentValue) or 0)
-
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
     frame.BackgroundColor3 = self.theme.Element
@@ -1409,7 +1278,6 @@ function ControlFactory:createNumberInput(options)
     frame.Size = UDim2.new(1, 0, 0, self.theme.TextInputHeight)
     addCorner(frame, self.theme.CornerRadius)
     addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
-
     local label = Instance.new("TextLabel")
     label.Parent = frame
     label.BackgroundTransparency = 1
@@ -1420,7 +1288,6 @@ function ControlFactory:createNumberInput(options)
     label.TextColor3 = self.theme.Text
     label.TextSize = self.theme.TextSizeNormal
     label.TextXAlignment = Enum.TextXAlignment.Left
-
     local input = Instance.new("TextBox")
     input.Parent = frame
     input.BackgroundColor3 = self.theme.ElementDark
@@ -1437,7 +1304,6 @@ function ControlFactory:createNumberInput(options)
     input:GetPropertyChangedSignal("Text"):Connect(function()
         input.Text = input.Text:gsub("[^%d%.%-]", "")
     end)
-
     local connection = input.FocusLost:Connect(function()
         local num = tonumber(input.Text)
         if num then
@@ -1448,17 +1314,14 @@ function ControlFactory:createNumberInput(options)
             input.Text = tostring(currentVal)
         end
     end)
-
     local flagObj = {
         GetValue = function() return currentVal end,
         SetValue = function(_, v) currentVal = tonumber(v) or 0; input.Text = tostring(currentVal); pcall(options.Callback, currentVal); if self.configHandler then self.configHandler:Set(flag, currentVal) end end
     }
     self.controls[flag] = flagObj
-
     table.insert(self.createdControls, {type = "numberinput", frame = frame, label = label, input = input})
     return flagObj, connection
 end
-
 local function stringToKeyCode(str)
     if not str or str == "None" then return nil end
     local success, result = pcall(function()
@@ -1474,12 +1337,10 @@ local function stringToKeyCode(str)
     end
     return nil
 end
-
 function ControlFactory:createKeybind(options)
     local flag = options.Flag or options.Name
     local savedVal = self.configHandler and self.configHandler:Get(flag)
     local currentStr = (savedVal ~= nil and type(savedVal) == "string") and savedVal or (options.CurrentKeybind or "None")
-
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
     frame.BackgroundColor3 = self.theme.Element
@@ -1487,7 +1348,6 @@ function ControlFactory:createKeybind(options)
     frame.Size = UDim2.new(1, 0, 0, self.theme.KeybindHeight)
     addCorner(frame, self.theme.CornerRadius)
     addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
-
     local label = Instance.new("TextLabel")
     label.Parent = frame
     label.BackgroundTransparency = 1
@@ -1498,7 +1358,6 @@ function ControlFactory:createKeybind(options)
     label.TextColor3 = self.theme.Text
     label.TextSize = self.theme.TextSizeNormal
     label.TextXAlignment = Enum.TextXAlignment.Left
-
     local bindBtn = Instance.new("TextButton")
     bindBtn.Parent = frame
     bindBtn.BackgroundColor3 = self.theme.ElementDark
@@ -1511,9 +1370,7 @@ function ControlFactory:createKeybind(options)
     bindBtn.TextSize = self.theme.TextSizeSmall
     addCorner(bindBtn, self.theme.CornerRadius)
     addStroke(bindBtn, self.theme.StrokeColor)
-
     local binding = false
-
     local connection1 = bindBtn.MouseButton1Click:Connect(function()
         binding = true
         _anyKeybindBinding = true
@@ -1528,7 +1385,6 @@ function ControlFactory:createKeybind(options)
             end
         end)
     end)
-
     local connection2 = UserInputService.InputBegan:Connect(function(input, gp)
         if binding then
             if input.UserInputType == Enum.UserInputType.Keyboard or input.UserInputType.Name:find("MouseButton") then
@@ -1549,7 +1405,6 @@ function ControlFactory:createKeybind(options)
             end
         end
     end)
-
     local flagObj = {
         GetValue = function() return currentStr end,
         SetValue = function(_, v)
@@ -1560,11 +1415,9 @@ function ControlFactory:createKeybind(options)
         end
     }
     self.controls[flag] = flagObj
-
     table.insert(self.createdControls, {type = "keybind", frame = frame, label = label, bindBtn = bindBtn})
     return flagObj, {connection1, connection2}
 end
-
 function ControlFactory:createColorPicker(options)
     local flag = options.Flag or options.Name
     local savedVal = self.configHandler and self.configHandler:Get(flag)
@@ -1577,7 +1430,6 @@ function ControlFactory:createColorPicker(options)
     local h, s, v = Color3.toHSV(color)
     local rainbowActive = false
     local rainbowTask = nil
-
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
     frame.BackgroundColor3 = self.theme.Element
@@ -1586,7 +1438,6 @@ function ControlFactory:createColorPicker(options)
     frame.ClipsDescendants = true
     addCorner(frame, self.theme.CornerRadius)
     addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
-
     local label = Instance.new("TextLabel")
     label.Parent = frame
     label.BackgroundTransparency = 1
@@ -1597,7 +1448,6 @@ function ControlFactory:createColorPicker(options)
     label.TextColor3 = self.theme.Text
     label.TextSize = self.theme.TextSizeNormal
     label.TextXAlignment = Enum.TextXAlignment.Left
-
     local preview = Instance.new("Frame")
     preview.Parent = frame
     preview.BackgroundColor3 = color
@@ -1605,13 +1455,11 @@ function ControlFactory:createColorPicker(options)
     preview.Size = UDim2.new(0, self.theme.ColorPickerPreviewSize, 0, self.theme.ColorPickerPreviewSize)
     addCorner(preview, self.theme.CornerRadius)
     addStroke(preview, Color3.fromRGB(255,255,255), 1.5, 0.6)
-
     local btn = Instance.new("TextButton")
     btn.Parent = frame
     btn.BackgroundTransparency = 1
     btn.Size = UDim2.new(1, 0, 0, self.theme.ColorPickerHeight)
     btn.Text = ""
-
     local container = Instance.new("Frame")
     container.Parent = frame
     container.BackgroundColor3 = self.theme.ElementDark
@@ -1619,7 +1467,6 @@ function ControlFactory:createColorPicker(options)
     container.Position = UDim2.new(0, 0, 0, self.theme.ColorPickerHeight)
     container.Size = UDim2.new(1, 0, 0, self.theme.ColorPickerExpandedHeight - self.theme.ColorPickerHeight)
     container.Visible = false
-
     local colorWheel = Instance.new("ImageLabel")
     colorWheel.Parent = container
     colorWheel.BackgroundColor3 = Color3.fromRGB(255,0,4)
@@ -1627,7 +1474,6 @@ function ControlFactory:createColorPicker(options)
     colorWheel.Size = UDim2.new(0, 140, 0, 140)
     colorWheel.Image = "rbxassetid://4155801252"
     addCorner(colorWheel, 8)
-
     local colorSelection = Instance.new("ImageLabel")
     colorSelection.Parent = colorWheel
     colorSelection.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -1635,13 +1481,11 @@ function ControlFactory:createColorPicker(options)
     colorSelection.Size = UDim2.new(0, 18, 0, 18)
     colorSelection.Image = "http://www.roblox.com/asset/?id=4805639000"
     colorSelection.Position = UDim2.new(s, 0, 1 - v, 0)
-
     local hueBar = Instance.new("Frame")
     hueBar.Parent = container
     hueBar.Position = UDim2.new(0, 165, 0, 12)
     hueBar.Size = UDim2.new(0, 25, 0, 140)
     addCorner(hueBar, 4)
-
     local hueGradient = Instance.new("UIGradient")
     hueGradient.Color = ColorSequence.new({
         ColorSequenceKeypoint.new(0, Color3.fromRGB(255,0,4)),
@@ -1654,7 +1498,6 @@ function ControlFactory:createColorPicker(options)
     })
     hueGradient.Rotation = 270
     hueGradient.Parent = hueBar
-
     local hueSelection = Instance.new("ImageLabel")
     hueSelection.Parent = hueBar
     hueSelection.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -1662,7 +1505,6 @@ function ControlFactory:createColorPicker(options)
     hueSelection.Size = UDim2.new(0, 18, 0, 18)
     hueSelection.Image = "http://www.roblox.com/asset/?id=4805639000"
     hueSelection.Position = UDim2.new(0.5, 0, 1 - h, 0)
-
     local rainbowBtn = Instance.new("TextButton")
     rainbowBtn.Parent = container
     rainbowBtn.BackgroundColor3 = self.theme.Element
@@ -1674,7 +1516,6 @@ function ControlFactory:createColorPicker(options)
     rainbowBtn.TextSize = 12
     addCorner(rainbowBtn, 8)
     addStroke(rainbowBtn, self.theme.StrokeColor)
-
     local function updateColorFromWheel(pos)
         local x = math.clamp((pos.X - colorWheel.AbsolutePosition.X) / colorWheel.AbsoluteSize.X, 0, 1)
         local y = math.clamp((pos.Y - colorWheel.AbsolutePosition.Y) / colorWheel.AbsoluteSize.Y, 0, 1)
@@ -1686,7 +1527,6 @@ function ControlFactory:createColorPicker(options)
         pcall(options.Callback, color)
         if self.configHandler then self.configHandler:Set(flag, {__type = "Color3", r = color.R, g = color.G, b = color.B}) end
     end
-
     local function updateHue(pos)
         local y = math.clamp((pos.Y - hueBar.AbsolutePosition.Y) / hueBar.AbsoluteSize.Y, 0, 1)
         h = 1 - y
@@ -1697,7 +1537,6 @@ function ControlFactory:createColorPicker(options)
         pcall(options.Callback, color)
         if self.configHandler then self.configHandler:Set(flag, {__type = "Color3", r = color.R, g = color.G, b = color.B}) end
     end
-
     local function startRainbow()
         rainbowActive = true
         rainbowTask = task.spawn(function()
@@ -1716,12 +1555,10 @@ function ControlFactory:createColorPicker(options)
             end
         end)
     end
-
     local function stopRainbow()
         rainbowActive = false
         if rainbowTask then task.cancel(rainbowTask) end
     end
-
     rainbowBtn.MouseButton1Click:Connect(function()
         if rainbowActive then
             stopRainbow()
@@ -1731,7 +1568,6 @@ function ControlFactory:createColorPicker(options)
             rainbowBtn.Text = "Stop"
         end
     end)
-
     local draggingWheel = false
     colorWheel.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -1749,7 +1585,6 @@ function ControlFactory:createColorPicker(options)
             draggingWheel = false
         end
     end)
-
     local draggingHue = false
     hueBar.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -1767,14 +1602,12 @@ function ControlFactory:createColorPicker(options)
             draggingHue = false
         end
     end)
-
     local isOpen = false
     local connection = btn.MouseButton1Click:Connect(function()
         isOpen = not isOpen
         container.Visible = isOpen
         createTween(frame, 0.28, {Size = UDim2.new(1, 0, 0, isOpen and self.theme.ColorPickerExpandedHeight or self.theme.ColorPickerHeight)})
     end)
-
     local flagObj = {
         GetValue = function() return Color3.fromHSV(h, s, v) end,
         SetValue = function(_, newColor)
@@ -1791,11 +1624,9 @@ function ControlFactory:createColorPicker(options)
         end
     }
     self.controls[flag] = flagObj
-
     table.insert(self.createdControls, {type = "colorpicker", frame = frame, label = label, preview = preview, btn = btn, container = container, rainbowBtn = rainbowBtn})
     return flagObj, connection
 end
-
 function ControlFactory:createRadioGroup(options)
     local flag = options.Flag or options.Name
     local savedVal = self.configHandler and self.configHandler:Get(flag)
@@ -1807,7 +1638,6 @@ function ControlFactory:createRadioGroup(options)
     else
         selected = options.Options[1] or ""
     end
-
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
     frame.BackgroundColor3 = self.theme.Element
@@ -1815,7 +1645,6 @@ function ControlFactory:createRadioGroup(options)
     frame.Size = UDim2.new(1, 0, 0, #options.Options * self.theme.RadioItemHeight + 16)
     addCorner(frame, self.theme.CornerRadius)
     addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
-
     local label = Instance.new("TextLabel")
     label.Parent = frame
     label.BackgroundTransparency = 1
@@ -1826,16 +1655,13 @@ function ControlFactory:createRadioGroup(options)
     label.TextColor3 = self.theme.Text
     label.TextSize = self.theme.TextSizeNormal
     label.TextXAlignment = Enum.TextXAlignment.Left
-
     local radioButtons = {}
-
     for i, opt in ipairs(options.Options) do
         local row = Instance.new("Frame")
         row.Parent = frame
         row.BackgroundTransparency = 1
         row.Position = UDim2.new(0, 0, 0, 30 + (i-1) * self.theme.RadioItemHeight)
         row.Size = UDim2.new(1, 0, 0, self.theme.RadioItemHeight)
-
         local outer = Instance.new("Frame")
         outer.Parent = row
         outer.BackgroundColor3 = self.theme.ElementDark
@@ -1844,14 +1670,12 @@ function ControlFactory:createRadioGroup(options)
         outer.Size = UDim2.new(0, 20, 0, 20)
         addCorner(outer, 999)
         addStroke(outer, self.theme.StrokeColor)
-
         local inner = Instance.new("Frame")
         inner.Parent = outer
         inner.BackgroundColor3 = (opt == selected) and self.theme.Accent or Color3.fromRGB(60,60,60)
         inner.Position = UDim2.new(0.5, -6, 0.5, -6)
         inner.Size = UDim2.new(0, 12, 0, 12)
         addCorner(inner, 999)
-
         local optLabel = Instance.new("TextLabel")
         optLabel.Parent = row
         optLabel.BackgroundTransparency = 1
@@ -1862,13 +1686,11 @@ function ControlFactory:createRadioGroup(options)
         optLabel.TextColor3 = self.theme.TextMuted
         optLabel.TextSize = self.theme.TextSizeSmall
         optLabel.TextXAlignment = Enum.TextXAlignment.Left
-
         local click = Instance.new("TextButton")
         click.Parent = row
         click.BackgroundTransparency = 1
         click.Size = UDim2.new(1, 0, 1, 0)
         click.Text = ""
-
         click.MouseButton1Click:Connect(function()
             if opt ~= selected then
                 selected = opt
@@ -1879,10 +1701,8 @@ function ControlFactory:createRadioGroup(options)
                 if self.configHandler then self.configHandler:Set(flag, selected) end
             end
         end)
-
         table.insert(radioButtons, {Option = opt, Inner = inner})
     end
-
     local flagObj = {
         GetValue = function() return selected end,
         SetValue = function(_, v)
@@ -1897,11 +1717,9 @@ function ControlFactory:createRadioGroup(options)
         end
     }
     self.controls[flag] = flagObj
-
     table.insert(self.createdControls, {type = "radiogroup", frame = frame, label = label, radioButtons = radioButtons})
     return flagObj, nil
 end
-
 function ControlFactory:createParagraph(options)
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
@@ -1911,7 +1729,6 @@ function ControlFactory:createParagraph(options)
     frame.ClipsDescendants = true
     addCorner(frame, self.theme.CornerRadius)
     addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
-
     local title = Instance.new("TextLabel")
     title.Parent = frame
     title.BackgroundTransparency = 1
@@ -1923,7 +1740,6 @@ function ControlFactory:createParagraph(options)
     title.TextSize = self.theme.TextSizeNormal
     title.TextXAlignment = Enum.TextXAlignment.Left
     title.TextWrapped = true
-
     local imageContainer = nil
     local imageLabel = nil
     if options.Image and options.Image ~= "" then
@@ -1932,7 +1748,6 @@ function ControlFactory:createParagraph(options)
         imageContainer.BackgroundTransparency = 1
         imageContainer.Position = UDim2.new(0, self.theme.PaddingHorizontal, 0, self.theme.PaddingVertical + 0)
         imageContainer.Size = UDim2.new(1, -2 * self.theme.PaddingHorizontal, 0, 0)
-
         imageLabel = Instance.new("ImageLabel")
         imageLabel.Parent = imageContainer
         imageLabel.BackgroundColor3 = self.theme.ElementDark
@@ -1942,7 +1757,6 @@ function ControlFactory:createParagraph(options)
         imageLabel.ScaleType = Enum.ScaleType.Fit
         addCorner(imageLabel, 8)
         addStroke(imageLabel, self.theme.StrokeColor, 1, 0.5)
-
         if options.ImageDescription and options.ImageDescription ~= "" then
             local imgDesc = Instance.new("TextLabel")
             imgDesc.Parent = imageContainer
@@ -1957,7 +1771,6 @@ function ControlFactory:createParagraph(options)
             imgDesc.TextWrapped = true
         end
     end
-
     local content = Instance.new("TextLabel")
     content.Parent = frame
     content.BackgroundTransparency = 1
@@ -1970,7 +1783,6 @@ function ControlFactory:createParagraph(options)
     content.TextWrapped = true
     content.TextXAlignment = Enum.TextXAlignment.Left
     content.TextYAlignment = Enum.TextYAlignment.Top
-
     local function updateSize()
         if frame.AbsoluteSize.X <= 0 then return end
         local titleHeight = 0
@@ -1978,7 +1790,6 @@ function ControlFactory:createParagraph(options)
             titleHeight = TextService:GetTextSize(options.Title, self.theme.TextSizeNormal, self.theme.Font, Vector2.new(frame.AbsoluteSize.X - 2 * self.theme.PaddingHorizontal, 9999)).Y
         end
         title.Size = UDim2.new(1, -2 * self.theme.PaddingHorizontal, 0, titleHeight)
-
         local imageHeight = 0
         local imageSpacing = 0
         if imageLabel then
@@ -1990,22 +1801,18 @@ function ControlFactory:createParagraph(options)
             imageContainer.Size = UDim2.new(1, -2 * self.theme.PaddingHorizontal, 0, imageHeight)
             imageSpacing = 12
         end
-
         local contentY = self.theme.PaddingVertical + titleHeight + (titleHeight > 0 and 8 or 0) + imageHeight + imageSpacing
         local contentHeight = TextService:GetTextSize(options.Content, self.theme.TextSizeSmall, self.theme.Font, Vector2.new(frame.AbsoluteSize.X - 2 * self.theme.PaddingHorizontal, 9999)).Y
         content.Position = UDim2.new(0, self.theme.PaddingHorizontal, 0, contentY)
         content.Size = UDim2.new(1, -2 * self.theme.PaddingHorizontal, 0, contentHeight)
-
         local totalHeight = contentY + contentHeight + self.theme.PaddingVertical
         frame.Size = UDim2.new(1, 0, 0, totalHeight)
     end
-
     frame:GetPropertyChangedSignal("AbsoluteSize"):Connect(updateSize)
     task.defer(updateSize)
     table.insert(self.createdControls, {type = "paragraph", frame = frame, title = title, content = content, imageLabel = imageLabel})
     return frame
 end
-
 function ControlFactory:createImage(options)
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
@@ -2015,7 +1822,6 @@ function ControlFactory:createImage(options)
     frame.ClipsDescendants = true
     addCorner(frame, self.theme.CornerRadius)
     addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
-
     local title = Instance.new("TextLabel")
     title.Parent = frame
     title.BackgroundTransparency = 1
@@ -2026,10 +1832,8 @@ function ControlFactory:createImage(options)
     title.TextColor3 = self.theme.Text
     title.TextSize = self.theme.TextSizeNormal
     title.TextXAlignment = Enum.TextXAlignment.Left
-
     local arrow = createChevron(frame, self.theme.TextMuted)
     arrow.Position = UDim2.new(1, -24, 0, 22)
-
     local container = Instance.new("Frame")
     container.Parent = frame
     container.BackgroundColor3 = self.theme.ElementDark
@@ -2037,7 +1841,6 @@ function ControlFactory:createImage(options)
     container.Position = UDim2.new(0, 0, 0, 44)
     container.Size = UDim2.new(1, 0, 0, 0)
     container.Visible = false
-
     local image = Instance.new("ImageLabel")
     image.Parent = container
     image.BackgroundColor3 = self.theme.Element
@@ -2047,7 +1850,6 @@ function ControlFactory:createImage(options)
     image.Image = options.Image or ""
     image.ScaleType = Enum.ScaleType.Fit
     addCorner(image, 8)
-
     if options.Description and options.Description ~= "" then
         local desc = Instance.new("TextLabel")
         desc.Parent = container
@@ -2063,14 +1865,12 @@ function ControlFactory:createImage(options)
     else
         container.Size = UDim2.new(1, 0, 0, 140)
     end
-
     local expanded = false
     local btn = Instance.new("TextButton")
     btn.Parent = frame
     btn.BackgroundTransparency = 1
     btn.Size = UDim2.new(1, 0, 1, 0)
     btn.Text = ""
-
     btn.MouseButton1Click:Connect(function()
         expanded = not expanded
         if expanded then
@@ -2083,11 +1883,9 @@ function ControlFactory:createImage(options)
             createTween(arrow, 0.18, {Rotation = 0})
         end
     end)
-
     table.insert(self.createdControls, {type = "image", frame = frame, title = title, arrow = arrow, container = container})
     return frame
 end
-
 function ControlFactory:createVideo(options)
     local frame = Instance.new("Frame")
     frame.Parent = self.parent
@@ -2097,7 +1895,6 @@ function ControlFactory:createVideo(options)
     frame.ClipsDescendants = true
     addCorner(frame, self.theme.CornerRadius)
     addStroke(frame, self.theme.StrokeColor, 1, self.theme.StrokeTransparency)
-
     local title = Instance.new("TextLabel")
     title.Parent = frame
     title.BackgroundTransparency = 1
@@ -2108,10 +1905,8 @@ function ControlFactory:createVideo(options)
     title.TextColor3 = self.theme.Text
     title.TextSize = self.theme.TextSizeNormal
     title.TextXAlignment = Enum.TextXAlignment.Left
-
     local arrow = createChevron(frame, self.theme.TextMuted)
     arrow.Position = UDim2.new(1, -24, 0, 22)
-
     local container = Instance.new("Frame")
     container.Parent = frame
     container.BackgroundColor3 = self.theme.ElementDark
@@ -2119,7 +1914,6 @@ function ControlFactory:createVideo(options)
     container.Position = UDim2.new(0, 0, 0, 44)
     container.Size = UDim2.new(1, 0, 0, 0)
     container.Visible = false
-
     local video = Instance.new("VideoFrame")
     video.Parent = container
     video.BackgroundColor3 = Color3.fromRGB(20,20,20)
@@ -2129,13 +1923,11 @@ function ControlFactory:createVideo(options)
     video.Looped = options.Looped or false
     video.Volume = options.Volume or 1
     addCorner(video, 8)
-
     local controlsFrame = Instance.new("Frame")
     controlsFrame.Parent = container
     controlsFrame.BackgroundTransparency = 1
     controlsFrame.Position = UDim2.new(0, 10, 0, 170)
     controlsFrame.Size = UDim2.new(1, -20, 0, 40)
-
     local playBtn = Instance.new("TextButton")
     playBtn.Parent = controlsFrame
     playBtn.BackgroundColor3 = self.theme.Element
@@ -2146,7 +1938,6 @@ function ControlFactory:createVideo(options)
     playBtn.TextColor3 = self.theme.Text
     playBtn.TextSize = 12
     addCorner(playBtn, 6)
-
     local pauseBtn = Instance.new("TextButton")
     pauseBtn.Parent = controlsFrame
     pauseBtn.BackgroundColor3 = self.theme.Element
@@ -2157,19 +1948,15 @@ function ControlFactory:createVideo(options)
     pauseBtn.TextColor3 = self.theme.Text
     pauseBtn.TextSize = 12
     addCorner(pauseBtn, 6)
-
     playBtn.MouseButton1Click:Connect(function() video:Play() end)
     pauseBtn.MouseButton1Click:Connect(function() video:Pause() end)
-
     container.Size = UDim2.new(1, 0, 0, 220)
-
     local expanded = false
     local btn = Instance.new("TextButton")
     btn.Parent = frame
     btn.BackgroundTransparency = 1
     btn.Size = UDim2.new(1, 0, 1, 0)
     btn.Text = ""
-
     btn.MouseButton1Click:Connect(function()
         expanded = not expanded
         if expanded then
@@ -2182,11 +1969,9 @@ function ControlFactory:createVideo(options)
             createTween(arrow, 0.18, {Rotation = 0})
         end
     end)
-
     table.insert(self.createdControls, {type = "video", frame = frame, title = title, arrow = arrow, container = container})
     return frame
 end
-
 local Themes = {
     Rise = {
         Accent = Color3.fromRGB(0, 170, 255),
@@ -2829,10 +2614,8 @@ local Themes = {
         StrokeTransparency = 0.78,
     },
 }
-
 local ConfigHandler = {}
 ConfigHandler.__index = ConfigHandler
-
 function ConfigHandler.new(configName)
     local self = setmetatable({}, ConfigHandler)
     self.configName = configName
@@ -2840,16 +2623,13 @@ function ConfigHandler.new(configName)
     self.pendingSave = false
     return self
 end
-
 function ConfigHandler:Get(key)
     return self.data[key]
 end
-
 function ConfigHandler:Set(key, value)
     self.data[key] = value
     self:ScheduleSave()
 end
-
 function ConfigHandler:ScheduleSave()
     if self.pendingSave then return end
     self.pendingSave = true
@@ -2858,18 +2638,14 @@ function ConfigHandler:ScheduleSave()
         saveConfigToFile(self.configName, self.data)
     end)
 end
-
 function ConfigHandler:GetAll()
     return self.data
 end
-
 function SynergyUI:CreateWindow(options)
     options = options or {}
-
     if type(options.Theme) ~= "string" or not Themes[options.Theme] then
         options.Theme = "Rise"
     end
-
     local window = {
         Flags = {},
         Tabs = {},
@@ -2884,7 +2660,6 @@ function SynergyUI:CreateWindow(options)
         ConfigHandler = nil,
         AllControls = {}
     }
-
     if type(window.ToggleKey) == "string" and window.ToggleKey ~= "None" then
         local keyEnum = Enum.KeyCode[window.ToggleKey]
         if keyEnum then
@@ -2895,25 +2670,20 @@ function SynergyUI:CreateWindow(options)
     elseif window.ToggleKey == "None" then
         window.ToggleKey = nil
     end
-
     if options.AccentColor then
         window.Theme.Accent = options.AccentColor
     end
-
     local configHandler = ConfigHandler.new(window.ConfigName)
     window.ConfigHandler = configHandler
     local savedConfig = configHandler:GetAll()
-
     if savedConfig.__position then
         savedConfig.__position = nil
         configHandler:ScheduleSave()
     end
-
     if savedConfig.__theme and Themes[savedConfig.__theme] then
         window.Theme = Themes[savedConfig.__theme]
         if options.AccentColor then window.Theme.Accent = options.AccentColor end
     end
-
     local strokeThickness = 2
     local gui = Instance.new("ScreenGui")
     gui.Name = "SynergyUI_" .. HttpService:GenerateGUID(false)
@@ -2922,7 +2692,6 @@ function SynergyUI:CreateWindow(options)
     gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     gui.IgnoreGuiInset = true
     window.Gui = gui
-
     local mainFrame = Instance.new("Frame")
     mainFrame.Name = "MainFrame"
     mainFrame.Parent = gui
@@ -2941,7 +2710,6 @@ function SynergyUI:CreateWindow(options)
         NumberSequenceKeypoint.new(1, 0.15)
     })
     window.MainFrame = mainFrame
-
     if savedConfig.__size then
         local s = savedConfig.__size
         local w = math.clamp(s.xo or 560, 460, 1200)
@@ -2950,9 +2718,7 @@ function SynergyUI:CreateWindow(options)
     else
         mainFrame.Size = UDim2.new(0, 560, 0, 380)
     end
-
     mainFrame.Position = UDim2.new(0.5, -280, 0.5, -190)
-
     local topBar = Instance.new("Frame")
     topBar.Name = "TopBar"
     topBar.Parent = mainFrame
@@ -2962,7 +2728,6 @@ function SynergyUI:CreateWindow(options)
     topBar.Size = UDim2.new(1, 0, 0, 42)
     addCorner(topBar, window.Theme.CornerRadius)
     topBar.ZIndex = 10
-
     local topBarMask = Instance.new("Frame")
     topBarMask.Name = "TopBarMask"
     topBarMask.Parent = topBar
@@ -2972,7 +2737,6 @@ function SynergyUI:CreateWindow(options)
     topBarMask.Position = UDim2.new(0, 0, 1, -window.Theme.CornerRadius)
     topBarMask.Size = UDim2.new(1, 0, 0, window.Theme.CornerRadius)
     topBarMask.ZIndex = 9
-
     local topBarSep = Instance.new("Frame")
     topBarSep.Parent = topBar
     topBarSep.BackgroundColor3 = window.Theme.StrokeColor
@@ -2980,7 +2744,6 @@ function SynergyUI:CreateWindow(options)
     topBarSep.Position = UDim2.new(0, 0, 1, -1)
     topBarSep.Size = UDim2.new(1, 0, 0, 1)
     topBarSep.ZIndex = 10
-
     local topBarSheen = Instance.new("Frame")
     topBarSheen.Name = "TopBarSheen"
     topBarSheen.Parent = topBar
@@ -2990,7 +2753,6 @@ function SynergyUI:CreateWindow(options)
     topBarSheen.Position = UDim2.new(0, 0, 0, 0)
     topBarSheen.Size = UDim2.new(1, 0, 0, 1)
     topBarSheen.ZIndex = 11
-
     local titleLabel = Instance.new("TextLabel")
     titleLabel.Parent = topBar
     titleLabel.BackgroundTransparency = 1
@@ -3002,7 +2764,6 @@ function SynergyUI:CreateWindow(options)
     titleLabel.TextSize = 16
     titleLabel.TextXAlignment = Enum.TextXAlignment.Left
     titleLabel.ZIndex = 10
-
     local controlContainer = Instance.new("Frame")
     controlContainer.Name = "ControlContainer"
     controlContainer.Parent = topBar
@@ -3010,7 +2771,6 @@ function SynergyUI:CreateWindow(options)
     controlContainer.Position = UDim2.new(1, -88, 0, 0)
     controlContainer.Size = UDim2.new(0, 88, 1, 0)
     controlContainer.ZIndex = 10
-
     local minBtn = Instance.new("TextButton")
     minBtn.Name = "MinimizeButton"
     minBtn.Parent = controlContainer
@@ -3026,7 +2786,6 @@ function SynergyUI:CreateWindow(options)
     addCorner(minBtn, 999)
     addStroke(minBtn, window.Theme.StrokeColor, 1, 0.6)
     addHoverEffect(minBtn, minBtn.BackgroundColor3, window.Theme.HoverColor, false)
-
     local closeBtn = Instance.new("TextButton")
     closeBtn.Name = "CloseButton"
     closeBtn.Parent = controlContainer
@@ -3050,7 +2809,6 @@ function SynergyUI:CreateWindow(options)
         createTween(closeBtn, 0.18, {BackgroundColor3 = window.Theme.ElementDark, BackgroundTransparency = 0.35, TextColor3 = window.Theme.TextMuted})
         createTween(closeBtnStroke, 0.18, {Color = window.Theme.StrokeColor, Transparency = 0.6})
     end)
-
     local sidebar = Instance.new("ScrollingFrame")
     sidebar.Name = "Sidebar"
     sidebar.Parent = mainFrame
@@ -3068,7 +2826,6 @@ function SynergyUI:CreateWindow(options)
     sidebar.ElasticBehavior = Enum.ElasticBehavior.WhenScrollable
     sidebar.ClipsDescendants = true
     addCorner(sidebar, window.Theme.CornerRadius)
-
     local sidebarMask = Instance.new("Frame")
     sidebarMask.Name = "SidebarMask"
     sidebarMask.Parent = mainFrame
@@ -3078,21 +2835,17 @@ function SynergyUI:CreateWindow(options)
     sidebarMask.Position = UDim2.new(0, 150 - window.Theme.CornerRadius, 0, 42)
     sidebarMask.Size = UDim2.new(0, window.Theme.CornerRadius, 1, -42 - strokeThickness)
     sidebarMask.ZIndex = 4
-
     local sidebarLayout = Instance.new("UIListLayout")
     sidebarLayout.Parent = sidebar
     sidebarLayout.SortOrder = Enum.SortOrder.LayoutOrder
     sidebarLayout.Padding = UDim.new(0, 2)
-
     local sidebarPad = Instance.new("UIPadding")
     sidebarPad.Parent = sidebar
     sidebarPad.PaddingTop = UDim.new(0, 6)
     sidebarPad.PaddingBottom = UDim.new(0, 6)
-
     sidebarLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
         sidebar.CanvasSize = UDim2.new(0, 0, 0, sidebarLayout.AbsoluteContentSize.Y + 12)
     end)
-
     local contentArea = Instance.new("Frame")
     contentArea.Name = "ContentArea"
     contentArea.Parent = mainFrame
@@ -3104,12 +2857,10 @@ function SynergyUI:CreateWindow(options)
     contentArea.ZIndex = 1
     addCorner(contentArea, window.Theme.CornerRadius)
     contentArea.ClipsDescendants = true
-
     local function addConnection(conn)
         table.insert(window.Connections, conn)
         return conn
     end
-
     local resizeHandle = Instance.new("Frame")
     resizeHandle.Name = "ResizeHandle"
     resizeHandle.Parent = gui
@@ -3119,26 +2870,21 @@ function SynergyUI:CreateWindow(options)
     resizeHandle.Size = UDim2.new(0, 5, 0, 54)
     resizeHandle.ZIndex = 150
     addCorner(resizeHandle, 999)
-
     window.resizeHandle = resizeHandle
-
     local function syncResizeHandle()
         local ap = mainFrame.AbsolutePosition
         local as = mainFrame.AbsoluteSize
         resizeHandle.Position = UDim2.new(0, ap.X + as.X + 18, 0, ap.Y + as.Y / 2 - 27)
     end
-
     addConnection(mainFrame:GetPropertyChangedSignal("AbsolutePosition"):Connect(syncResizeHandle))
     addConnection(mainFrame:GetPropertyChangedSignal("AbsoluteSize"):Connect(syncResizeHandle))
     task.defer(syncResizeHandle)
-
     addConnection(resizeHandle.MouseEnter:Connect(function()
         createTween(resizeHandle, 0.18, {BackgroundTransparency = 0.1, Size = UDim2.new(0, 7, 0, 54)})
     end))
     addConnection(resizeHandle.MouseLeave:Connect(function()
         createTween(resizeHandle, 0.18, {BackgroundTransparency = 0.45, Size = UDim2.new(0, 5, 0, 54)})
     end))
-
     local dragging = false
     local dragStart, startPos
     addConnection(topBar.InputBegan:Connect(function(input)
@@ -3148,20 +2894,17 @@ function SynergyUI:CreateWindow(options)
             startPos = mainFrame.Position
         end
     end))
-
     addConnection(UserInputService.InputChanged:Connect(function(input)
         if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
             local delta = input.Position - dragStart
             mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
         end
     end))
-
     addConnection(UserInputService.InputEnded:Connect(function(input)
         if dragging and (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
             dragging = false
         end
     end))
-
     local resizing = false
     local resizeStart, startSize
     addConnection(resizeHandle.InputBegan:Connect(function(input)
@@ -3171,7 +2914,6 @@ function SynergyUI:CreateWindow(options)
             startSize = mainFrame.Size
         end
     end))
-
     addConnection(UserInputService.InputChanged:Connect(function(input)
         if resizing and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
             local delta = input.Position - resizeStart
@@ -3180,14 +2922,12 @@ function SynergyUI:CreateWindow(options)
             mainFrame.Size = UDim2.new(0, newWidth, 0, newHeight)
         end
     end))
-
     addConnection(UserInputService.InputEnded:Connect(function(input)
         if resizing and (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
             resizing = false
             configHandler:Set("__size", {xo = mainFrame.Size.X.Offset, yo = mainFrame.Size.Y.Offset})
         end
     end))
-
     addConnection(minBtn.MouseButton1Click:Connect(function()
         window.IsMinimized = not window.IsMinimized
         if window.IsMinimized then
@@ -3203,12 +2943,10 @@ function SynergyUI:CreateWindow(options)
         end
         configHandler:Set("__minimized", window.IsMinimized)
     end))
-
     addConnection(closeBtn.MouseButton1Click:Connect(function()
         window:Destroy()
         if window.OnClose then pcall(window.OnClose) end
     end))
-
     addConnection(UserInputService.InputBegan:Connect(function(input, gameProcessed)
         if not gameProcessed and not _anyKeybindBinding and window.ToggleKey and input.KeyCode == window.ToggleKey then
             window.IsVisible = not window.IsVisible
@@ -3218,7 +2956,6 @@ function SynergyUI:CreateWindow(options)
             window:Destroy()
         end
     end))
-
     if savedConfig.__minimized then
         window.IsMinimized = true
         mainFrame.Size = UDim2.new(0, mainFrame.Size.X.Offset, 0, 42)
@@ -3226,7 +2963,6 @@ function SynergyUI:CreateWindow(options)
         contentArea.Visible = false
         resizeHandle.Visible = false
     end
-
     window.SetToggleKey = function(keyName)
         if keyName == "None" then
             window.ToggleKey = nil
@@ -3237,13 +2973,11 @@ function SynergyUI:CreateWindow(options)
             end
         end
     end
-
     local iconMap = {}
     if options.IconSet ~= false then
         local commitRef = "46d30c19ba7bc601d6ec794a48dc3a89568b1eec"
         local baseUrl = "https://raw.githubusercontent.com/Footagesus/Icons/" .. commitRef .. "/"
         local fetch = request or (syn and syn.request) or (http and http.request) or http_request
-
         local function fetchIconSet(setName)
             local iconUrl = baseUrl .. setName .. "/dist/Icons.lua"
             local body = nil
@@ -3262,12 +2996,10 @@ function SynergyUI:CreateWindow(options)
             if ok and type(loadedMap) == "table" then return loadedMap end
             return nil
         end
-
         local setsToLoad = {"lucide", "gravity"}
         if type(options.IconSet) == "string" then
             setsToLoad = {options.IconSet}
         end
-
         for _, setName in ipairs(setsToLoad) do
             local loadedMap = fetchIconSet(setName)
             if loadedMap then
@@ -3279,7 +3011,6 @@ function SynergyUI:CreateWindow(options)
             end
         end
     end
-
     function window:RefreshTheme()
         local newTheme = self.Theme
         self.MainFrame.BackgroundColor3 = newTheme.Background
@@ -3315,7 +3046,6 @@ function SynergyUI:CreateWindow(options)
         self.MainFrame:FindFirstChild("ContentArea").BackgroundColor3 = newTheme.Background
         self.MainFrame:FindFirstChild("ContentArea").BackgroundTransparency = newTheme.BackgroundTransparency
         self.resizeHandle.BackgroundColor3 = newTheme.Accent
-
         for _, tab in ipairs(self.Tabs) do
             tab.Content.BackgroundColor3 = newTheme.Background
             tab.Content.BackgroundTransparency = newTheme.BackgroundTransparency
@@ -3334,7 +3064,6 @@ function SynergyUI:CreateWindow(options)
             if img then
                 img.ImageColor3 = tab.Content.Visible and newTheme.Accent or newTheme.TextMuted
             end
-
             for _, control in ipairs(tab.Controls) do
                 if control.type == "label" then
                     control.instance.TextColor3 = newTheme.Text
@@ -3479,7 +3208,6 @@ function SynergyUI:CreateWindow(options)
             end
         end
     end
-
     function window:SetAccent(color)
         window.Theme.Accent = color
         mainFrame:FindFirstChild("UIStroke").Color = color
@@ -3497,7 +3225,6 @@ function SynergyUI:CreateWindow(options)
         end
         window:RefreshTheme()
     end
-
     function window:SetTheme(themeName)
         if Themes[themeName] then
             local newTheme = Themes[themeName]
@@ -3508,20 +3235,17 @@ function SynergyUI:CreateWindow(options)
             configHandler:Set("__theme", themeName)
         end
     end
-
     function window:Destroy()
         for _, conn in ipairs(window.Connections) do
             if conn and conn.Connected then conn:Disconnect() end
         end
         gui:Destroy()
     end
-
     function window:CreateTab(name, icon)
         local iconAsset = icon
         if type(icon) == "string" and not icon:match("^rbxasset") and not icon:match("^http") then
             iconAsset = iconMap[icon] or ""
         end
-
         local tabBtn = Instance.new("TextButton")
         tabBtn.Parent = sidebar
         tabBtn.BackgroundColor3 = window.Theme.Sidebar
@@ -3530,7 +3254,6 @@ function SynergyUI:CreateWindow(options)
         tabBtn.Size = UDim2.new(1, 0, 0, 42)
         tabBtn.Text = ""
         tabBtn.Position = UDim2.new(0, window.Theme.PaddingHorizontal + 10, 0, 0)
-
         local tabLabel = Instance.new("TextLabel")
         tabLabel.Name = "TabLabel"
         tabLabel.Parent = tabBtn
@@ -3541,7 +3264,6 @@ function SynergyUI:CreateWindow(options)
         tabLabel.TextSize = 14
         tabLabel.TextXAlignment = Enum.TextXAlignment.Left
         tabLabel.Text = name
-
         local tabState = {Active = false}
         tabBtn.MouseEnter:Connect(function()
             if not tabState.Active then
@@ -3553,7 +3275,6 @@ function SynergyUI:CreateWindow(options)
                 createTween(tabBtn, 0.15, {BackgroundTransparency = window.Theme.SidebarTransparency})
             end
         end)
-
         local activeIndicator = Instance.new("Frame")
         activeIndicator.Parent = tabBtn
         activeIndicator.BackgroundColor3 = window.Theme.Accent
@@ -3562,7 +3283,6 @@ function SynergyUI:CreateWindow(options)
         activeIndicator.Size = UDim2.new(0, 3, 0.7, 0)
         activeIndicator.Visible = false
         addCorner(activeIndicator, 999)
-
         if iconAsset and iconAsset ~= "" then
             local iconLabel = Instance.new("ImageLabel")
             iconLabel.Parent = tabBtn
@@ -3579,7 +3299,6 @@ function SynergyUI:CreateWindow(options)
             tabBtn.Position = UDim2.new(0, 0, 0, 0)
             activeIndicator.Position = UDim2.new(0, 0, 0.15, 0)
         end
-
         local scrollFrame = Instance.new("ScrollingFrame")
         scrollFrame.Parent = contentArea
         scrollFrame.Active = true
@@ -3592,26 +3311,21 @@ function SynergyUI:CreateWindow(options)
         scrollFrame.ScrollBarImageColor3 = window.Theme.Accent
         scrollFrame.Visible = (#window.Tabs == 0)
         scrollFrame.ZIndex = 1
-
         local layout = Instance.new("UIListLayout")
         layout.Parent = scrollFrame
         layout.SortOrder = Enum.SortOrder.LayoutOrder
         layout.Padding = UDim.new(0, window.Theme.PaddingVertical)
-
         local padding = Instance.new("UIPadding")
         padding.Parent = scrollFrame
         padding.PaddingLeft = UDim.new(0, window.Theme.PaddingHorizontal)
         padding.PaddingRight = UDim.new(0, window.Theme.PaddingHorizontal + 6)
         padding.PaddingTop = UDim.new(0, window.Theme.PaddingVertical)
         padding.PaddingBottom = UDim.new(0, window.Theme.PaddingVertical)
-
         addConnection(layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
             scrollFrame.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + window.Theme.PaddingVertical * 2)
         end))
-
         local tabData = {Button = tabBtn, Content = scrollFrame, ActiveIndicator = activeIndicator, Controls = {}, State = tabState}
         table.insert(window.Tabs, tabData)
-
         if #window.Tabs == 1 then
             local lbl = tabBtn:FindFirstChild("TabLabel")
             if lbl then lbl.TextColor3 = window.Theme.Accent end
@@ -3625,7 +3339,6 @@ function SynergyUI:CreateWindow(options)
             end
             window.CurrentTab = scrollFrame
         end
-
         addConnection(tabBtn.MouseButton1Click:Connect(function()
             for _, t in ipairs(window.Tabs) do
                 local tlbl = t.Button:FindFirstChild("TabLabel")
@@ -3649,12 +3362,10 @@ function SynergyUI:CreateWindow(options)
             local img = tabBtn:FindFirstChild("ImageLabel")
             if img then img.ImageColor3 = window.Theme.Accent end
         end))
-
         local elements = {}
         local controlFactory = ControlFactory:new(scrollFrame, window.Theme, window.SetAccent, configHandler)
         controlFactory.controls = window.Flags
         controlFactory.connections = window.Connections
-
         local originalCreateKeybind = controlFactory.createKeybind
         controlFactory.createKeybind = function(self, opts)
             if opts.Flag == "Keybind" then
@@ -3671,7 +3382,6 @@ function SynergyUI:CreateWindow(options)
             end
             return flagObj, conns
         end
-
         elements.CreateLabel = function(_, text) local lbl = controlFactory:createLabel(text); table.insert(tabData.Controls, controlFactory.createdControls[#controlFactory.createdControls]); return lbl end
         elements.CreateSeparator = function() local sep = controlFactory:createSeparator(); table.insert(tabData.Controls, controlFactory.createdControls[#controlFactory.createdControls]); return sep end
         elements.CreateButton = function(_, opts) local btn,conn = controlFactory:createButton(opts); table.insert(tabData.Controls, controlFactory.createdControls[#controlFactory.createdControls]); return btn,conn end
@@ -3688,7 +3398,6 @@ function SynergyUI:CreateWindow(options)
         elements.CreateParagraph = function(_, opts) local para = controlFactory:createParagraph(opts); table.insert(tabData.Controls, controlFactory.createdControls[#controlFactory.createdControls]); return para end
         elements.CreateImage = function(_, opts) local img = controlFactory:createImage(opts); table.insert(tabData.Controls, controlFactory.createdControls[#controlFactory.createdControls]); return img end
         elements.CreateVideo = function(_, opts) local vid = controlFactory:createVideo(opts); table.insert(tabData.Controls, controlFactory.createdControls[#controlFactory.createdControls]); return vid end
-
         function elements:CreateSection(name)
             local section = Instance.new("TextLabel")
             section.Parent = scrollFrame
@@ -3703,11 +3412,8 @@ function SynergyUI:CreateWindow(options)
             table.insert(tabData.Controls, {type = "section", instance = section})
             return section
         end
-
         return elements
     end
-
     return window
 end
-
 return SynergyUI
