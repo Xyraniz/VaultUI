@@ -1058,7 +1058,7 @@ function ControlFactory:createDropdown(options)
                         end
                         updateButtonText()
                         pcall(options.Callback, opt, selected[opt])
-                        if self.configHandler then self.configHandler:Set(flag, flagObj:GetValue()) end
+                        if self.configHandler then self.configHandler:SetImmediate(flag, flagObj:GetValue()) end
                     else
                         selected = opt
                         updateButtonText()
@@ -1067,7 +1067,7 @@ function ControlFactory:createDropdown(options)
                         container.Size = UDim2.new(1, 0, 0, 0)
                         createTween(icon, 0.18, {Rotation = 0})
                         pcall(options.Callback, opt)
-                        if self.configHandler then self.configHandler:Set(flag, selected) end
+                        if self.configHandler then self.configHandler:SetImmediate(flag, selected) end
                     end
                 end)
                 -- Guardamos la fila completa para que rebuild no deje contenedores vacÃ­os.
@@ -1122,7 +1122,7 @@ function ControlFactory:createDropdown(options)
             updateButtonText()
             rebuild()
             pcall(options.Callback, v)
-            if self.configHandler then self.configHandler:Set(flag, flagObj:GetValue()) end
+            if self.configHandler then self.configHandler:SetImmediate(flag, flagObj:GetValue()) end
         end,
         AddOption = function(_, opt)
             if not table.find(optionsList, opt) then
@@ -1138,7 +1138,7 @@ function ControlFactory:createDropdown(options)
                 elseif selected == opt then selected = "" end
                 rebuild()
                 updateButtonText()
-                if self.configHandler then self.configHandler:Set(flag, flagObj:GetValue()) end
+                if self.configHandler then self.configHandler:SetImmediate(flag, flagObj:GetValue()) end
             end
         end,
         ClearOptions = function()
@@ -1146,7 +1146,7 @@ function ControlFactory:createDropdown(options)
             selected = multi and {} or ""
             rebuild()
             updateButtonText()
-            if self.configHandler then self.configHandler:Set(flag, flagObj:GetValue()) end
+            if self.configHandler then self.configHandler:SetImmediate(flag, flagObj:GetValue()) end
         end,
         Select = function(_, val)
             if multi then
@@ -1159,7 +1159,7 @@ function ControlFactory:createDropdown(options)
             updateButtonText()
             rebuild()
             pcall(options.Callback, val)
-            if self.configHandler then self.configHandler:Set(flag, flagObj:GetValue()) end
+            if self.configHandler then self.configHandler:SetImmediate(flag, flagObj:GetValue()) end
         end
     }
     self.controls[flag] = flagObj
@@ -1202,8 +1202,10 @@ function ControlFactory:createChecklist(options)
     local countLabel = Instance.new("TextLabel")
     countLabel.Parent = frame
     countLabel.BackgroundTransparency = 1
-    countLabel.Position = UDim2.new(1, -80, 0.5, -10)
+    -- La etiqueta pertenece a la cabecera; no debe usar el 0.5 del frame expandible.
+    countLabel.Position = UDim2.new(1, -80, 0, (self.theme.ChecklistHeight - 20) / 2)
     countLabel.Size = UDim2.new(0, 60, 0, 20)
+    countLabel.ZIndex = 2
     countLabel.Font = self.theme.Font
     countLabel.Text = "0 selected"
     countLabel.TextColor3 = self.theme.Accent
@@ -2875,6 +2877,17 @@ function ConfigHandler:ScheduleSave()
     end)
 end
 
+-- Se usa para controles cuyo valor debe sobrevivir incluso a un cambio de servidor inmediato.
+function ConfigHandler:SaveNow()
+    self.pendingSave = false
+    saveConfigToFile(self.configName, self.data)
+end
+
+function ConfigHandler:SetImmediate(key, value)
+    self.data[key] = value
+    self:SaveNow()
+end
+
 function ConfigHandler:GetAll()
     return self.data
 end
@@ -3536,6 +3549,9 @@ function SynergyUI:CreateWindow(options)
     end
 
     function window:Destroy()
+        if window.ConfigHandler then
+            window.ConfigHandler:SaveNow()
+        end
         for _, conn in ipairs(window.Connections) do
             if conn and conn.Connected then conn:Disconnect() end
         end
