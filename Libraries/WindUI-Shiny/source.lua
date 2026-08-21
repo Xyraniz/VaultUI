@@ -5510,7 +5510,8 @@ d.Heartbeat
     do
         local function buildModule()
             local aa = {
-                Path = 'WindUI_SY/Settings/config.json',
+                ConfigName = 'default_config',
+                Path = nil,
                 Data = {},
                 Elements = {},
                 Loading = false,
@@ -5522,6 +5523,12 @@ d.Heartbeat
                 return value
             end)
             local ac = ab(game:GetService('HttpService'))
+
+            local function sanitizeSegment(value, fallback)
+                local result = tostring(value or fallback or 'default_config')
+                result = result:gsub('[^%w%._%-]', '_')
+                return result ~= '' and result or (fallback or 'default_config')
+            end
 
             local function ensureFolder(path)
                 if type(makefolder) ~= 'function' then
@@ -5797,6 +5804,8 @@ d.Heartbeat
 
             function aa.Init(_, window)
                 aa.Window = window
+                aa.ConfigName = sanitizeSegment(window and window.ConfigName, 'default_config')
+                aa.Path = 'WindUI_SY/Settings/' .. aa.ConfigName .. '.json'
                 aa.Elements = {}
                 aa.Loading = false
                 aa.PendingSave = false
@@ -17085,6 +17094,7 @@ aB, b = al:New(aA)
                     IconThemed = au.IconThemed,
                     IconRadius = au.IconRadius or 0,
                     Folder = au.Folder or au.ConfigFolder or 'Default',
+                    ConfigName = au.ConfigName or 'default_config',
                     Resizable = au.Resizable ~= false,
                     Background = au.Background,
                     BackgroundVideo = au.BackgroundVideo,
