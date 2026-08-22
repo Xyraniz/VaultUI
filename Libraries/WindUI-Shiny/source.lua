@@ -5677,6 +5677,8 @@ d.Heartbeat
 
                 local elementType = element.__type
                 if elementType == 'Toggle' then
+                    -- `false` es un valor vÃ¡lido y no debe convertirse en `nil`.
+                    -- Usar `and/or` aquÃ­ descartarÃ­a precisamente el estado desactivado.
                     if type(element.Value) == 'boolean' then
                         return element.Value
                     end
@@ -5848,6 +5850,8 @@ d.Heartbeat
             end
 
             function aa.ScheduleSave(_)
+                -- La configuraciÃ³n se persiste de forma sÃ­ncrona. El guardado
+                -- pospuesto dejaba una ventana con el valor anterior en el JSON.
                 if aa.Loading then
                     return aa
                 end
@@ -19349,7 +19353,7 @@ M, N = aq:New(L)
                             av:Dialog({
 
                                 Title = 'Close Window',
-                                Content = 'Do you want to hide this window? You can reopen it with the toggle key.',
+                                Content = 'Do you want to close this window? You will not be able to open it again.',
                                 Buttons = {
                                     {
                                         Title = 'Cancel',
@@ -19360,18 +19364,18 @@ M, N = aq:New(L)
                                         Variant = 'Secondary',
                                     },
                                     {
-                                        Title = 'Hide Window',
+                                        Title = 'Close Window',
 
                                         Callback = function()
                                             aC = false
-                                            av:Close()
+                                            av:Destroy()
                                         end,
                                         Variant = 'Primary',
                                     },
                                 },
                             })
                         else
-                            av:Close()
+                            av:Destroy()
                         end
                     end
                 end, (av.Topbar.ButtonsType == 'Default' and 999 or 997), nil, Color3.fromHex('#F4695F'))
