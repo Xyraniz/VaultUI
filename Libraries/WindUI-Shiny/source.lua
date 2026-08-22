@@ -5677,7 +5677,12 @@ d.Heartbeat
 
                 local elementType = element.__type
                 if elementType == 'Toggle' then
-                    return type(element.Value) == 'boolean' and element.Value or nil
+                    -- `false` es un valor válido y no debe convertirse en `nil`.
+                    -- Usar `and/or` aquí descartaría precisamente el estado desactivado.
+                    if type(element.Value) == 'boolean' then
+                        return element.Value
+                    end
+                    return nil
                 elseif elementType == 'ToggleKeybind' then
                     return {
                         value = type(element.Value) == 'boolean' and element.Value or false,
@@ -5845,15 +5850,13 @@ d.Heartbeat
             end
 
             function aa.ScheduleSave(_)
-                if aa.PendingSave or aa.Loading then
+                -- La configuración se persiste de forma síncrona. El guardado
+                -- pospuesto dejaba una ventana con el valor anterior en el JSON.
+                if aa.Loading then
                     return aa
                 end
                 aa.PendingSave = true
-                task.defer(function()
-                    if aa.PendingSave and not aa.Loading then
-                        aa:Save()
-                    end
-                end)
+                aa:Save()
                 return aa
             end
 
