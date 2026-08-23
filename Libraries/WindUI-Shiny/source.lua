@@ -17367,13 +17367,7 @@ aB, b = al:New(aA)
                     Name = 'Blur',
                 })
 
-                if ad.TouchEnabled and not ad.KeyboardEnabled then
-                    av.IsPC = false
-                elseif ad.KeyboardEnabled then
-                    av.IsPC = true
-                else
-                    av.IsPC = nil
-                end
+                av.IsPC = not ad.TouchEnabled
 
                 local d
                 if av.User then
@@ -18495,7 +18489,7 @@ aB, b = al:New(aA)
                     av.Closed = true
 
                     if av.OpenButtonMain then
-                        av:SetOpenButtonVisible(false)
+                        av:SetOpenButtonVisible(not av.IsPC)
                     end
 
                     al(av.UIElements.Main.Background, 0.32, {
@@ -18558,7 +18552,6 @@ aB, b = al:New(aA)
                             and not av.Destroyed
                             and not av.IsPC
                             and av.IsOpenButtonEnabled
-                            and not av.HideOpenButtonOnClose
                         then
                             av:SetOpenButtonVisible(true)
                         elseif av.OpenButtonMain then
