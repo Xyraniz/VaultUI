@@ -18489,7 +18489,11 @@ aB, b = al:New(aA)
                     av.Closed = true
 
                     if av.OpenButtonMain then
-                        av:SetOpenButtonVisible(not av.IsPC)
+                        if av.HideOpenButtonOnClose then
+                            av:SetOpenButtonVisible(false)
+                        else
+                            av:SetOpenButtonVisible(not av.IsPC)
+                        end
                     end
 
                     al(av.UIElements.Main.Background, 0.32, {
@@ -18548,11 +18552,16 @@ aB, b = al:New(aA)
                         task.wait(0.4)
                         av.UIElements.Main.Visible = false
 
-                        if av.OpenButtonMain
-                            and not av.Destroyed
-                            and not av.IsPC
-                            and av.IsOpenButtonEnabled
-                        then
+                        if av.Destroyed then
+                            if av.OpenButtonMain then
+                                av:SetOpenButtonVisible(false)
+                            end
+                            return
+                        end
+
+                        if av.HideOpenButtonOnClose then
+                            av:SetOpenButtonVisible(false)
+                        elseif av.OpenButtonMain and not av.IsPC and av.IsOpenButtonEnabled then
                             av:SetOpenButtonVisible(true)
                         elseif av.OpenButtonMain then
                             av:SetOpenButtonVisible(false)
