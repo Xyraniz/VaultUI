@@ -5677,8 +5677,6 @@ d.Heartbeat
 
                 local elementType = element.__type
                 if elementType == 'Toggle' then
-                    -- `false` es un valor vÃ¡lido y no debe convertirse en `nil`.
-                    -- Usar `and/or` aquÃ­ descartarÃ­a precisamente el estado desactivado.
                     if type(element.Value) == 'boolean' then
                         return element.Value
                     end
@@ -5850,8 +5848,6 @@ d.Heartbeat
             end
 
             function aa.ScheduleSave(_)
-                -- La configuraciÃ³n se persiste de forma sÃ­ncrona. El guardado
-                -- pospuesto dejaba una ventana con el valor anterior en el JSON.
                 if aa.Loading then
                     return aa
                 end
@@ -17128,6 +17124,7 @@ aB, b = al:New(aA)
                     HidePanelBackground = au.HidePanelBackground or false,
                     AutoScale = au.AutoScale ~= false,
                     OpenButton = au.OpenButton,
+                    HideOpenButtonOnClose = au.HideOpenButtonOnClose == true,
                     BottomDragBarEnabled = not (au.BottomDragBarEnabled == false or au.BottomDragEnabled == false),
                     WatermarkConfig = au.Watermark,
 
@@ -18486,6 +18483,10 @@ aB, b = al:New(aA)
                     av.CanDropdown = false
                     av.Closed = true
 
+                    if av.OpenButtonMain and av.HideOpenButtonOnClose then
+                        av.OpenButtonMain:Visible(false)
+                    end
+
                     al(av.UIElements.Main.Background, 0.32, {
                         ImageTransparency = 1,
                     }, Enum.EasingStyle.Quint, Enum.EasingDirection.InOut):Play()
@@ -18542,7 +18543,12 @@ aB, b = al:New(aA)
                         task.wait(0.4)
                         av.UIElements.Main.Visible = false
 
-                        if av.OpenButtonMain and not av.Destroyed and not av.IsPC and av.IsOpenButtonEnabled then
+                        if av.OpenButtonMain
+                            and not av.Destroyed
+                            and not av.IsPC
+                            and av.IsOpenButtonEnabled
+                            and not av.HideOpenButtonOnClose
+                        then
                             av.OpenButtonMain:Visible(true)
                         end
                     end)
