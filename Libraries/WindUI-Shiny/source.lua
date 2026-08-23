@@ -18188,6 +18188,17 @@ aB, b = al:New(aA)
                     av.ToggleKey = B
                 end
 
+                function av.SetOpenButtonVisible(A, B)
+                    local C = B == true
+                    if av.OpenButtonMain then
+                        av.OpenButtonMain:Visible(C)
+                        if av.OpenButtonMain.Button then
+                            av.OpenButtonMain.Button.Visible = C
+                        end
+                    end
+                    return av
+                end
+
                 function av.SetTitle(A, B)
                     av.Title = B
                     x.Text = B
@@ -18414,7 +18425,7 @@ aB, b = al:New(aA)
                         end
 
                         if av.OpenButtonMain and av.IsOpenButtonEnabled then
-                            av.OpenButtonMain:Visible(false)
+                            av:SetOpenButtonVisible(false)
                         end
 
                         al(
@@ -18483,8 +18494,8 @@ aB, b = al:New(aA)
                     av.CanDropdown = false
                     av.Closed = true
 
-                    if av.OpenButtonMain and av.HideOpenButtonOnClose then
-                        av.OpenButtonMain:Visible(false)
+                    if av.OpenButtonMain then
+                        av:SetOpenButtonVisible(false)
                     end
 
                     al(av.UIElements.Main.Background, 0.32, {
@@ -18549,7 +18560,9 @@ aB, b = al:New(aA)
                             and av.IsOpenButtonEnabled
                             and not av.HideOpenButtonOnClose
                         then
-                            av.OpenButtonMain:Visible(true)
+                            av:SetOpenButtonVisible(true)
+                        elseif av.OpenButtonMain then
+                            av:SetOpenButtonVisible(false)
                         end
                     end)
 
