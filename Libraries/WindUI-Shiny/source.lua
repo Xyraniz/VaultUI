@@ -18472,8 +18472,9 @@ aB, b = al:New(aA)
                         end)
                     end)
                 end
-                function av.Close(C)
+                                function av.Close(C, D)
                     local F = {}
+                    local forceHide = (C == true) or (D == true) or (type(C) == "table" and C.ForceHide)
 
                     if av.OnCloseCallback then
                         task.spawn(function()
@@ -18489,7 +18490,7 @@ aB, b = al:New(aA)
                     av.Closed = true
 
                     if av.OpenButtonMain then
-                        if av.HideOpenButtonOnClose then
+                        if forceHide then
                             av:SetOpenButtonVisible(false)
                         else
                             av:SetOpenButtonVisible(not av.IsPC)
@@ -18559,7 +18560,7 @@ aB, b = al:New(aA)
                             return
                         end
 
-                        if av.HideOpenButtonOnClose then
+                        if forceHide then
                             av:SetOpenButtonVisible(false)
                         elseif av.OpenButtonMain and not av.IsPC and av.IsOpenButtonEnabled then
                             av:SetOpenButtonVisible(true)
