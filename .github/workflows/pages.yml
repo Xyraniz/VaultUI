@@ -1,4 +1,4 @@
-name: Deploy VaultUI Pages
+name: Deploy VaultUI
 
 on:
   push:
@@ -6,9 +6,7 @@ on:
       - main
     paths:
       - "web/**"
-      - "Libraries/SynergyUI/**"
-      - "Libraries/Bacon/**"
-      - "Libraries/Armenta-Lib/**"
+      - "Libraries/**"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -36,12 +34,9 @@ jobs:
         run: |
           set -euo pipefail
           rm -rf _site
-          mkdir -p _site/Libraries/SynergyUI _site/Libraries/Bacon _site/Libraries/Armenta-Lib
+          mkdir -p _site/Libraries
           cp -R web/. _site/
-          cp Libraries/SynergyUI/source.lua Libraries/SynergyUI/example.lua _site/Libraries/SynergyUI/
-          cp Libraries/SynergyUI/preview.html _site/Libraries/SynergyUI/
-          cp Libraries/Bacon/source.lua Libraries/Bacon/example.lua Libraries/Bacon/preview.html _site/Libraries/Bacon/
-          cp Libraries/Armenta-Lib/source.lua Libraries/Armenta-Lib/preview.html _site/Libraries/Armenta-Lib/
+          cp -R Libraries/. _site/Libraries/
           touch _site/.nojekyll
 
       - name: Configure Pages

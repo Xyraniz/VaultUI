@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0d0d0e">
-  <meta name="description" content="VaultUI library shelf: browse Roblox UI libraries, previews and source files.">
+  <meta name="description" content="VaultUI library shelf: browse Roblox UI libraries, static showcase images and source files.">
   <title>VaultUI — Library shelf</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -22,7 +22,7 @@
       <div class="breadcrumb" aria-label="Current location">
         <span class="breadcrumb-muted">Library shelf</span>
         <span class="breadcrumb-slash">/</span>
-        <strong id="currentCrumb">SynergyUI</strong>
+        <strong id="currentCrumb">0x37</strong>
       </div>
       <div class="topbar-actions">
         <button class="text-button" id="copyActiveButton" type="button"><span class="button-icon">⌘</span> Copy</button>
@@ -39,12 +39,12 @@
           </div>
           <button class="icon-button close-menu" id="drawerClose" type="button" aria-label="Close library menu">×</button>
         </div>
-        <p class="drawer-note">Source files, examples and the preview that belongs to each library.</p>
+        <p class="drawer-note">Source files, examples and the static image belonging to each library.</p>
         <nav class="library-list" id="libraryList"></nav>
         <div class="drawer-footer">
           <span class="status-dot"></span>
           <span>VaultUI collection</span>
-          <span class="version-label">02</span>
+          <span class="version-label">03</span>
         </div>
       </aside>
       <button class="drawer-backdrop" id="drawerBackdrop" type="button" aria-label="Close library menu"></button>
@@ -52,42 +52,42 @@
       <section class="content" aria-live="polite">
         <div class="page-heading">
           <div class="heading-copy">
-            <span class="eyebrow" id="libraryEyebrow">LIBRARY / SYNERGYUI</span>
-            <h1 id="libraryName">SynergyUI</h1>
-            <p id="libraryDescription">A dark Roblox UI library with tabs, overlays and animated controls.</p>
+            <span class="eyebrow" id="libraryEyebrow">LIBRARY / 0X37</span>
+            <h1 id="libraryName">0x37</h1>
+            <p id="libraryDescription">A compact window library with sliders, toggles and direct callbacks.</p>
             <div class="tag-row" id="libraryTags"></div>
           </div>
           <div class="heading-actions">
-            <a class="outline-button" id="sourceLink" href="../Libraries/SynergyUI/source.lua" target="_blank" rel="noreferrer">Open source</a>
-            <button class="solid-button" id="openPreviewButton" type="button">Use preview <span>↗</span></button>
+            <a class="outline-button" id="sourceLink" href="../Libraries/0x37/source.lua" target="_blank" rel="noreferrer">Open source</a>
+            <button class="solid-button" id="openShowcaseButton" type="button">Open showcase <span>↗</span></button>
           </div>
         </div>
 
-        <section class="preview-card" id="previewCard" aria-labelledby="previewTitle">
+        <section class="showcase-card" id="showcaseCard" aria-labelledby="showcaseTitle">
           <div class="section-bar">
             <div class="section-title-group">
               <span class="section-index">01</span>
-              <h2 id="previewTitle">Preview</h2>
-              <span class="live-label" id="previewMode">INTERACTIVE</span>
+              <h2 id="showcaseTitle">Showcase</h2>
+              <span class="live-label" id="showcaseMode">STATIC IMAGE</span>
             </div>
             <div class="section-actions">
-              <div class="zoom-controls" aria-label="Preview zoom">
+              <div class="zoom-controls" aria-label="Showcase zoom">
                 <button class="mini-button zoom-button" id="zoomOutButton" type="button" aria-label="Zoom out" title="Zoom out">−</button>
                 <span class="zoom-label" id="zoomLabel">100%</span>
                 <button class="mini-button zoom-button" id="zoomInButton" type="button" aria-label="Zoom in" title="Zoom in">+</button>
-                <button class="mini-button zoom-button" id="zoomResetButton" type="button" aria-label="Reset preview zoom" title="Reset zoom">1:1</button>
+                <button class="mini-button zoom-button" id="zoomResetButton" type="button" aria-label="Reset showcase zoom" title="Reset zoom">1:1</button>
               </div>
-              <button class="mini-button" id="expandPreviewButton" type="button">Expand</button>
-              <a class="mini-button" id="openPreviewLink" href="../Libraries/SynergyUI/preview.html" target="_blank" rel="noreferrer">Open</a>
+              <button class="mini-button" id="expandShowcaseButton" type="button">Expand</button>
+              <a class="mini-button" id="openShowcaseLink" href="../Libraries/0x37/showcase.png" target="_blank" rel="noreferrer">Open</a>
             </div>
           </div>
-          <div class="preview-canvas" id="previewCanvas">
-            <iframe id="interactivePreview" title="SynergyUI interactive preview" src="../Libraries/SynergyUI/preview.html"></iframe>
-            <div class="preview-empty" id="previewEmpty" hidden>
-              <span>There is no preview file for this library.</span>
+          <div class="showcase-canvas" id="showcaseCanvas">
+            <img id="showcaseImage" src="../Libraries/0x37/showcase.png" alt="0x37 showcase image">
+            <div class="showcase-empty" id="showcaseEmpty" hidden>
+              <span>There is no showcase image for this library.</span>
             </div>
-            <div class="canvas-corner canvas-corner-left">TOUCH / PINCH / ZOOM</div>
-            <div class="canvas-corner canvas-corner-right" id="canvasSize">560 × 380</div>
+            <div class="canvas-corner canvas-corner-left">STATIC IMAGE / ZOOM</div>
+            <div class="canvas-corner canvas-corner-right" id="canvasSize">1280 × 800</div>
           </div>
         </section>
 
@@ -108,7 +108,7 @@
             <pre id="codePre"><code id="codeContent">Loading source.lua…</code></pre>
           </div>
           <div class="code-footer">
-            <span class="file-path" id="filePath">Libraries/SynergyUI/source.lua</span>
+            <span class="file-path" id="filePath">Libraries/0x37/source.lua</span>
             <div class="footer-actions">
               <button class="outline-button small" id="copyFileButton" type="button">Copy file</button>
               <button class="solid-button small" id="downloadFileButton" type="button">Download <span>↓</span></button>
@@ -120,6 +120,6 @@
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="app.js" defer></script>
+  <script src="app.js?v=3" defer></script>
 </body>
 </html>
