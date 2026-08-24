@@ -399,6 +399,13 @@
     dragbar.addEventListener('pointermove', (event) => { if (dragging) { win.style.left = startLeft + event.clientX - startX + 'px'; win.style.top = startTop + event.clientY - startY + 'px'; } });
     dragbar.addEventListener('pointerup', () => { dragging = false; });
 
+    let activeScrollEl = null;
+    let scrollStartTop = 0;
+    const findScrollable = (target) => {
+      const panel = target.closest ? target.closest('.panel') : null;
+      if (panel && panel.scrollHeight > panel.clientHeight + 1) return panel;
+      return null;
+    };
     stage.addEventListener('touchstart', (event) => {
       if (event.touches.length === 2) {
         event.preventDefault();
@@ -409,6 +416,15 @@
         return;
       }
       if (event.touches.length !== 1) return;
+      const scrollable = findScrollable(event.target);
+      if (scrollable) {
+        touchMode = 'scroll';
+        touchMoved = false;
+        activeScrollEl = scrollable;
+        scrollStartTop = scrollable.scrollTop;
+        touchStartY = event.touches[0].clientY;
+        return;
+      }
       const current = readDrag();
       touchMode = 'pan';
       touchMoved = false;
@@ -423,7 +439,18 @@
         setScale(pinchStartScale * distance(event.touches[0], event.touches[1]) / pinchStartDistance);
         return;
       }
-      if (event.touches.length !== 1 || touchMode !== 'pan') return;
+      if (event.touches.length !== 1) return;
+      if (touchMode === 'scroll' && activeScrollEl) {
+        const touch = event.touches[0];
+        const deltaY = touch.clientY - touchStartY;
+        if (!touchMoved && Math.abs(deltaY) < 4) return;
+        touchMoved = true;
+        event.preventDefault();
+        const max = activeScrollEl.scrollHeight - activeScrollEl.clientHeight;
+        activeScrollEl.scrollTop = Math.max(0, Math.min(max, scrollStartTop - deltaY));
+        return;
+      }
+      if (touchMode !== 'pan') return;
       const touch = event.touches[0];
       const deltaX = touch.clientX - touchStartX;
       const deltaY = touch.clientY - touchStartY;
@@ -444,9 +471,10 @@
         touchOriginY = current.y;
       } else if (event.touches.length === 0) {
         touchMode = 'idle';
+        activeScrollEl = null;
       }
     }, { passive: false });
-    stage.addEventListener('touchcancel', () => { pinchStartDistance = 0; touchMode = 'idle'; }, { passive: false });
+    stage.addEventListener('touchcancel', () => { pinchStartDistance = 0; touchMode = 'idle'; activeScrollEl = null; }, { passive: false });
     window.addEventListener('resize', () => { if (!manualScale) setScale(Math.min(1, Math.max(.52, (window.innerWidth - 24) / 560))); });
   </script>
 </body>
