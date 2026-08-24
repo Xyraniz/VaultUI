@@ -20,6 +20,9 @@
       --success: #34d399;
       --warning: #fbbf24;
       --danger: #f87171;
+      --preview-scale: 1;
+      --drag-x: 0px;
+      --drag-y: 0px;
       --radius: 14px;
       --font: Gotham, "Gotham Medium", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
@@ -41,7 +44,7 @@
 
     button, input, select, textarea { font: inherit; }
     button { color: inherit; }
-    .stage { position: relative; width: 100%; height: 100%; display: grid; place-items: center; }
+    .stage { position: relative; width: 100%; height: 100%; display: grid; place-items: center; overflow: hidden; touch-action: none; }
 
     .main-frame {
       position: relative;
@@ -54,7 +57,9 @@
         linear-gradient(var(--background), var(--background)) padding-box,
         linear-gradient(180deg, rgba(88, 166, 255, .9), rgba(88, 166, 255, .32) 52%, rgba(88, 166, 255, .76)) border-box;
       box-shadow: 0 28px 80px rgba(0, 0, 0, .48), 0 0 0 1px rgba(88, 166, 255, .06);
-      transition: height .35s cubic-bezier(.22, 1, .36, 1), opacity .22s ease, transform .22s ease;
+      transform: translate(var(--drag-x), var(--drag-y)) scale(var(--preview-scale));
+      transform-origin: center;
+      transition: height .35s cubic-bezier(.22, 1, .36, 1), opacity .22s ease, transform .12s ease;
     }
 
     .top-bar {
@@ -186,7 +191,7 @@
 
     @media (max-width: 720px) {
       body { overflow: auto; padding: 20px; }
-      .main-frame { transform: scale(.84); transform-origin: center; }
+
       .resize-handle { display: none; }
     }
   </style>
@@ -284,6 +289,32 @@
     const close = document.getElementById('close');
     const reopen = document.getElementById('reopen');
     const toast = document.getElementById('toast');
+    const stage = document.querySelector('.stage');
+    let previewScale = Math.min(1, Math.max(.52, (window.innerWidth - 24) / 560));
+    let manualScale = false;
+    let pinchStartDistance = 0;
+    let pinchStartScale = previewScale;
+    let touchMode = 'idle';
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchOriginX = 0;
+    let touchOriginY = 0;
+    let touchMoved = false;
+    const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+    const readDrag = () => ({
+      x: parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--drag-x')) || 0,
+      y: parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--drag-y')) || 0
+    });
+    const setDrag = (x, y) => {
+      document.documentElement.style.setProperty('--drag-x', x + 'px');
+      document.documentElement.style.setProperty('--drag-y', y + 'px');
+    };
+    const setScale = (value) => {
+      previewScale = clamp(value, .52, 1.45);
+      document.documentElement.style.setProperty('--preview-scale', previewScale);
+    };
+    const distance = (a, b) => Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+    setScale(previewScale);
 
     document.querySelectorAll('.tab').forEach((tab) => {
       tab.addEventListener('click', () => {
@@ -360,13 +391,64 @@
     let dragging = false; let startX = 0; let startY = 0; let startLeft = 0; let startTop = 0;
     const dragbar = document.getElementById('dragbar');
     dragbar.addEventListener('pointerdown', (event) => {
-      if (event.target.closest('button')) return;
+      if (event.target.closest('button') || event.pointerType === 'touch') return;
       dragging = true; dragbar.setPointerCapture(event.pointerId);
       const rect = win.getBoundingClientRect(); startX = event.clientX; startY = event.clientY; startLeft = rect.left; startTop = rect.top;
-      win.style.position = 'fixed'; win.style.left = rect.left + 'px'; win.style.top = rect.top + 'px'; win.style.transform = 'none';
+      win.style.position = 'fixed'; win.style.left = rect.left + 'px'; win.style.top = rect.top + 'px';
     });
     dragbar.addEventListener('pointermove', (event) => { if (dragging) { win.style.left = startLeft + event.clientX - startX + 'px'; win.style.top = startTop + event.clientY - startY + 'px'; } });
     dragbar.addEventListener('pointerup', () => { dragging = false; });
+
+    stage.addEventListener('touchstart', (event) => {
+      if (event.touches.length === 2) {
+        event.preventDefault();
+        manualScale = true;
+        touchMode = 'pinch';
+        pinchStartDistance = distance(event.touches[0], event.touches[1]);
+        pinchStartScale = previewScale;
+        return;
+      }
+      if (event.touches.length !== 1) return;
+      const current = readDrag();
+      if (previewScale <= 1 && current.x === 0 && current.y === 0) return;
+      touchMode = 'pan';
+      touchMoved = false;
+      touchStartX = event.touches[0].clientX;
+      touchStartY = event.touches[0].clientY;
+      touchOriginX = current.x;
+      touchOriginY = current.y;
+    }, { passive: false });
+    stage.addEventListener('touchmove', (event) => {
+      if (event.touches.length === 2 && pinchStartDistance) {
+        event.preventDefault();
+        setScale(pinchStartScale * distance(event.touches[0], event.touches[1]) / pinchStartDistance);
+        return;
+      }
+      if (event.touches.length !== 1 || touchMode !== 'pan') return;
+      const touch = event.touches[0];
+      const deltaX = touch.clientX - touchStartX;
+      const deltaY = touch.clientY - touchStartY;
+      if (!touchMoved && Math.hypot(deltaX, deltaY) < 4) return;
+      touchMoved = true;
+      event.preventDefault();
+      setDrag(touchOriginX + deltaX, touchOriginY + deltaY);
+    }, { passive: false });
+    stage.addEventListener('touchend', (event) => {
+      if (event.touches.length < 2) pinchStartDistance = 0;
+      if (event.touches.length === 1 && touchMode === 'pinch') {
+        const current = readDrag();
+        touchMode = 'pan';
+        touchMoved = false;
+        touchStartX = event.touches[0].clientX;
+        touchStartY = event.touches[0].clientY;
+        touchOriginX = current.x;
+        touchOriginY = current.y;
+      } else if (event.touches.length === 0) {
+        touchMode = 'idle';
+      }
+    }, { passive: false });
+    stage.addEventListener('touchcancel', () => { pinchStartDistance = 0; touchMode = 'idle'; }, { passive: false });
+    window.addEventListener('resize', () => { if (!manualScale) setScale(Math.min(1, Math.max(.52, (window.innerWidth - 24) / 560))); });
   </script>
 </body>
 </html>
