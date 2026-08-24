@@ -25,8 +25,8 @@ const libraries = [
     label: 'BaconLib',
     number: '02',
     type: 'Source',
-    description: 'A compact Roblox UI library with classic controls and a focused layout.',
-    tags: ['Classic', 'Controls', 'Roblox'],
+    description: 'A faithful browser recreation of BaconLib v1.2 running the repository example script.',
+    tags: ['Example script', 'Callbacks', 'Touch'],
     files: {
       source: `${libraryBase}/Bacon/source.lua`,
       example: `${libraryBase}/Bacon/example.lua`
@@ -34,7 +34,7 @@ const libraries = [
     preview: {
       kind: 'iframe',
       url: `${libraryBase}/Bacon/preview.html`,
-      size: '560 × 380'
+      size: '240 × 329'
     }
   },
   {
@@ -43,15 +43,15 @@ const libraries = [
     label: 'Armenta-Lib',
     number: '03',
     type: 'Source',
-    description: 'A classic Roblox UI library with direct controls, callbacks and a compact window composition.',
-    tags: ['Classic', 'Callbacks', 'Controls'],
+    description: 'A live FyyUI.Menu recreation using Armenta-Lib\'s public tab and component factories.',
+    tags: ['FyyUI.Menu', 'Themes', 'Callbacks'],
     files: {
       source: `${libraryBase}/Armenta-Lib/source.lua`
     },
     preview: {
       kind: 'iframe',
       url: `${libraryBase}/Armenta-Lib/preview.html`,
-      size: '560 × 380'
+      size: '601 × 344'
     }
   }
 ];
