@@ -1,4 +1,4 @@
-local SynergyUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Xyraniz/SynergyUI/main/source.lua"))()
+local SynergyUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Xyraniz/VaultUI/main/Libraries/SynergyUI/source.lua"))()
 
 local Window = SynergyUI:CreateWindow({
     Title = "Synergy Hub",
