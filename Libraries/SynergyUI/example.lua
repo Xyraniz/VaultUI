@@ -6,7 +6,7 @@ if getgenv then
 	end
 end
 
-local LIB_URL = "https://raw.githubusercontent.com/Xyraniz/VaultUI/refs/heads/main/Libraries/SynergyUI/source.lua"
+local LIB_URL = "https://raw.githubusercontent.com/Xyraniz/SynergyUI/refs/heads/main/dist/main.lua"
 
 local SynergyUI = loadstring(game:HttpGet(LIB_URL))()
 
