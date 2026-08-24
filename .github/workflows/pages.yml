@@ -1,0 +1,56 @@
+name: Deploy VaultUI Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "web/**"
+      - "Libraries/SynergyUI/**"
+      - "Libraries/Bacon/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Assemble static site
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf _site
+          mkdir -p _site/Libraries/SynergyUI _site/Libraries/Bacon
+          cp -R web/. _site/
+          cp Libraries/SynergyUI/source.lua Libraries/SynergyUI/example.lua _site/Libraries/SynergyUI/
+          cp Libraries/SynergyUI/preview.html Libraries/SynergyUI/Screenshot_SynergyUI.png _site/Libraries/SynergyUI/
+          cp Libraries/Bacon/source.lua Libraries/Bacon/example.lua _site/Libraries/Bacon/
+          cp Libraries/Bacon/Screenshot_20251111_232521_Roblox.jpg _site/Libraries/Bacon/
+          touch _site/.nojekyll
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
