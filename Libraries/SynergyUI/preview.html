@@ -410,7 +410,6 @@
       }
       if (event.touches.length !== 1) return;
       const current = readDrag();
-      if (previewScale <= 1 && current.x === 0 && current.y === 0) return;
       touchMode = 'pan';
       touchMoved = false;
       touchStartX = event.touches[0].clientX;
