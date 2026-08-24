@@ -71,17 +71,22 @@
               <span class="live-label" id="previewMode">INTERACTIVE</span>
             </div>
             <div class="section-actions">
+              <div class="zoom-controls" aria-label="Preview zoom">
+                <button class="mini-button zoom-button" id="zoomOutButton" type="button" aria-label="Zoom out" title="Zoom out">−</button>
+                <span class="zoom-label" id="zoomLabel">100%</span>
+                <button class="mini-button zoom-button" id="zoomInButton" type="button" aria-label="Zoom in" title="Zoom in">+</button>
+                <button class="mini-button zoom-button" id="zoomResetButton" type="button" aria-label="Reset preview zoom" title="Reset zoom">1:1</button>
+              </div>
               <button class="mini-button" id="expandPreviewButton" type="button">Expand</button>
               <a class="mini-button" id="openPreviewLink" href="../Libraries/SynergyUI/preview.html" target="_blank" rel="noreferrer">Open</a>
             </div>
           </div>
           <div class="preview-canvas" id="previewCanvas">
             <iframe id="interactivePreview" title="SynergyUI interactive preview" src="../Libraries/SynergyUI/preview.html"></iframe>
-            <img id="staticPreview" alt="Library screenshot" hidden>
             <div class="preview-empty" id="previewEmpty" hidden>
               <span>There is no preview file for this library.</span>
             </div>
-            <div class="canvas-corner canvas-corner-left">DRAG / CLICK / SCROLL</div>
+            <div class="canvas-corner canvas-corner-left">CLICK / SCROLL / ZOOM</div>
             <div class="canvas-corner canvas-corner-right" id="canvasSize">560 × 380</div>
           </div>
         </section>

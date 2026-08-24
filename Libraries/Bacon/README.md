@@ -1,2 +1,5 @@
-# Preview 
-![a](https://github.com/Xyraniz/VaultUI/blob/main/Libraries/Bacon/Screenshot_20251111_232521_Roblox.jpg?raw=true)
+# BaconLib Preview
+
+BaconLib now has an interactive HTML showcase that mirrors its classic dark window and exposes clickable toggles, a slider, theme presets, keybinds, minimize and close/reopen behavior.
+
+Open [`preview.html`](preview.html) to explore the preview.
