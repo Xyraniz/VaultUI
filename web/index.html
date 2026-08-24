@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d0d0e">
+  <meta name="description" content="VaultUI library shelf: browse Roblox UI libraries, previews and source files.">
+  <title>VaultUI — Library shelf</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#mainContent">Skip to content</a>
+  <div class="app-shell">
+    <header class="topbar">
+      <button class="icon-button menu-button" id="menuButton" type="button" aria-label="Open library menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <a class="brand" href="./" aria-label="VaultUI home">
+        <span class="brand-mark">V</span>
+        <span>VaultUI</span>
+      </a>
+      <div class="breadcrumb" aria-label="Current location">
+        <span class="breadcrumb-muted">Library shelf</span>
+        <span class="breadcrumb-slash">/</span>
+        <strong id="currentCrumb">SynergyUI</strong>
+      </div>
+      <div class="topbar-actions">
+        <button class="text-button" id="copyActiveButton" type="button"><span class="button-icon">⌘</span> Copy</button>
+        <button class="text-button" id="downloadActiveButton" type="button"><span class="button-icon">↓</span> Download</button>
+      </div>
+    </header>
+
+    <main class="workspace" id="mainContent">
+      <aside class="library-drawer" id="libraryDrawer" aria-label="Library menu">
+        <div class="drawer-header">
+          <div>
+            <span class="eyebrow">COLLECTION</span>
+            <h2>Libraries</h2>
+          </div>
+          <button class="icon-button close-menu" id="drawerClose" type="button" aria-label="Close library menu">×</button>
+        </div>
+        <p class="drawer-note">Source files, examples and the preview that belongs to each library.</p>
+        <nav class="library-list" id="libraryList"></nav>
+        <div class="drawer-footer">
+          <span class="status-dot"></span>
+          <span>VaultUI collection</span>
+          <span class="version-label">02</span>
+        </div>
+      </aside>
+      <button class="drawer-backdrop" id="drawerBackdrop" type="button" aria-label="Close library menu"></button>
+
+      <section class="content" aria-live="polite">
+        <div class="page-heading">
+          <div class="heading-copy">
+            <span class="eyebrow" id="libraryEyebrow">LIBRARY / SYNERGYUI</span>
+            <h1 id="libraryName">SynergyUI</h1>
+            <p id="libraryDescription">A dark Roblox UI library with tabs, overlays and animated controls.</p>
+            <div class="tag-row" id="libraryTags"></div>
+          </div>
+          <div class="heading-actions">
+            <a class="outline-button" id="sourceLink" href="../Libraries/SynergyUI/source.lua" target="_blank" rel="noreferrer">Open source</a>
+            <button class="solid-button" id="openPreviewButton" type="button">Use preview <span>↗</span></button>
+          </div>
+        </div>
+
+        <section class="preview-card" id="previewCard" aria-labelledby="previewTitle">
+          <div class="section-bar">
+            <div class="section-title-group">
+              <span class="section-index">01</span>
+              <h2 id="previewTitle">Preview</h2>
+              <span class="live-label" id="previewMode">INTERACTIVE</span>
+            </div>
+            <div class="section-actions">
+              <button class="mini-button" id="expandPreviewButton" type="button">Expand</button>
+              <a class="mini-button" id="openPreviewLink" href="../Libraries/SynergyUI/preview.html" target="_blank" rel="noreferrer">Open</a>
+            </div>
+          </div>
+          <div class="preview-canvas" id="previewCanvas">
+            <iframe id="interactivePreview" title="SynergyUI interactive preview" src="../Libraries/SynergyUI/preview.html"></iframe>
+            <img id="staticPreview" alt="Library screenshot" hidden>
+            <div class="preview-empty" id="previewEmpty" hidden>
+              <span>There is no preview file for this library.</span>
+            </div>
+            <div class="canvas-corner canvas-corner-left">DRAG / CLICK / SCROLL</div>
+            <div class="canvas-corner canvas-corner-right" id="canvasSize">560 × 380</div>
+          </div>
+        </section>
+
+        <section class="code-card" id="codeCard" aria-labelledby="codeTitle">
+          <div class="code-header section-bar">
+            <div class="code-tabs" role="tablist" aria-label="Library files">
+              <button class="code-tab active" id="sourceTab" type="button" role="tab" aria-selected="true" data-file="source">source.lua</button>
+              <button class="code-tab" id="exampleTab" type="button" role="tab" aria-selected="false" data-file="example">example.lua</button>
+            </div>
+            <div class="section-actions">
+              <span class="file-status" id="fileStatus">Loading</span>
+              <button class="mini-button" id="expandCodeButton" type="button">Expand</button>
+              <button class="mini-button" id="minimizeCodeButton" type="button">Minimize</button>
+            </div>
+          </div>
+          <div class="code-body" id="codeBody">
+            <aside class="line-numbers" id="lineNumbers" aria-hidden="true"></aside>
+            <pre id="codePre"><code id="codeContent">Loading source.lua…</code></pre>
+          </div>
+          <div class="code-footer">
+            <span class="file-path" id="filePath">Libraries/SynergyUI/source.lua</span>
+            <div class="footer-actions">
+              <button class="outline-button small" id="copyFileButton" type="button">Copy file</button>
+              <button class="solid-button small" id="downloadFileButton" type="button">Download <span>↓</span></button>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js" defer></script>
+</body>
+</html>
