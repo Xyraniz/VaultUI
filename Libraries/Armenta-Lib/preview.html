@@ -37,9 +37,11 @@
     .brand { font-size: 16px; font-weight: 700; letter-spacing: -.02em; }
     .subtitle { margin-left: 8px; color: var(--muted); font-size: 10px; }
     .topbar-actions { display: flex; gap: 7px; margin-left: auto; }
-    .window-button { display: grid; place-items: center; width: 20px; height: 20px; padding: 0; color: var(--muted); background: #18181b; border: 1px solid #3b3b40; border-radius: 50%; cursor: pointer; }
+    .window-button { display: grid; place-items: center; width: 20px; height: 20px; padding: 0; color: var(--muted); background: #18181b; border: 1px solid #3b3b40; border-radius: 50%; cursor: pointer; font-size: 13px; line-height: 1; }
     .window-button:hover { color: white; background: #29292e; }
     .window-button.close:hover { color: #fff; background: #e85a64; border-color: #e85a64; }
+    .window-button.maximize { font-size: 9px; }
+    .window.is-maximized { width: min(880px, calc(100% - 32px)); height: min(600px, calc(100% - 32px)); transition: width .22s ease, height .22s ease, transform .12s ease; }
     .window-body { display: grid; grid-template-columns: 150px minmax(0, 1fr); height: calc(100% - 44px); }
     .sidebar { padding: 10px 7px; background: var(--sidebar); border-right: 1px solid var(--stroke); }
     .sidebar-caption { margin: 0 9px 10px; color: var(--quiet); font-size: 9px; letter-spacing: .13em; text-transform: uppercase; }
@@ -113,6 +115,7 @@
         <span class="brand">Armenta Demo</span><span class="subtitle">FyyUI.Menu</span>
         <div class="topbar-actions">
           <button class="window-button" id="minimize" type="button" aria-label="Minimize">−</button>
+          <button class="window-button maximize" id="maximize" type="button" aria-label="Maximize">▢</button>
           <button class="window-button close" id="close" type="button" aria-label="Close">×</button>
         </div>
       </header>
@@ -220,7 +223,19 @@
     document.getElementById('profile').addEventListener('change', (event) => addLog('profile = "' + event.target.value + '"'));
     document.getElementById('keybind').addEventListener('click', (event) => { const next = event.currentTarget.textContent === 'RightShift' ? 'LeftAlt' : 'RightShift'; event.currentTarget.textContent = next; addLog('keybind = "' + next + '"'); showToast('Keybind updated.'); });
     document.getElementById('clearLog').addEventListener('click', () => { log.innerHTML = '<div class="log-line">Output cleared</div>'; });
-    document.getElementById('minimize').addEventListener('click', (event) => { event.stopPropagation(); const minimized = win.classList.toggle('minimized'); win.style.height = minimized ? '44px' : '380px'; body.style.visibility = minimized ? 'hidden' : 'visible'; });
+    document.getElementById('minimize').addEventListener('click', (event) => {
+      event.stopPropagation();
+      win.classList.remove('is-maximized');
+      const minimized = win.classList.toggle('minimized');
+      if (minimized) { win.style.height = '44px'; } else { win.style.removeProperty('height'); }
+      body.style.visibility = minimized ? 'hidden' : 'visible';
+    });
+    document.getElementById('maximize').addEventListener('click', (event) => {
+      event.stopPropagation();
+      if (win.classList.contains('minimized')) { win.classList.remove('minimized'); win.style.removeProperty('height'); body.style.visibility = 'visible'; }
+      win.classList.toggle('is-maximized');
+      addLog('menu:ToggleMaximize()');
+    });
     document.getElementById('close').addEventListener('click', (event) => { event.stopPropagation(); win.style.display = 'none'; reopen.classList.add('show'); });
     reopen.addEventListener('click', () => { win.style.display = 'block'; reopen.classList.remove('show'); });
 
@@ -239,6 +254,13 @@
       stage.style.setProperty('--drag-x', x + 'px');
       stage.style.setProperty('--drag-y', y + 'px');
     };
+    let activeScrollEl = null;
+    let scrollStartTop = 0;
+    const findScrollable = (target) => {
+      const panel = target.closest ? target.closest('.panel') : null;
+      if (panel && panel.scrollHeight > panel.clientHeight + 1) return panel;
+      return null;
+    };
     stage.addEventListener('touchstart', (event) => {
       if (event.touches.length === 2) {
         event.preventDefault();
@@ -249,8 +271,16 @@
         return;
       }
       if (event.touches.length !== 1) return;
+      const scrollable = findScrollable(event.target);
+      if (scrollable) {
+        touchMode = 'scroll';
+        touchMoved = false;
+        activeScrollEl = scrollable;
+        scrollStartTop = scrollable.scrollTop;
+        touchStartY = event.touches[0].clientY;
+        return;
+      }
       const current = readDrag();
-      if (previewScale <= 1 && current.x === 0 && current.y === 0) return;
       touchMode = 'pan';
       touchMoved = false;
       touchStartX = event.touches[0].clientX;
@@ -264,7 +294,18 @@
         setScale(pinchStartScale * distance(event.touches[0], event.touches[1]) / pinchStartDistance);
         return;
       }
-      if (event.touches.length !== 1 || touchMode !== 'pan') return;
+      if (event.touches.length !== 1) return;
+      if (touchMode === 'scroll' && activeScrollEl) {
+        const touch = event.touches[0];
+        const deltaY = touch.clientY - touchStartY;
+        if (!touchMoved && Math.abs(deltaY) < 4) return;
+        touchMoved = true;
+        event.preventDefault();
+        const max = activeScrollEl.scrollHeight - activeScrollEl.clientHeight;
+        activeScrollEl.scrollTop = Math.max(0, Math.min(max, scrollStartTop - deltaY));
+        return;
+      }
+      if (touchMode !== 'pan') return;
       const touch = event.touches[0];
       const deltaX = touch.clientX - touchStartX;
       const deltaY = touch.clientY - touchStartY;
@@ -287,9 +328,10 @@
       } else if (event.touches.length === 0) {
         touchMode = 'idle';
         win.classList.remove('is-touch-panning');
+        activeScrollEl = null;
       }
     }, { passive: false });
-    stage.addEventListener('touchcancel', () => { pinchStartDistance = 0; touchMode = 'idle'; win.classList.remove('is-touch-panning'); }, { passive: false });
+    stage.addEventListener('touchcancel', () => { pinchStartDistance = 0; touchMode = 'idle'; win.classList.remove('is-touch-panning'); activeScrollEl = null; }, { passive: false });
     window.addEventListener('resize', () => { if (!manualScale) setScale(Math.min(1, Math.max(.62, (window.innerWidth - 24) / 560))); });
   </script>
 </body>
