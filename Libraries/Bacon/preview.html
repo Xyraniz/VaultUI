@@ -2,171 +2,156 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>BaconLib — Interactive Preview</title>
   <style>
     :root {
       --canvas: #0d0d0f;
       --background: #242424;
       --topbar: #1f1f1f;
-      --element: #2d2d2d;
-      --element-hover: #383838;
+      --element: #292929;
+      --element-hover: #393939;
       --text: #f1f1f1;
       --muted: #a4a4a4;
       --stroke: #4a4a4a;
-      --accent: #86c946;
-      --danger: #ff5b5f;
-      --radius: 5px;
+      --accent: #60bc19;
+      --danger: #ff393c;
       --font: Arial, Helvetica, sans-serif;
+      --preview-scale: 1;
+      --drag-x: 0px;
+      --drag-y: 0px;
     }
     * { box-sizing: border-box; }
-    html, body { width: 100%; height: 100%; margin: 0; }
-    body { overflow: hidden; display: grid; place-items: center; color: var(--text); background: radial-gradient(circle at 50% 40%, #1c1c1e 0, var(--canvas) 72%); font-family: var(--font); }
+    html, body { width: 100%; min-width: 240px; height: 100%; margin: 0; }
+    body { overflow: hidden; color: var(--text); background: radial-gradient(circle at 50% 40%, #1c1c1e 0, var(--canvas) 72%); font-family: var(--font); }
     button, input, select { font: inherit; }
     button { color: inherit; }
-    .stage { position: relative; width: 100%; height: 100%; display: grid; place-items: center; }
-    .window { position: relative; width: 560px; height: 380px; overflow: hidden; border: 1px solid #545454; border-radius: 6px; background: var(--background); box-shadow: 0 25px 75px rgba(0,0,0,.58), 0 0 0 1px rgba(255,255,255,.05); transition: height .24s ease, opacity .18s ease; }
-    .topbar { display: flex; align-items: center; height: 38px; padding: 0 11px; color: #fff; background: var(--topbar); border-bottom: 1px solid #393939; cursor: grab; user-select: none; }
+    .stage { position: relative; width: 100%; height: 100%; display: grid; place-items: center; overflow: hidden; touch-action: none; }
+    .window { position: relative; width: 240px; height: 329px; overflow: hidden; border: 0; border-radius: 2px; background: var(--background); box-shadow: 0 25px 75px rgba(0,0,0,.58), 0 0 0 1px rgba(255,255,255,.05); transform: translate(var(--drag-x), var(--drag-y)) scale(var(--preview-scale)); transform-origin: center; transition: height .24s ease, transform .12s ease; }
+    .window.is-dragging { transition: height .24s ease; }
+    .topbar { display: flex; align-items: center; width: 240px; height: 30px; padding: 0 7px; color: #fff; background: var(--topbar); cursor: grab; user-select: none; touch-action: none; }
     .topbar:active { cursor: grabbing; }
-    .brand { overflow: hidden; max-width: 370px; font-size: 15px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
-    .version { margin-left: 8px; color: var(--muted); font-size: 10px; }
-    .window-actions { display: flex; gap: 7px; margin-left: auto; }
-    .window-button { display: grid; place-items: center; width: 19px; height: 19px; padding: 0; color: #cfcfcf; background: #292929; border: 1px solid #4a4a4a; border-radius: 4px; cursor: pointer; }
-    .window-button:hover { color: white; background: #3c3c3c; }
-    .window-button.close:hover { background: var(--danger); border-color: var(--danger); }
-    .window-body { display: grid; grid-template-columns: 138px minmax(0, 1fr); height: calc(100% - 38px); }
-    .sidebar { padding: 9px 7px; background: #202020; border-right: 1px solid #3a3a3a; }
-    .sidebar-label { margin: 0 8px 7px; color: #858585; font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
-    .nav { display: grid; gap: 4px; }
-    .nav-item { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 32px; padding: 0 9px; color: #a9a9a9; background: transparent; border: 1px solid transparent; border-radius: 4px; text-align: left; cursor: pointer; }
-    .nav-item:hover { color: white; background: #2c2c2c; }
-    .nav-item.active { color: white; background: #353535; border-color: #525252; box-shadow: inset 2px 0 0 var(--accent); }
-    .nav-icon { display: grid; place-items: center; width: 15px; color: currentColor; font-size: 11px; }
-    .nav-text { font-size: 12px; font-weight: 600; }
-    .content { min-width: 0; overflow: hidden; background: var(--background); }
-    .panel { display: none; height: 100%; overflow-y: auto; padding: 15px 17px; scrollbar-color: #606060 transparent; scrollbar-width: thin; }
-    .panel.active { display: block; }
-    .panel::-webkit-scrollbar { width: 5px; }
-    .panel::-webkit-scrollbar-thumb { background: #5b5b5b; border-radius: 99px; }
-    h1, h2, p { margin: 0; }
-    .panel-title { margin-bottom: 4px; font-size: 16px; font-weight: 700; }
-    .panel-copy { margin-bottom: 12px; color: var(--muted); font-size: 11px; line-height: 1.45; }
-    .controls { display: grid; gap: 7px; }
-    .control { min-height: 37px; padding: 7px 10px; background: var(--element); border: 1px solid #454545; border-radius: var(--radius); transition: background .15s ease, border-color .15s ease; }
-    .control:hover { background: var(--element-hover); border-color: #606060; }
-    .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 21px; }
-    .label { min-width: 0; color: #f0f0f0; font-size: 12px; font-weight: 600; }
-    .meta { color: var(--muted); font-size: 10px; }
-    .status { padding: 3px 7px; color: #b7e681; background: rgba(134,201,70,.12); border: 1px solid rgba(134,201,70,.36); border-radius: 99px; font-size: 10px; font-weight: 700; }
-    .toggle { position: relative; width: 35px; height: 19px; padding: 0; background: var(--danger); border: 0; border-radius: 99px; cursor: pointer; transition: background .17s ease; }
-    .toggle::after { content: ''; position: absolute; top: 3px; left: 3px; width: 13px; height: 13px; background: #fff; border-radius: 50%; transition: transform .17s ease; }
-    .toggle.is-on { background: var(--accent); }
-    .toggle.is-on::after { transform: translateX(16px); }
-    .slider-line { display: flex; align-items: center; gap: 10px; }
-    .slider-line input { flex: 1; min-width: 0; accent-color: var(--accent); }
-    .slider-value { min-width: 31px; color: #d5eba9; font-family: monospace; font-size: 10px; text-align: right; }
-    select, .text-input { height: 25px; padding: 0 7px; color: var(--text); background: #202020; border: 1px solid #545454; border-radius: 4px; outline: none; font-size: 11px; }
-    select:focus, .text-input:focus { border-color: var(--accent); }
-    .select { min-width: 106px; }
-    .text-input { width: 150px; }
-    .action-row { display: flex; justify-content: flex-end; gap: 7px; margin-top: 5px; }
-    .action { height: 27px; padding: 0 10px; color: #171717; background: var(--accent); border: 0; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer; }
-    .action:hover { filter: brightness(1.1); }
-    .action.secondary { color: #ddd; background: #363636; border: 1px solid #555; }
-    .about-card { padding: 12px; background: var(--element); border: 1px solid #454545; border-radius: var(--radius); }
-    .about-card h2 { margin-bottom: 7px; font-size: 15px; }
-    .about-card p { color: var(--muted); font-size: 11px; line-height: 1.5; }
-    .api-list { display: grid; gap: 5px; margin-top: 11px; padding: 0; color: #d8d8d8; font-family: monospace; font-size: 10px; list-style: none; }
-    .api-list li::before { content: '>'; margin-right: 6px; color: var(--accent); }
+    .brand { overflow: hidden; max-width: 202px; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
+    .size-toggle { width: 30px; height: 30px; margin-left: auto; padding: 0; color: #fff; background: transparent; border: 0; cursor: pointer; font-size: 19px; line-height: 1; }
+    .size-toggle:active, .reopen:active, .control-button:active, .dropdown-trigger:active, .keybind:active { transform: scale(.96); }
+    .container { width: 240px; height: 299px; overflow: hidden auto; padding: 0; background: var(--background); scrollbar-color: #5b5b5b transparent; scrollbar-width: thin; }
+    .container::-webkit-scrollbar { width: 4px; }
+    .container::-webkit-scrollbar-thumb { background: #5b5b5b; border-radius: 99px; }
+    .control-row { display: flex; align-items: center; width: 240px; min-height: 40px; padding: 5px 7px; }
+    .label { display: block; overflow: hidden; flex: 1; min-width: 0; color: #fff; font-size: 15px; line-height: 30px; text-overflow: ellipsis; white-space: nowrap; }
+    .text-box { width: 227px; height: 30px; padding: 0 8px; color: #fff; background: #151515; border: 0; border-radius: 1px; outline: none; font-size: 14px; }
+    .text-box:focus { box-shadow: inset 0 -2px 0 var(--accent); }
+    .control-button { width: 227px; height: 30px; padding: 0 6px; color: #fff; background: #292929; border: 0; border-radius: 1px; cursor: pointer; font-size: 15px; text-align: center; }
+    .control-button:hover, .dropdown-trigger:hover, .keybind:hover { background: var(--element-hover); }
+    .toggle-row { position: relative; }
+    .toggle-label { width: 190px; }
+    .toggle { position: absolute; right: 7px; width: 30px; height: 30px; padding: 0; background: transparent; border: 0; cursor: pointer; }
+    .toggle-track { display: block; width: 30px; height: 22px; border-radius: 7px; background: var(--danger); transition: background .18s ease; }
+    .toggle-track::after { content: ''; display: block; width: 14px; height: 14px; margin: 4px 0 0 4px; border-radius: 50%; background: #fff; transition: transform .18s ease; }
+    .toggle.is-on .toggle-track { background: var(--accent); }
+    .toggle.is-on .toggle-track::after { transform: translateX(8px); }
+    .dropdown { position: relative; width: 240px; min-height: 40px; }
+    .dropdown-trigger { display: flex; align-items: center; justify-content: space-between; width: 227px; height: 30px; margin: 5px 7px; padding: 0 8px; color: #fff; background: #292929; border: 0; border-radius: 1px; cursor: pointer; font-size: 15px; text-align: left; }
+    .chevron { color: #aaa; font-size: 12px; }
+    .dropdown-options { display: none; padding: 0 7px 5px; }
+    .dropdown.open .dropdown-options { display: grid; gap: 3px; }
+    .dropdown-option { height: 27px; padding: 0 8px; color: #ddd; background: #202020; border: 0; cursor: pointer; font-size: 13px; text-align: left; }
+    .dropdown-option:hover, .dropdown-option.selected { color: #fff; background: #3b3b3b; box-shadow: inset 2px 0 0 var(--accent); }
+    .slider-control { display: block; height: 56px; padding: 2px 7px 5px; }
+    .slider-label { height: 18px; color: #fff; font-size: 14px; line-height: 18px; }
+    .slider-bar { position: relative; display: flex; align-items: center; width: 227px; height: 24px; }
+    .slider-bar input { width: 227px; height: 24px; margin: 0; accent-color: var(--accent); }
+    .slider-value { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; pointer-events: none; font-size: 13px; }
+    .keybind-row { height: 43px; }
+    .keybind-label { width: 161px; }
+    .keybind { width: 60px; height: 30px; padding: 0; color: #fff; background: #292929; border: 0; border-radius: 1px; cursor: pointer; font-size: 15px; }
+    .callback-line { display: block; min-height: 28px; margin: 0 7px 6px; padding: 5px 7px; overflow: hidden; color: #cfe8b1; background: rgba(96,188,25,.09); border-left: 2px solid var(--accent); font-family: monospace; font-size: 8px; line-height: 1.3; text-overflow: ellipsis; white-space: nowrap; }
     .toast { position: fixed; right: 18px; top: 18px; display: none; min-width: 190px; padding: 9px 11px; color: #eee; background: #292929; border: 1px solid #575757; border-radius: 5px; box-shadow: 0 12px 30px rgba(0,0,0,.42); font-size: 11px; }
     .toast.show { display: block; animation: toast-in .2s ease-out; }
-    @keyframes toast-in { from { opacity: 0; transform: translateY(-7px); } to { opacity: 1; transform: translateY(0); } }
     .reopen { position: fixed; bottom: 18px; left: 18px; display: none; height: 29px; padding: 0 10px; color: #eee; background: #303030; border: 1px solid #555; border-radius: 4px; cursor: pointer; font-size: 11px; }
     .reopen.show { display: block; }
-    @media (max-width: 600px) { body { overflow: auto; padding: 12px; } .window { transform: scale(.82); transform-origin: center; } }
+    .pinch-hint { position: fixed; right: 16px; bottom: 15px; padding: 5px 7px; color: #777; background: rgba(20,20,20,.78); border: 1px solid #333; border-radius: 4px; font-family: monospace; font-size: 8px; letter-spacing: .04em; pointer-events: none; }
+    @keyframes toast-in { from { opacity: 0; transform: translateY(-7px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 600px) { body { overflow: hidden; } .pinch-hint { right: 10px; bottom: 10px; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; } }
   </style>
 </head>
 <body>
-  <main class="stage">
-    <section class="window" id="window" aria-label="BaconLib preview">
+  <main class="stage" id="stage" aria-label="BaconLib live preview">
+    <section class="window" id="window" aria-label="BaconLib v1.2 preview">
       <header class="topbar" id="dragbar">
-        <span class="brand">BaconLib</span><span class="version">v1.2 · Roblox UI</span>
-        <div class="window-actions">
-          <button class="window-button" id="minimize" type="button" aria-label="Minimize">−</button>
-          <button class="window-button close" id="close" type="button" aria-label="Close">×</button>
-        </div>
+        <span class="brand">BaconLib v1.2</span>
+        <button class="size-toggle" id="sizeToggle" type="button" aria-label="Minimize BaconLib window">−</button>
       </header>
-      <div class="window-body" id="windowBody">
-        <aside class="sidebar">
-          <p class="sidebar-label">BaconLib</p>
-          <nav class="nav" aria-label="BaconLib sections">
-            <button class="nav-item active" type="button" data-panel="controls"><span class="nav-icon">▦</span><span class="nav-text">Controls</span></button>
-            <button class="nav-item" type="button" data-panel="settings"><span class="nav-icon">⚙</span><span class="nav-text">Settings</span></button>
-            <button class="nav-item" type="button" data-panel="about"><span class="nav-icon">i</span><span class="nav-text">About</span></button>
-          </nav>
-        </aside>
-        <section class="content">
-          <section class="panel active" id="panel-controls">
-            <h2 class="panel-title">Controls</h2>
-            <p class="panel-copy">Interactive representations of BaconLib's classic control factory.</p>
-            <div class="controls">
-              <div class="control"><div class="row"><span class="label">Library status</span><span class="status">Ready</span></div></div>
-              <div class="control"><div class="row"><span class="label">Enable notifications</span><button class="toggle is-on" type="button" aria-pressed="true" aria-label="Enable notifications"></button></div></div>
-              <div class="control"><div class="row"><span class="label">Auto-save configuration</span><button class="toggle" type="button" aria-pressed="false" aria-label="Auto-save configuration"></button></div></div>
-              <div class="control"><div class="row"><span class="label">Panel opacity</span><div class="slider-line"><input id="opacity" type="range" min="0" max="100" value="72" aria-label="Panel opacity"><span class="slider-value" id="opacityValue">72%</span></div></div></div>
-              <div class="control"><div class="row"><span class="label">Theme preset</span><select class="select" id="theme" aria-label="Theme preset"><option>Classic</option><option>Charcoal</option><option>Olive</option></select></div></div>
-              <div class="action-row"><button class="action" id="runAction" type="button">Run test action</button></div>
-            </div>
-          </section>
-          <section class="panel" id="panel-settings">
-            <h2 class="panel-title">Settings</h2>
-            <p class="panel-copy">A compact view of the options exposed by CreateWindow and its keybind.</p>
-            <div class="controls">
-              <div class="control"><div class="row"><span class="label">Window keybind</span><button class="action secondary" id="keybind" type="button">RightShift</button></div></div>
-              <div class="control"><div class="row"><span class="label">Configuration name</span><input class="text-input" value="bacon_default" aria-label="Configuration name"></div></div>
-              <div class="control"><div class="row"><span class="label">Show advanced controls</span><button class="toggle" type="button" aria-pressed="false" aria-label="Show advanced controls"></button></div></div>
-            </div>
-          </section>
-          <section class="panel" id="panel-about">
-            <h2 class="panel-title">About</h2>
-            <div class="about-card">
-              <h2>BaconLib</h2>
-              <p>A compact Roblox library with a familiar dark frame, direct callbacks and classic controls designed for quick setup.</p>
-              <ul class="api-list"><li>CreateWindow(name, keyCode)</li><li>CreateToggle(window, text, state, callback)</li><li>CreateSlider(window, name, min, max, current, callback)</li><li>CreateDropdown(window, name)</li></ul>
-            </div>
-          </section>
-        </section>
+      <div class="container" id="container">
+        <div class="control-row"><span class="label">Main</span></div>
+        <div class="control-row"><input class="text-box" id="textBox" value="Hello, World!" placeholder="Text" aria-label="Text"></div>
+        <div class="control-row"><button class="control-button" id="printText" type="button">Print Text</button></div>
+        <div class="control-row toggle-row"><span class="label toggle-label">Spam Warn 'Hello'</span><button class="toggle" id="spamToggle" type="button" aria-pressed="false" aria-label="Spam Warn Hello"><span class="toggle-track"></span></button></div>
+        <div class="dropdown" id="dropdown">
+          <button class="dropdown-trigger" id="dropdownTrigger" type="button" aria-expanded="false"><span id="dropdownValue">Dropdown</span><span class="chevron">▾</span></button>
+          <div class="dropdown-options" role="listbox" aria-label="Dropdown options">
+            <button class="dropdown-option" type="button" data-value="LOL">Print 'LOL'</button>
+            <button class="dropdown-option" type="button" data-value="YES">Print 'YES'</button>
+            <button class="dropdown-option" type="button" data-value="XD">Warn 'XD'</button>
+          </div>
+        </div>
+        <div class="slider-control"><div class="slider-label">Print Value</div><div class="slider-bar"><input id="slider" type="range" min="0" max="100" value="50" aria-label="Print Value"><span class="slider-value" id="sliderValue">50</span></div></div>
+        <div class="control-row keybind-row"><span class="label keybind-label">Print Key</span><button class="keybind" id="keybind" type="button">Z</button></div>
+        <code class="callback-line" id="callbackLine">callbacks ready · RightShift toggles UI</code>
       </div>
     </section>
     <button class="reopen" id="reopen" type="button">Open BaconLib</button>
+    <span class="pinch-hint">PINCH TO ZOOM</span>
   </main>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script>
+    const stage = document.getElementById('stage');
     const win = document.getElementById('window');
-    const body = document.getElementById('windowBody');
+    const container = document.getElementById('container');
+    const sizeToggle = document.getElementById('sizeToggle');
     const toast = document.getElementById('toast');
     const reopen = document.getElementById('reopen');
+    const callbackLine = document.getElementById('callbackLine');
     let toastTimer;
+    let previewScale = Math.min(1.15, Math.max(.78, (window.innerHeight - 24) / 380));
+    let manualScale = false;
+    const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
     const showToast = (message) => { toast.textContent = message; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 1900); };
-    document.querySelectorAll('.nav-item').forEach((item) => item.addEventListener('click', () => {
-      document.querySelectorAll('.nav-item').forEach((nav) => nav.classList.toggle('active', nav === item));
-      document.querySelectorAll('.panel').forEach((panel) => panel.classList.toggle('active', panel.id === 'panel-' + item.dataset.panel));
-    }));
-    document.querySelectorAll('.toggle').forEach((toggle) => toggle.addEventListener('click', () => { const on = toggle.classList.toggle('is-on'); toggle.setAttribute('aria-pressed', String(on)); }));
-    const range = document.getElementById('opacity');
-    const rangeValue = document.getElementById('opacityValue');
-    range.addEventListener('input', () => { rangeValue.textContent = range.value + '%'; });
-    document.getElementById('runAction').addEventListener('click', () => showToast('Callback fired · BaconLib is ready.'));
-    document.getElementById('keybind').addEventListener('click', (event) => { event.currentTarget.textContent = event.currentTarget.textContent === 'RightShift' ? 'LeftAlt' : 'RightShift'; showToast('Keybind updated.'); });
-    document.getElementById('theme').addEventListener('change', (event) => { const colors = { Classic: ['#86c946', '#242424'], Charcoal: ['#74b8ff', '#24262b'], Olive: ['#d1b95f', '#25251f'] }; const [accent, background] = colors[event.target.value]; document.documentElement.style.setProperty('--accent', accent); document.documentElement.style.setProperty('--background', background); showToast(event.target.value + ' theme selected.'); });
-    document.getElementById('minimize').addEventListener('click', (event) => { event.stopPropagation(); const minimized = win.classList.toggle('minimized'); win.style.height = minimized ? '38px' : '380px'; body.style.visibility = minimized ? 'hidden' : 'visible'; });
-    document.getElementById('close').addEventListener('click', (event) => { event.stopPropagation(); win.style.display = 'none'; reopen.classList.add('show'); });
+    const setScale = (value) => { previewScale = clamp(value, .52, 1.45); stage.style.setProperty('--preview-scale', previewScale); };
+    const writeCallback = (message) => { callbackLine.textContent = message; showToast(message); };
+    setScale(previewScale);
+
+    document.getElementById('printText').addEventListener('click', () => { const value = document.getElementById('textBox').value || ''; writeCallback('print("' + value + '")'); });
+    const spamToggle = document.getElementById('spamToggle');
+    spamToggle.addEventListener('click', () => { const on = spamToggle.classList.toggle('is-on'); spamToggle.setAttribute('aria-pressed', String(on)); writeCallback(on ? "warn('Hello') · loop on" : "Spam Warn 'Hello' · loop off"); });
+
+    const dropdown = document.getElementById('dropdown');
+    const dropdownTrigger = document.getElementById('dropdownTrigger');
+    dropdownTrigger.addEventListener('click', () => { const open = dropdown.classList.toggle('open'); dropdownTrigger.setAttribute('aria-expanded', String(open)); });
+    document.querySelectorAll('.dropdown-option').forEach((option) => option.addEventListener('click', () => { const value = option.dataset.value; const message = value === 'LOL' ? "print('LOL')" : value === 'YES' ? "print('YES')" : "warn('XD')"; document.getElementById('dropdownValue').textContent = option.textContent; dropdown.classList.remove('open'); dropdownTrigger.setAttribute('aria-expanded', 'false'); document.querySelectorAll('.dropdown-option').forEach((item) => item.classList.toggle('selected', item === option)); writeCallback(message); }));
+
+    const range = document.getElementById('slider');
+    range.addEventListener('input', () => { document.getElementById('sliderValue').textContent = range.value; callbackLine.textContent = 'print(' + range.value + ')'; });
+    document.getElementById('keybind').addEventListener('click', (event) => { const next = event.currentTarget.textContent === 'Z' ? 'X' : 'Z'; event.currentTarget.textContent = next; writeCallback("key = '" + next.toLowerCase() + "'"); });
+
+    sizeToggle.addEventListener('click', (event) => { event.stopPropagation(); const minimized = win.classList.toggle('minimized'); win.style.height = minimized ? '30px' : '329px'; container.style.height = minimized ? '0px' : '299px'; sizeToggle.textContent = minimized ? '+' : '−'; });
+    document.getElementById('window').addEventListener('dblclick', (event) => { if (event.target.closest('button, input')) return; sizeToggle.click(); });
     reopen.addEventListener('click', () => { win.style.display = 'block'; reopen.classList.remove('show'); });
-    let dragging = false, startX = 0, startY = 0, startLeft = 0, startTop = 0;
+
+    let dragging = false, startX = 0, startY = 0, originX = 0, originY = 0;
     const dragbar = document.getElementById('dragbar');
-    dragbar.addEventListener('pointerdown', (event) => { if (event.target.closest('button')) return; dragging = true; dragbar.setPointerCapture(event.pointerId); const rect = win.getBoundingClientRect(); startX = event.clientX; startY = event.clientY; startLeft = rect.left; startTop = rect.top; win.style.position = 'fixed'; win.style.left = rect.left + 'px'; win.style.top = rect.top + 'px'; win.style.transform = 'none'; });
-    dragbar.addEventListener('pointermove', (event) => { if (dragging) { win.style.left = startLeft + event.clientX - startX + 'px'; win.style.top = startTop + event.clientY - startY + 'px'; } });
-    dragbar.addEventListener('pointerup', () => { dragging = false; });
+    const readDrag = () => ({ x: parseFloat(getComputedStyle(stage).getPropertyValue('--drag-x')) || 0, y: parseFloat(getComputedStyle(stage).getPropertyValue('--drag-y')) || 0 });
+    dragbar.addEventListener('pointerdown', (event) => { if (event.target.closest('button')) return; dragging = true; win.classList.add('is-dragging'); dragbar.setPointerCapture(event.pointerId); const current = readDrag(); startX = event.clientX; startY = event.clientY; originX = current.x; originY = current.y; });
+    dragbar.addEventListener('pointermove', (event) => { if (dragging) { stage.style.setProperty('--drag-x', (originX + event.clientX - startX) + 'px'); stage.style.setProperty('--drag-y', (originY + event.clientY - startY) + 'px'); } });
+    const stopDragging = () => { dragging = false; win.classList.remove('is-dragging'); }; dragbar.addEventListener('pointerup', stopDragging); dragbar.addEventListener('pointercancel', stopDragging);
+
+    let pinchStartDistance = 0, pinchStartScale = previewScale;
+    const distance = (a, b) => Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+    stage.addEventListener('touchstart', (event) => { if (event.touches.length !== 2) return; event.preventDefault(); manualScale = true; pinchStartDistance = distance(event.touches[0], event.touches[1]); pinchStartScale = previewScale; }, { passive: false });
+    stage.addEventListener('touchmove', (event) => { if (event.touches.length !== 2 || !pinchStartDistance) return; event.preventDefault(); setScale(pinchStartScale * distance(event.touches[0], event.touches[1]) / pinchStartDistance); }, { passive: false });
+    stage.addEventListener('touchend', (event) => { if (event.touches.length < 2) pinchStartDistance = 0; }, { passive: false });
+    window.addEventListener('resize', () => { if (!manualScale) setScale(Math.min(1.15, Math.max(.78, (window.innerHeight - 24) / 380))); });
   </script>
 </body>
 </html>
