@@ -32,9 +32,26 @@ const libraries = [
       example: `${libraryBase}/Bacon/example.lua`
     },
     preview: {
-      kind: 'image',
-      url: `${libraryBase}/Bacon/Screenshot_20251111_232521_Roblox.jpg`,
-      size: 'Screenshot'
+      kind: 'iframe',
+      url: `${libraryBase}/Bacon/preview.html`,
+      size: '560 × 380'
+    }
+  },
+  {
+    id: 'armenta',
+    name: 'Armenta-Lib',
+    label: 'Armenta-Lib',
+    number: '03',
+    type: 'Source',
+    description: 'A classic Roblox UI library with direct controls, callbacks and a compact window composition.',
+    tags: ['Classic', 'Callbacks', 'Controls'],
+    files: {
+      source: `${libraryBase}/Armenta-Lib/source.lua`
+    },
+    preview: {
+      kind: 'iframe',
+      url: `${libraryBase}/Armenta-Lib/preview.html`,
+      size: '560 × 380'
     }
   }
 ];
@@ -44,7 +61,8 @@ const state = {
   file: 'source',
   text: '',
   cache: new Map(),
-  requestId: 0
+  requestId: 0,
+  previewZoom: 1
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -67,10 +85,15 @@ const elements = {
   expandPreviewButton: $('#expandPreviewButton'),
   openPreviewLink: $('#openPreviewLink'),
   interactivePreview: $('#interactivePreview'),
-  staticPreview: $('#staticPreview'),
+  previewCanvas: $('#previewCanvas'),
+  zoomOutButton: $('#zoomOutButton'),
+  zoomInButton: $('#zoomInButton'),
+  zoomResetButton: $('#zoomResetButton'),
+  zoomLabel: $('#zoomLabel'),
   previewEmpty: $('#previewEmpty'),
   previewMode: $('#previewMode'),
   canvasSize: $('#canvasSize'),
+  exampleTab: $('#exampleTab'),
   codeCard: $('#codeCard'),
   codeContent: $('#codeContent'),
   codePre: $('#codePre'),
@@ -117,7 +140,7 @@ function renderLibraryList() {
         <span class="library-name">${library.label}</span>
         <span class="library-type">${library.type}</span>
       </span>
-      <span class="library-badge">${library.preview.kind === 'iframe' ? 'UI' : 'IMG'}</span>
+      <span class="library-badge">HTML</span>
     </button>
   `).join('');
 
@@ -134,6 +157,7 @@ function renderHeader() {
   elements.libraryDescription.textContent = library.description;
   elements.libraryTags.innerHTML = library.tags.map((tag) => `<span class="tag">${tag}</span>`).join('');
   elements.sourceLink.href = library.files.source;
+  elements.exampleTab.hidden = !library.files.example;
   elements.openPreviewLink.href = library.preview.url;
   elements.canvasSize.textContent = library.preview.size;
   document.title = `VaultUI — ${library.name}`;
@@ -142,7 +166,6 @@ function renderHeader() {
 function renderPreview() {
   const preview = state.library.preview;
   elements.interactivePreview.hidden = true;
-  elements.staticPreview.hidden = true;
   elements.previewEmpty.hidden = true;
 
   if (preview.kind === 'iframe') {
@@ -150,15 +173,23 @@ function renderPreview() {
     elements.interactivePreview.title = `${state.library.name} interactive preview`;
     elements.interactivePreview.src = preview.url;
     elements.interactivePreview.hidden = false;
-  } else if (preview.kind === 'image') {
-    elements.previewMode.textContent = 'IMAGE';
-    elements.staticPreview.src = preview.url;
-    elements.staticPreview.alt = `${state.library.name} screenshot`;
-    elements.staticPreview.hidden = false;
   } else {
     elements.previewMode.textContent = 'EMPTY';
     elements.previewEmpty.hidden = false;
   }
+}
+
+function renderPreviewZoom() {
+  const percentage = Math.round(state.previewZoom * 100);
+  elements.previewCanvas.style.setProperty('--preview-zoom', state.previewZoom);
+  elements.zoomLabel.textContent = `${percentage}%`;
+  elements.zoomOutButton.disabled = state.previewZoom <= 0.7;
+  elements.zoomInButton.disabled = state.previewZoom >= 1.5;
+}
+
+function setPreviewZoom(value) {
+  state.previewZoom = Math.min(1.5, Math.max(0.7, Math.round(value * 10) / 10));
+  renderPreviewZoom();
 }
 
 function renderLineNumbers(text) {
@@ -226,6 +257,7 @@ async function selectLibrary(id) {
   }
   state.library = library;
   state.file = 'source';
+  setPreviewZoom(1);
   renderLibraryList();
   renderHeader();
   renderPreview();
@@ -298,6 +330,9 @@ function initEvents() {
 
   elements.openPreviewButton.addEventListener('click', () => togglePreviewExpanded());
   elements.expandPreviewButton.addEventListener('click', () => togglePreviewExpanded());
+  elements.zoomOutButton.addEventListener('click', () => setPreviewZoom(state.previewZoom - 0.1));
+  elements.zoomInButton.addEventListener('click', () => setPreviewZoom(state.previewZoom + 0.1));
+  elements.zoomResetButton.addEventListener('click', () => setPreviewZoom(1));
   elements.expandCodeButton.addEventListener('click', () => toggleCodeExpanded());
   elements.minimizeCodeButton.addEventListener('click', toggleCodeMinimized);
 
@@ -326,6 +361,7 @@ function init() {
   renderLibraryList();
   renderHeader();
   renderPreview();
+  renderPreviewZoom();
   initEvents();
   loadFile('source');
 }

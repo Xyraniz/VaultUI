@@ -2,7 +2,7 @@
 
 # UI-Libs
 
-**A curated collection of 15+ free Roblox UI libraries — with sources, previews, and ready-to-use loadstrings.**
+**A curated collection of 20+ free Roblox UI libraries — with sources, interactive previews, and ready-to-use loadstrings.**
 
 [![Stars](https://img.shields.io/github/stars/Xyraniz/UI-Libs?style=for-the-badge&color=gold)](https://github.com/Xyraniz/UI-Libs/stargazers)[![Lua](https://img.shields.io/badge/Lua-000080?style=for-the-badge&logo=lua&logoColor=white)](https://www.lua.org/)[![Roblox](https://img.shields.io/badge/Roblox-00A2FF?style=for-the-badge&logo=roblox&logoColor=white)](https://www.roblox.com/)[![Last Updated](https://img.shields.io/badge/last%20updated-August%202026-blue?style=for-the-badge)](https://github.com/Xyraniz/UI-Libs/commits/main)[![License](https://img.shields.io/badge/license-MIT%20%26%20Original%20Licenses-green?style=for-the-badge)](#license--attribution)
 
@@ -12,7 +12,7 @@
 
 ## About
 
-**UI-Libs** is a centralized archive of popular **UI frameworks used across the Roblox community**, organized in one place for developers, scripters, and enthusiasts. Every library includes its full source code, a preview screenshot, and a working loadstring so you can drop it straight into your script and start building.
+**UI-Libs** is a centralized archive of popular **UI frameworks used across the Roblox community**, organized in one place for developers, scripters, and enthusiasts. Every library includes its full source code and a working loadstring; selected libraries also include an interactive HTML preview so you can explore the interface before loading anything.
 
 Whether you are prototyping a hub, learning how GUI libraries are structured in Luau, or looking for a lightweight UI layer for your project, this collection gives you direct access to well-known frameworks such as **BaconLib, Flux, Aztup, Blek, and many more** — no hunting through scattered repositories required.
 
@@ -24,7 +24,7 @@ Whether you are prototyping a hub, learning how GUI libraries are structured in 
 
 - **Ready-to-use loadstrings.** Each `example.lua` shows how to load and use the library with a single `game:HttpGet` call.
 
-- **Visual previews.** Screenshot of each library's default appearance so you can pick the look you want before loading anything.
+- **Interactive previews.** HTML showcases for SynergyUI, BaconLib, and Armenta-Lib make their controls clickable and easy to inspect on desktop or mobile.
 
 ---
 
@@ -50,9 +50,10 @@ Whether you are prototyping a hub, learning how GUI libraries are structured in 
 | 16 | Gostmi | Source | [Source](Libraries/Gostmi/source.lua) | [Example](Libraries/Gostmi/example.lua) | Preview |
 | 17 | Hook GUI | Source | [Source](Libraries/Hook/source.lua) | [Example](Libraries/Hook/example.lua) | Preview |
 | 18 | NexusLib | Source | [Source](Libraries/NexusLib/source.lua) | [Example](Libraries/NexusLib/example.lua) | — |
-| 19 | SynergyUI | Source | [Source](Libraries/SynergyUI/source.lua) | — | [Preview](Libraries/SynergyUI/README.md) |
+| 19 | SynergyUI | Source | [Source](Libraries/SynergyUI/source.lua) | — | [Preview](Libraries/SynergyUI/preview.html) |
+| 20 | Armenta-Lib | Source | [Source](Libraries/Armenta-Lib/source.lua) | — | [Preview](Libraries/Armenta-Lib/preview.html) |
 
-> Preview images are available inside each library folder (e.g., `Libraries/Bacon/Screenshot_*.jpg`) and in each library's `README.md`.
+> Interactive HTML previews are currently available for [SynergyUI](Libraries/SynergyUI/preview.html), [BaconLib](Libraries/Bacon/preview.html), and [Armenta-Lib](Libraries/Armenta-Lib/preview.html). More libraries will be migrated incrementally.
 
 ---
 
@@ -75,8 +76,8 @@ Each library folder follows the same layout:
 Libraries/<LibraryName>/
 ├── source.lua      # Full library source code
 ├── example.lua     # Minimal working example
-├── README.md       # Preview screenshot
-└── Screenshot_*    # Visual preview of the library
+├── README.md       # Library notes and links
+└── preview.html    # Interactive HTML preview, when available
 ```
 
 ---
@@ -85,7 +86,7 @@ Libraries/<LibraryName>/
 
 Contributions are welcome! If you want to help grow this collection:
 
-1. **Add a library** — create a folder under `Libraries/` with its `source.lua`, an `example.lua`, and a preview screenshot.
+1. **Add a library** — create a folder under `Libraries/` with its `source.lua`, an `example.lua`, and an interactive `preview.html` when the UI can be represented in the browser.
 
 1. **Report broken links** — open an [issue](https://github.com/Xyraniz/UI-Libs/issues) if a loadstring or source no longer works.
 

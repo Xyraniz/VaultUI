@@ -8,6 +8,7 @@ on:
       - "web/**"
       - "Libraries/SynergyUI/**"
       - "Libraries/Bacon/**"
+      - "Libraries/Armenta-Lib/**"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -35,12 +36,12 @@ jobs:
         run: |
           set -euo pipefail
           rm -rf _site
-          mkdir -p _site/Libraries/SynergyUI _site/Libraries/Bacon
+          mkdir -p _site/Libraries/SynergyUI _site/Libraries/Bacon _site/Libraries/Armenta-Lib
           cp -R web/. _site/
           cp Libraries/SynergyUI/source.lua Libraries/SynergyUI/example.lua _site/Libraries/SynergyUI/
-          cp Libraries/SynergyUI/preview.html Libraries/SynergyUI/Screenshot_SynergyUI.png _site/Libraries/SynergyUI/
-          cp Libraries/Bacon/source.lua Libraries/Bacon/example.lua _site/Libraries/Bacon/
-          cp Libraries/Bacon/Screenshot_20251111_232521_Roblox.jpg _site/Libraries/Bacon/
+          cp Libraries/SynergyUI/preview.html _site/Libraries/SynergyUI/
+          cp Libraries/Bacon/source.lua Libraries/Bacon/example.lua Libraries/Bacon/preview.html _site/Libraries/Bacon/
+          cp Libraries/Armenta-Lib/source.lua Libraries/Armenta-Lib/preview.html _site/Libraries/Armenta-Lib/
           touch _site/.nojekyll
 
       - name: Configure Pages

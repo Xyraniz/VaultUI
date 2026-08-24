@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Armenta-Lib — Interactive Preview</title>
+  <style>
+    :root {
+      --canvas: #09090b;
+      --background: #080809;
+      --sidebar: #0b0b0d;
+      --topbar: #0d0d0f;
+      --element: #141416;
+      --element-hover: #1f1f22;
+      --text: #f2f2f5;
+      --muted: #aeb0b8;
+      --quiet: #808089;
+      --stroke: #2b2b2f;
+      --accent: #eeeeF2;
+      --accent-soft: rgba(238,238,242,.12);
+      --success: #55d993;
+      --font: Arial, Helvetica, sans-serif;
+      --radius: 8px;
+    }
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; }
+    body { overflow: hidden; display: grid; place-items: center; color: var(--text); background: radial-gradient(circle at 50% 36%, rgba(255,255,255,.06), transparent 38%), var(--canvas); font-family: var(--font); }
+    button, input, select { font: inherit; }
+    button { color: inherit; }
+    .stage { position: relative; width: 100%; height: 100%; display: grid; place-items: center; }
+    .window { position: relative; width: 560px; height: 380px; overflow: hidden; border: 1px solid var(--stroke); border-radius: 10px; background: var(--background); box-shadow: 0 30px 90px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.03); transition: height .24s ease; }
+    .topbar { display: flex; align-items: center; height: 44px; padding: 0 13px; background: var(--topbar); border-bottom: 1px solid var(--stroke); cursor: grab; user-select: none; }
+    .topbar:active { cursor: grabbing; }
+    .brand { font-size: 16px; font-weight: 700; letter-spacing: -.02em; }
+    .subtitle { margin-left: 8px; color: var(--muted); font-size: 10px; }
+    .topbar-actions { display: flex; gap: 7px; margin-left: auto; }
+    .window-button { display: grid; place-items: center; width: 20px; height: 20px; padding: 0; color: var(--muted); background: #18181b; border: 1px solid #3b3b40; border-radius: 50%; cursor: pointer; }
+    .window-button:hover { color: white; background: #29292e; }
+    .window-button.close:hover { color: #fff; background: #e85a64; border-color: #e85a64; }
+    .window-body { display: grid; grid-template-columns: 150px minmax(0, 1fr); height: calc(100% - 44px); }
+    .sidebar { padding: 10px 7px; background: var(--sidebar); border-right: 1px solid var(--stroke); }
+    .sidebar-caption { margin: 0 9px 10px; color: var(--quiet); font-size: 9px; letter-spacing: .13em; text-transform: uppercase; }
+    .nav { display: grid; gap: 4px; }
+    .nav-item { position: relative; display: flex; align-items: center; gap: 9px; width: 100%; min-height: 35px; padding: 0 10px; color: var(--muted); background: transparent; border: 1px solid transparent; border-radius: 7px; text-align: left; cursor: pointer; transition: color .15s ease, background .15s ease, border-color .15s ease; }
+    .nav-item:hover { color: var(--text); background: #17171a; border-color: #2d2d32; }
+    .nav-item.active { color: var(--text); background: var(--accent-soft); border-color: rgba(238,238,242,.27); }
+    .nav-item.active::before { content: ''; position: absolute; left: -7px; width: 3px; height: 20px; background: var(--accent); border-radius: 99px; }
+    .nav-icon { display: grid; place-items: center; width: 16px; color: currentColor; font-size: 12px; }
+    .nav-text { font-size: 12px; font-weight: 600; }
+    .content { min-width: 0; overflow: hidden; background: var(--background); }
+    .panel { display: none; height: 100%; overflow-y: auto; padding: 15px 19px 16px 15px; scrollbar-color: #606067 transparent; scrollbar-width: thin; }
+    .panel.active { display: block; }
+    .panel::-webkit-scrollbar { width: 5px; }
+    .panel::-webkit-scrollbar-thumb { background: #5a5a61; border-radius: 99px; }
+    .panel-title { margin: 0 0 4px; color: var(--text); font-size: 16px; }
+    .panel-copy { margin: 0 0 12px; color: var(--muted); font-size: 11px; line-height: 1.5; }
+    .controls { display: grid; gap: 7px; }
+    .control { min-height: 39px; padding: 7px 11px; background: var(--element); border: 1px solid var(--stroke); border-radius: var(--radius); transition: background .15s ease, border-color .15s ease; }
+    .control:hover { background: var(--element-hover); border-color: #4a4a50; }
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 23px; }
+    .label { min-width: 0; color: var(--text); font-size: 12px; font-weight: 600; }
+    .meta { color: var(--muted); font-size: 10px; }
+    .status { padding: 3px 7px; color: var(--success); background: rgba(85,217,147,.1); border: 1px solid rgba(85,217,147,.28); border-radius: 99px; font-size: 10px; font-weight: 700; }
+    .toggle { position: relative; width: 39px; height: 21px; padding: 0; background: #313136; border: 1px solid #515158; border-radius: 99px; cursor: pointer; transition: background .18s ease, border-color .18s ease; }
+    .toggle::after { content: ''; position: absolute; top: 3px; left: 3px; width: 13px; height: 13px; background: #a4a4ac; border-radius: 50%; transition: transform .18s cubic-bezier(.23,1,.32,1), background .18s ease; }
+    .toggle.is-on { background: var(--accent); border-color: var(--accent); }
+    .toggle.is-on::after { background: #101012; transform: translateX(17px); }
+    .range-row { display: grid; grid-template-columns: 1fr 36px; align-items: center; gap: 11px; }
+    input[type="range"] { width: 100%; accent-color: var(--accent); }
+    .range-value { color: var(--text); font-family: monospace; font-size: 10px; text-align: right; }
+    select, .text-input { height: 26px; padding: 0 8px; color: var(--text); background: #0d0d0f; border: 1px solid #44444a; border-radius: 6px; outline: none; font-size: 11px; }
+    select { min-width: 126px; }
+    select:focus, .text-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(238,238,242,.08); }
+    .text-input { width: 142px; }
+    .button-row { display: flex; justify-content: flex-end; gap: 7px; margin-top: 5px; }
+    .action { height: 28px; padding: 0 11px; color: #0e0e10; background: var(--accent); border: 1px solid var(--accent); border-radius: 6px; font-size: 11px; font-weight: 700; cursor: pointer; }
+    .action:hover { filter: brightness(1.08); }
+    .action.secondary { color: var(--text); background: #1c1c20; border-color: #494950; }
+    .about-card { padding: 13px; background: var(--element); border: 1px solid var(--stroke); border-radius: var(--radius); }
+    .about-card h2 { margin: 0 0 8px; font-size: 15px; }
+    .about-card p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.55; }
+    .api-list { display: grid; gap: 5px; margin: 11px 0 0; padding: 0; color: #dddde2; font-family: monospace; font-size: 10px; list-style: none; }
+    .api-list li::before { content: 'ƒ'; margin-right: 7px; color: var(--accent); }
+    .toast { position: fixed; right: 18px; top: 18px; display: none; min-width: 210px; padding: 10px 12px; color: var(--text); background: #17171a; border: 1px solid #4b4b52; border-radius: 7px; box-shadow: 0 15px 40px rgba(0,0,0,.45); font-size: 11px; }
+    .toast.show { display: block; animation: toast-in .2s ease-out; }
+    @keyframes toast-in { from { opacity: 0; transform: translateY(-7px); } to { opacity: 1; transform: translateY(0); } }
+    .reopen { position: fixed; bottom: 18px; left: 18px; display: none; height: 29px; padding: 0 11px; color: var(--text); background: #1b1b1f; border: 1px solid #4a4a50; border-radius: 6px; cursor: pointer; font-size: 11px; }
+    .reopen.show { display: block; }
+    @media (max-width: 600px) { body { overflow: auto; padding: 12px; } .window { transform: scale(.82); transform-origin: center; } }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <section class="window" id="window" aria-label="Armenta-Lib preview">
+      <header class="topbar" id="dragbar">
+        <span class="brand">Armenta-Lib</span><span class="subtitle">Theme-aware control window</span>
+        <div class="topbar-actions">
+          <button class="window-button" id="minimize" type="button" aria-label="Minimize">−</button>
+          <button class="window-button close" id="close" type="button" aria-label="Close">×</button>
+        </div>
+      </header>
+      <div class="window-body" id="windowBody">
+        <aside class="sidebar">
+          <p class="sidebar-caption">Armenta UI</p>
+          <nav class="nav" aria-label="Armenta-Lib sections">
+            <button class="nav-item active" type="button" data-panel="components"><span class="nav-icon">▦</span><span class="nav-text">Components</span></button>
+            <button class="nav-item" type="button" data-panel="theme"><span class="nav-icon">◐</span><span class="nav-text">Theme</span></button>
+            <button class="nav-item" type="button" data-panel="about"><span class="nav-icon">i</span><span class="nav-text">About</span></button>
+          </nav>
+        </aside>
+        <section class="content">
+          <section class="panel active" id="panel-components">
+            <h2 class="panel-title">Components</h2>
+            <p class="panel-copy">A live sample of Armenta-Lib's compact window and direct callbacks.</p>
+            <div class="controls">
+              <div class="control"><div class="row"><span class="label">Window status</span><span class="status">Operational</span></div></div>
+              <div class="control"><div class="row"><span class="label">Enable animations</span><button class="toggle is-on" type="button" aria-pressed="true" aria-label="Enable animations"></button></div></div>
+              <div class="control"><div class="row"><span class="label">Show notifications</span><button class="toggle" type="button" aria-pressed="false" aria-label="Show notifications"></button></div></div>
+              <div class="control"><div class="row"><span class="label">Panel opacity</span><div class="range-row"><input id="opacity" type="range" min="0" max="100" value="64" aria-label="Panel opacity"><span class="range-value" id="opacityValue">64%</span></div></div></div>
+              <div class="control"><div class="row"><span class="label">Config name</span><input class="text-input" value="default_config" aria-label="Config name"></div></div>
+              <div class="button-row"><button class="action" id="runAction" type="button">Run callback</button></div>
+            </div>
+          </section>
+          <section class="panel" id="panel-theme">
+            <h2 class="panel-title">Theme</h2>
+            <p class="panel-copy">Armenta-Lib ships with dark, light, AMOLED and registered accent themes.</p>
+            <div class="controls">
+              <div class="control"><div class="row"><span class="label">Theme preset</span><select id="theme" aria-label="Theme preset"><option>Dark</option><option>Midnight</option><option>Violet</option><option>Emerald</option><option>Ocean</option><option>Amber</option></select></div></div>
+              <div class="control"><div class="row"><span class="label">Keybind</span><button class="action secondary" id="keybind" type="button">RightShift</button></div></div>
+              <div class="control"><div class="row"><span class="label">Accent system</span><span class="meta">Theme:Override</span></div></div>
+            </div>
+          </section>
+          <section class="panel" id="panel-about">
+            <h2 class="panel-title">About</h2>
+            <div class="about-card">
+              <h2>Armenta-Lib</h2>
+              <p>A theme-aware Roblox UI toolkit built around composable windows, tabs and direct control helpers with callback support.</p>
+              <ul class="api-list"><li>CreateWindow / CreateTab</li><li>CreateButton / CreateToggle</li><li>CreateSlider / CreateDropdown</li><li>CreateTextBox / CreateLabel</li></ul>
+            </div>
+          </section>
+        </section>
+      </div>
+    </section>
+    <button class="reopen" id="reopen" type="button">Open Armenta-Lib</button>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script>
+    const win = document.getElementById('window');
+    const body = document.getElementById('windowBody');
+    const toast = document.getElementById('toast');
+    const reopen = document.getElementById('reopen');
+    let toastTimer;
+    const showToast = (message) => { toast.textContent = message; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 1900); };
+    document.querySelectorAll('.nav-item').forEach((item) => item.addEventListener('click', () => {
+      document.querySelectorAll('.nav-item').forEach((nav) => nav.classList.toggle('active', nav === item));
+      document.querySelectorAll('.panel').forEach((panel) => panel.classList.toggle('active', panel.id === 'panel-' + item.dataset.panel));
+    }));
+    document.querySelectorAll('.toggle').forEach((toggle) => toggle.addEventListener('click', () => { const on = toggle.classList.toggle('is-on'); toggle.setAttribute('aria-pressed', String(on)); }));
+    const range = document.getElementById('opacity');
+    const rangeValue = document.getElementById('opacityValue');
+    range.addEventListener('input', () => { rangeValue.textContent = range.value + '%'; });
+    document.getElementById('runAction').addEventListener('click', () => showToast('Callback fired · Armenta-Lib is ready.'));
+    document.getElementById('keybind').addEventListener('click', (event) => { event.currentTarget.textContent = event.currentTarget.textContent === 'RightShift' ? 'LeftAlt' : 'RightShift'; showToast('Keybind updated.'); });
+    document.getElementById('theme').addEventListener('change', (event) => {
+      const colors = { Dark: ['#eeeeF2', '#080809'], Midnight: ['#7aa2ff', '#07101e'], Violet: ['#925cff', '#0c0813'], Emerald: ['#2acc81', '#06100b'], Ocean: ['#25aee2', '#050d12'], Amber: ['#f4ae36', '#110c05'] };
+      const [accent, background] = colors[event.target.value]; document.documentElement.style.setProperty('--accent', accent); document.documentElement.style.setProperty('--background', background); document.documentElement.style.setProperty('--accent-soft', accent === '#eeeeF2' ? 'rgba(238,238,242,.12)' : accent + '22'); showToast(event.target.value + ' theme selected.');
+    });
+    document.getElementById('minimize').addEventListener('click', (event) => { event.stopPropagation(); const minimized = win.classList.toggle('minimized'); win.style.height = minimized ? '44px' : '380px'; body.style.visibility = minimized ? 'hidden' : 'visible'; });
+    document.getElementById('close').addEventListener('click', (event) => { event.stopPropagation(); win.style.display = 'none'; reopen.classList.add('show'); });
+    reopen.addEventListener('click', () => { win.style.display = 'block'; reopen.classList.remove('show'); });
+    let dragging = false, startX = 0, startY = 0, startLeft = 0, startTop = 0;
+    const dragbar = document.getElementById('dragbar');
+    dragbar.addEventListener('pointerdown', (event) => { if (event.target.closest('button')) return; dragging = true; dragbar.setPointerCapture(event.pointerId); const rect = win.getBoundingClientRect(); startX = event.clientX; startY = event.clientY; startLeft = rect.left; startTop = rect.top; win.style.position = 'fixed'; win.style.left = rect.left + 'px'; win.style.top = rect.top + 'px'; win.style.transform = 'none'; });
+    dragbar.addEventListener('pointermove', (event) => { if (dragging) { win.style.left = startLeft + event.clientX - startX + 'px'; win.style.top = startTop + event.clientY - startY + 'px'; } });
+    dragbar.addEventListener('pointerup', () => { dragging = false; });
+  </script>
+</body>
+</html>
