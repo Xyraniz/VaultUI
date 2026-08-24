@@ -53,6 +53,23 @@ const libraries = [
       url: `${libraryBase}/Armenta-Lib/preview.html`,
       size: '601 × 344'
     }
+  },
+  {
+    id: 'windui-shiny',
+    name: 'WindUI-Shiny',
+    label: 'WindUI-Shiny',
+    number: '04',
+    type: 'Source',
+    description: 'A source-grounded WindUI-Shiny recreation with its real window defaults, official themes, element families and callback states.',
+    tags: ['WindUI', '16 themes', '22 elements', 'Interactive'],
+    files: {
+      source: `${libraryBase}/WindUI-Shiny/source.lua`
+    },
+    preview: {
+      kind: 'iframe',
+      url: `${libraryBase}/WindUI-Shiny/preview.html`,
+      size: '580 × 460'
+    }
   }
 ];
 

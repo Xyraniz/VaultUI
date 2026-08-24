@@ -1,0 +1,989 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>WindUI-Shiny — Interactive Preview</title>
+  <style>
+    :root {
+      --canvas: #0b0b0d;
+      --background: #101010;
+      --dialog: #161616;
+      --panel: rgba(255,255,255,.05);
+      --panel-strong: rgba(255,255,255,.08);
+      --element: rgba(255,255,255,.055);
+      --element-hover: rgba(255,255,255,.09);
+      --text: #ffffff;
+      --muted: rgba(255,255,255,.62);
+      --placeholder: #7a7a7a;
+      --icon: #a1a1aa;
+      --outline: rgba(255,255,255,.16);
+      --button: #52525b;
+      --accent: #18181b;
+      --toggle: #33c759;
+      --slider: #0091ff;
+      --checkbox: #0091ff;
+      --primary: #0091ff;
+      --tab-soft: rgba(255,255,255,.07);
+      --tab-active: rgba(255,255,255,.12);
+      --shadow: rgba(0,0,0,.72);
+      --radius: 16px;
+      --element-radius: 12px;
+      --preview-scale: 1;
+      --drag-x: 0px;
+      --drag-y: 0px;
+      --ease: cubic-bezier(.23,1,.32,1);
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    html, body { width: 100%; min-width: 320px; height: 100%; margin: 0; }
+    body {
+      overflow: hidden;
+      color: var(--text);
+      background: radial-gradient(circle at 50% 35%, rgba(255,255,255,.075), transparent 39%), var(--canvas);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input, select, textarea { font: inherit; }
+    button { color: inherit; border: 0; }
+    button, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+    button, select { cursor: pointer; }
+    input, textarea { cursor: text; }
+    :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+    .stage {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      touch-action: none;
+    }
+    .stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: .33;
+      pointer-events: none;
+      background-image: linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(to bottom, transparent, black 28%, black 72%, transparent);
+    }
+
+    .window {
+      position: relative;
+      width: 580px;
+      height: 460px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: var(--radius);
+      background: var(--background);
+      box-shadow: 0 34px 100px var(--shadow), 0 0 0 1px rgba(255,255,255,.025);
+      transform: translate(var(--drag-x), var(--drag-y)) scale(var(--preview-scale));
+      transform-origin: center;
+      transition: width .3s var(--ease), height .3s var(--ease), transform .13s ease, background .18s ease;
+      isolation: isolate;
+    }
+    .window::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: inherit;
+      pointer-events: none;
+    }
+    .window.is-dragging, .window.is-touch-panning { transition: width .3s var(--ease), height .3s var(--ease); }
+    .window.is-fullscreen {
+      width: min(850px, calc(100% - 20px));
+      height: min(560px, calc(100% - 72px));
+    }
+    .window.is-minimized { height: 52px; }
+    .window.is-minimized .window-body { visibility: hidden; opacity: 0; }
+    .window.is-closed { display: none; }
+
+    .topbar {
+      position: relative;
+      z-index: 12;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      height: 52px;
+      padding: 0 14px;
+      background: color-mix(in srgb, var(--background) 88%, black);
+      border-bottom: 1px solid rgba(255,255,255,.09);
+      user-select: none;
+      cursor: grab;
+      touch-action: none;
+    }
+    .topbar:active { cursor: grabbing; }
+    .topbar-left { min-width: 0; display: flex; align-items: center; gap: 9px; }
+    .window-icon {
+      display: grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      color: var(--text);
+      background: var(--accent);
+      border: 1px solid var(--outline);
+      border-radius: 7px;
+      flex: 0 0 auto;
+    }
+    .window-title { overflow: hidden; font-size: 16px; font-weight: 650; letter-spacing: -.03em; text-overflow: ellipsis; white-space: nowrap; }
+    .window-author { overflow: hidden; color: var(--muted); font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+    .window-author::before { content: "·"; margin-right: 8px; color: var(--placeholder); }
+    .topbar-actions { display: flex; align-items: center; gap: 9px; margin-left: auto; }
+    .topbar-button {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      color: var(--icon);
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 11px;
+      transition: color .16s ease, background .16s ease, border-color .16s ease, transform .16s ease;
+    }
+    .topbar-button::after { content: ""; position: absolute; inset: 0; border: 1px solid rgba(255,255,255,.12); border-radius: inherit; opacity: 0; transition: opacity .16s ease; }
+    .topbar-button:hover { color: var(--text); background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.09); }
+    .topbar-button:hover::after { opacity: 1; }
+    .topbar-button:active { transform: scale(.96); }
+
+    .window-body { display: grid; grid-template-columns: 200px minmax(0, 1fr); height: calc(100% - 52px); min-height: 0; }
+    .sidebar {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      padding: 14px 7px 10px;
+      background: rgba(0,0,0,.11);
+      border-right: 1px solid rgba(255,255,255,.075);
+    }
+    .sidebar-caption { margin: 0 11px 11px; color: var(--muted); font-family: var(--mono); font-size: 9px; letter-spacing: .16em; text-transform: uppercase; }
+    .tab-list { display: grid; gap: 4px; }
+    .tab-button {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      min-height: 37px;
+      padding: 8px 10px;
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      text-align: left;
+      transition: color .16s ease, background .16s ease, border-color .16s ease, transform .16s var(--ease);
+    }
+    .tab-button:hover { color: var(--text); background: rgba(255,255,255,.055); border-color: rgba(255,255,255,.09); transform: translateX(1px); }
+    .tab-button.active { color: var(--text); background: var(--tab-active); border-color: rgba(255,255,255,.16); }
+    .tab-button.active::before { content: ""; position: absolute; left: -8px; width: 3px; height: 22px; background: var(--text); border-radius: 999px; }
+    .tab-button.locked { cursor: not-allowed; opacity: .45; }
+    .tab-icon { display: grid; place-items: center; width: 18px; height: 18px; color: currentColor; flex: 0 0 auto; }
+    .tab-label { min-width: 0; display: grid; gap: 2px; }
+    .tab-title { overflow: hidden; font-size: 13px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+    .tab-desc { overflow: hidden; color: var(--muted); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+    .locked-mark { margin-left: auto; color: var(--placeholder); font-family: var(--mono); font-size: 10px; }
+
+    .search-launcher {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      width: 100%;
+      min-height: 34px;
+      margin-top: 12px;
+      padding: 0 11px;
+      color: var(--muted);
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.11);
+      border-radius: 22px;
+      text-align: left;
+      transition: color .16s ease, background .16s ease, border-color .16s ease;
+    }
+    .search-launcher:hover { color: var(--text); background: rgba(255,255,255,.075); border-color: rgba(255,255,255,.23); }
+    .search-launcher span { font-size: 11px; }
+    .search-shortcut { margin-left: auto; color: var(--placeholder); font-family: var(--mono); font-size: 8px !important; }
+    .sidebar-footer { display: flex; align-items: center; gap: 8px; margin-top: auto; padding: 10px 10px 0; color: var(--placeholder); border-top: 1px solid rgba(255,255,255,.075); font-family: var(--mono); font-size: 8px; letter-spacing: .04em; }
+    .status-dot { width: 6px; height: 6px; background: var(--toggle); border-radius: 50%; box-shadow: 0 0 0 3px color-mix(in srgb, var(--toggle) 13%, transparent); }
+    .sidebar-version { margin-left: auto; opacity: .65; }
+
+    .content { position: relative; min-width: 0; overflow: hidden; background: var(--background); }
+    .panel { display: none; height: 100%; overflow-y: auto; padding: 18px 18px 22px 17px; scrollbar-color: rgba(255,255,255,.35) transparent; scrollbar-width: thin; }
+    .panel.active { display: block; animation: panel-in .16s var(--ease); }
+    .panel::-webkit-scrollbar { width: 5px; }
+    .panel::-webkit-scrollbar-thumb { background: rgba(255,255,255,.3); border-radius: 99px; }
+    @keyframes panel-in { from { opacity: .25; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    .panel-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+    .panel-heading { min-width: 0; }
+    .panel-title { margin: 0 0 4px; color: var(--text); font-size: 20px; font-weight: 650; letter-spacing: -.04em; }
+    .panel-copy { max-width: 360px; margin: 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+    .panel-badge { flex: 0 0 auto; margin-top: 3px; padding: 5px 7px; color: var(--muted); background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.12); border-radius: 6px; font-family: var(--mono); font-size: 8px; letter-spacing: .08em; }
+    .script-line { display: block; width: 100%; margin: 0 0 12px; padding: 7px 8px; overflow: hidden; color: var(--muted); background: rgba(0,0,0,.24); border: 1px solid rgba(255,255,255,.09); border-radius: 8px; font-family: var(--mono); font-size: 8px; line-height: 1.4; text-overflow: ellipsis; white-space: nowrap; }
+    .script-line .accent-text { color: var(--primary); }
+    .stack { display: grid; gap: 7px; }
+
+    .element {
+      position: relative;
+      min-height: 48px;
+      padding: 9px 11px;
+      color: var(--text);
+      background: var(--element);
+      border: 1px solid rgba(255,255,255,.085);
+      border-radius: var(--element-radius);
+      transition: background .16s ease, border-color .16s ease, transform .16s var(--ease);
+    }
+    .element:hover { background: var(--element-hover); border-color: rgba(255,255,255,.17); }
+    .element-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 29px; }
+    .element-copy { min-width: 0; display: grid; gap: 3px; }
+    .element-title { overflow: hidden; color: var(--text); font-size: 12px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+    .element-desc { overflow: hidden; color: var(--muted); font-size: 9px; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
+    .element-icon { display: inline-grid; place-items: center; width: 18px; height: 18px; margin-right: 5px; color: var(--icon); vertical-align: -4px; }
+    .locked .element-title, .locked .element-desc { opacity: .45; }
+    .locked { cursor: not-allowed; }
+
+    .action-button, .secondary-button, .plain-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 30px;
+      padding: 0 10px;
+      border-radius: 8px;
+      font-size: 10px;
+      font-weight: 650;
+      transition: filter .16s ease, background .16s ease, border-color .16s ease, transform .16s ease;
+    }
+    .action-button { color: #fff; background: var(--button); border: 1px solid color-mix(in srgb, var(--button) 78%, white); }
+    .action-button:hover { filter: brightness(1.16); }
+    .secondary-button { color: var(--text); background: rgba(255,255,255,.065); border: 1px solid rgba(255,255,255,.16); }
+    .secondary-button:hover, .plain-button:hover { background: rgba(255,255,255,.11); border-color: rgba(255,255,255,.28); }
+    .plain-button { min-height: 28px; color: var(--muted); background: transparent; border: 1px solid transparent; }
+    .action-button:active, .secondary-button:active, .plain-button:active, .tab-button:active, .segment:active, .color-swatch:active { transform: scale(.97); }
+
+    .keycap { display: inline-flex; align-items: center; justify-content: center; min-width: 36px; min-height: 25px; padding: 0 8px; color: var(--text); background: rgba(255,255,255,.065); border: 1px solid rgba(255,255,255,.2); border-radius: 7px; box-shadow: inset 0 -2px 0 rgba(0,0,0,.25); font-family: var(--mono); font-size: 9px; }
+    .keycap.clickable { cursor: pointer; transition: color .16s ease, background .16s ease, border-color .16s ease, transform .16s ease; }
+    .keycap.clickable:hover { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.35); }
+    .keycap.picking { color: var(--primary); border-color: var(--primary); }
+
+    .switch { position: relative; flex: 0 0 auto; width: 41px; height: 24px; padding: 0; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.13); border-radius: 9px; transition: background .16s ease, border-color .16s ease; }
+    .switch::before { content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: rgba(255,255,255,.48); border-radius: 7px; box-shadow: 0 1px 2px rgba(0,0,0,.25); transition: transform .16s var(--ease), background .16s ease; }
+    .switch::after { content: ""; position: absolute; inset: 1px; border: 1px solid rgba(255,255,255,.15); border-radius: 8px; opacity: .55; pointer-events: none; }
+    .switch.is-on { background: var(--toggle); border-color: color-mix(in srgb, var(--toggle) 80%, white); }
+    .switch.is-on::before { background: #fff; transform: translateX(17px); }
+    .check { position: relative; flex: 0 0 auto; width: 26px; height: 26px; padding: 0; background: transparent; border: 1px solid rgba(255,255,255,.35); border-radius: 8px; transition: background .14s ease, border-color .14s ease; }
+    .check svg { position: absolute; inset: 5px; color: #fff; opacity: 0; transition: opacity .12s ease; }
+    .check.is-on { background: var(--checkbox); border-color: var(--checkbox); }
+    .check.is-on svg { opacity: 1; }
+    .accessories { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
+
+    .slider-wrap { display: flex; align-items: center; gap: 9px; width: min(210px, 53%); }
+    .slider-track { position: relative; width: 100%; height: 4px; background: rgba(255,255,255,.13); border-radius: 99px; cursor: pointer; }
+    .slider-fill { position: absolute; inset: 0 auto 0 0; width: 65%; background: var(--slider); border-radius: inherit; }
+    .slider-thumb { position: absolute; top: 50%; left: 65%; width: 15px; height: 15px; background: #fff; border: 1px solid rgba(0,0,0,.15); border-radius: 50%; box-shadow: 0 1px 4px rgba(0,0,0,.35); transform: translate(-50%, -50%); pointer-events: none; }
+    .slider-number { width: 31px; padding: 0; color: var(--text); background: transparent; border: 0; font-family: var(--mono); font-size: 10px; text-align: right; }
+    .range-icon { color: var(--icon); }
+    .range-icon svg { width: 16px; height: 16px; }
+
+    .stepper { display: flex; align-items: center; gap: 6px; width: 182px; flex: 0 0 auto; }
+    .stepper-button { display: grid; place-items: center; width: 31px; height: 31px; padding: 0; color: var(--muted); background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12); border-radius: 9px; transition: color .14s ease, background .14s ease, transform .14s ease; }
+    .stepper-button:hover { color: var(--text); background: rgba(255,255,255,.13); }
+    .stepper-button:active { transform: scale(.94); }
+    .stepper-value { display: grid; place-items: center; height: 31px; flex: 1; min-width: 0; color: var(--text); background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.1); border-radius: 9px; font-family: var(--mono); font-size: 10px; }
+
+    .text-input, .select-input { height: 31px; min-width: 130px; padding: 0 9px; color: var(--text); background: rgba(0,0,0,.22); border: 1px solid rgba(255,255,255,.17); border-radius: 8px; outline: none; font-size: 10px; }
+    .text-input:focus, .select-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 15%, transparent); }
+    .textarea-input { width: 100%; min-height: 70px; padding: 9px; resize: vertical; }
+    .select-input { min-width: 142px; }
+
+    .segmented { display: flex; flex-wrap: wrap; gap: 5px; justify-content: flex-end; max-width: 245px; }
+    .segment { min-height: 29px; padding: 0 10px; color: var(--muted); background: rgba(255,255,255,.045); border: 1px solid rgba(255,255,255,.11); border-radius: 8px; font-size: 10px; transition: color .14s ease, background .14s ease, border-color .14s ease, transform .14s ease; }
+    .segment:hover { color: var(--text); background: rgba(255,255,255,.09); }
+    .segment.active { color: var(--text); background: color-mix(in srgb, var(--accent) 75%, white 25%); border-color: color-mix(in srgb, var(--accent) 45%, white 55%); }
+
+    .section-box { overflow: hidden; background: rgba(255,255,255,.035); border: 1px solid rgba(255,255,255,.1); border-radius: 14px; }
+    .section-box.no-border { border-color: transparent; background: transparent; }
+    .section-top { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 48px; padding: 9px 12px; color: var(--text); background: transparent; text-align: left; }
+    .section-top:hover { background: rgba(255,255,255,.04); }
+    .section-symbol { display: grid; place-items: center; width: 22px; height: 22px; color: var(--icon); }
+    .section-copy { min-width: 0; display: grid; gap: 2px; }
+    .section-title { font-size: 13px; font-weight: 650; }
+    .section-desc { color: var(--muted); font-size: 9px; }
+    .section-chevron { display: grid; place-items: center; width: 20px; height: 20px; margin-left: auto; color: var(--icon); transition: transform .2s var(--ease); }
+    .section-box.open .section-chevron { transform: rotate(180deg); }
+    .section-content { display: grid; gap: 7px; padding: 0 11px 11px; }
+    .section-box:not(.open) .section-content { display: none; }
+    .section-divider { height: 1px; background: rgba(255,255,255,.1); }
+
+    .multi-section { overflow: hidden; background: rgba(255,255,255,.035); border: 1px solid rgba(255,255,255,.11); border-radius: 14px; }
+    .multi-header { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 9px 12px; }
+    .multi-heading { min-width: 0; }
+    .multi-title { margin: 0 0 3px; font-size: 16px; font-weight: 650; letter-spacing: -.025em; }
+    .multi-desc { color: var(--muted); font-size: 9px; }
+    .multi-tabs { display: flex; gap: 6px; padding: 0 11px; overflow-x: auto; scrollbar-width: none; }
+    .multi-tabs::-webkit-scrollbar { display: none; }
+    .multi-tab { min-height: 30px; padding: 0 11px; color: var(--muted); background: rgba(255,255,255,.04); border: 1px solid transparent; border-radius: 8px; white-space: nowrap; font-size: 10px; transition: color .14s ease, background .14s ease, border-color .14s ease; }
+    .multi-tab:hover { color: var(--text); background: rgba(255,255,255,.075); }
+    .multi-tab.active { color: var(--text); background: var(--tab-active); border-color: rgba(255,255,255,.17); }
+    .multi-content { display: none; gap: 7px; padding: 11px; }
+    .multi-content.active { display: grid; }
+
+    .code-element { position: relative; overflow: hidden; background: rgba(0,0,0,.3); border: 1px solid rgba(255,255,255,.1); border-radius: 11px; }
+    .code-label { display: flex; align-items: center; justify-content: space-between; min-height: 28px; padding: 0 9px; color: var(--muted); border-bottom: 1px solid rgba(255,255,255,.09); font-family: var(--mono); font-size: 8px; }
+    .code-block { max-height: 115px; margin: 0; padding: 9px; overflow: auto; color: #cdd6f4; font-family: var(--mono); font-size: 8px; line-height: 1.6; white-space: pre; }
+    .lua-keyword { color: #cba6f7; }
+    .lua-call { color: #89b4fa; }
+    .lua-string { color: #a6e3a1; }
+    .lua-comment { color: #9399b2; }
+    .lua-number { color: #fab387; }
+
+    .progress-bar { position: relative; height: 8px; margin-top: 9px; background: rgba(255,255,255,.09); border-radius: 99px; }
+    .progress-fill { position: absolute; inset: 0 auto 0 0; width: 72%; background: var(--slider); border-radius: inherit; box-shadow: 0 0 14px color-mix(in srgb, var(--slider) 35%, transparent); }
+    .stats-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+    .stat { min-width: 0; padding: 10px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); border-radius: 11px; }
+    .stat-label { overflow: hidden; color: var(--muted); font-family: var(--mono); font-size: 8px; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+    .stat-value { margin-top: 5px; overflow: hidden; color: var(--text); font-size: 18px; font-weight: 650; letter-spacing: -.04em; text-overflow: ellipsis; white-space: nowrap; }
+    .stat-change { margin-top: 3px; color: var(--toggle); font-family: var(--mono); font-size: 8px; }
+
+    .image-element { overflow: hidden; aspect-ratio: 16 / 9; background: linear-gradient(135deg, #20242b, #101114 50%, #263b59); border: 1px solid rgba(255,255,255,.12); border-radius: 12px; }
+    .image-art { position: relative; width: 100%; height: 100%; display: grid; place-items: center; overflow: hidden; }
+    .image-art::before, .image-art::after { content: ""; position: absolute; border-radius: 999px; filter: blur(1px); }
+    .image-art::before { width: 170px; height: 170px; background: radial-gradient(circle, color-mix(in srgb, var(--primary) 80%, white), transparent 68%); transform: translate(-42px, 20px); opacity: .7; }
+    .image-art::after { width: 200px; height: 200px; background: radial-gradient(circle, color-mix(in srgb, var(--toggle) 70%, white), transparent 68%); transform: translate(110px, -54px); opacity: .45; }
+    .image-caption { position: absolute; right: 10px; bottom: 9px; left: 10px; z-index: 1; display: flex; align-items: end; justify-content: space-between; gap: 10px; }
+    .image-caption strong { font-size: 12px; }
+    .image-caption span { color: rgba(255,255,255,.65); font-family: var(--mono); font-size: 8px; }
+    .video-element { position: relative; height: 128px; overflow: hidden; background: radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--accent) 75%, var(--primary)), #08090a 62%); border: 1px solid rgba(255,255,255,.12); border-radius: 12px; }
+    .video-element::before { content: ""; position: absolute; inset: 0; opacity: .18; background: repeating-linear-gradient(135deg, transparent 0 10px, rgba(255,255,255,.2) 10px 11px); }
+    .video-center { position: absolute; top: 50%; left: 50%; display: grid; place-items: center; width: 43px; height: 43px; color: #fff; background: color-mix(in srgb, var(--primary) 65%, transparent); border: 1px solid rgba(255,255,255,.35); border-radius: 50%; transform: translate(-50%, -50%); }
+    .video-meta { position: absolute; right: 10px; bottom: 9px; left: 10px; z-index: 1; display: flex; justify-content: space-between; color: rgba(255,255,255,.7); font-family: var(--mono); font-size: 8px; }
+
+    .theme-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+    .theme-option { display: flex; align-items: center; gap: 7px; min-width: 0; min-height: 32px; padding: 0 8px; color: var(--muted); background: rgba(255,255,255,.035); border: 1px solid rgba(255,255,255,.11); border-radius: 8px; text-align: left; font-size: 9px; transition: color .14s ease, background .14s ease, border-color .14s ease, transform .14s ease; }
+    .theme-option:hover { color: var(--text); background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.25); }
+    .theme-option.active { color: var(--text); border-color: var(--primary); background: color-mix(in srgb, var(--primary) 13%, transparent); }
+    .theme-swatch { width: 12px; height: 12px; flex: 0 0 auto; border-radius: 4px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.28); }
+    .theme-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .color-row { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
+    .color-swatch { width: 26px; height: 26px; padding: 0; background: #0091ff; border: 1px solid rgba(255,255,255,.45); border-radius: 9px; box-shadow: inset 0 0 0 4px rgba(0,0,0,.16); transition: transform .14s ease, border-color .14s ease; }
+    .color-swatch:hover { border-color: #fff; }
+    .hex-value { color: var(--muted); font-family: var(--mono); font-size: 9px; }
+    .color-popover { position: fixed; z-index: 30; top: var(--picker-top, 42px); left: var(--picker-left, 11px); width: 288px; padding: 10px; background: var(--dialog); border: 1px solid rgba(255,255,255,.2); border-radius: 13px; box-shadow: 0 18px 55px rgba(0,0,0,.66); }
+    .color-popover h3 { margin: 0 0 8px; font-size: 12px; font-weight: 650; }
+    .color-editor { display: grid; grid-template-columns: 160px 7px 7px; gap: 10px; }
+    .sv-map { position: relative; width: 160px; height: 158px; overflow: hidden; background: linear-gradient(to bottom, transparent, #000), linear-gradient(to right, #fff, hsl(205 100% 50%)); border: 1px solid rgba(255,255,255,.2); border-radius: 8px; cursor: crosshair; }
+    .sv-marker, .hue-marker, .alpha-marker { position: absolute; z-index: 2; width: 14px; height: 14px; border: 2px solid #fff; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,.45); transform: translate(-50%, -50%); pointer-events: none; }
+    .sv-marker { top: 25%; left: 78%; background: #0091ff; }
+    .hue-track { position: relative; width: 7px; height: 158px; background: linear-gradient(to bottom, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00); border-radius: 99px; cursor: ns-resize; }
+    .hue-marker { top: 49%; left: 50%; width: 14px; height: 14px; background: #0091ff; }
+    .alpha-track { position: relative; width: 7px; height: 158px; background: repeating-conic-gradient(#aaa 0 25%, #666 0 50%) 50% / 8px 8px; border-radius: 99px; cursor: ns-resize; }
+    .alpha-track::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(to bottom, transparent, var(--picker-color)); }
+    .alpha-marker { top: 16%; left: 50%; width: 14px; height: 14px; background: var(--picker-color); }
+    .picker-inputs { display: grid; gap: 5px; margin-top: 9px; }
+    .picker-field { display: grid; grid-template-columns: 39px minmax(0, 1fr); align-items: center; gap: 5px; }
+    .picker-field label { color: var(--muted); font-family: var(--mono); font-size: 8px; }
+    .picker-field input { width: 100%; height: 24px; padding: 0 6px; color: var(--text); background: rgba(0,0,0,.23); border: 1px solid rgba(255,255,255,.16); border-radius: 6px; font-family: var(--mono); font-size: 9px; }
+    .picker-actions { display: flex; gap: 6px; margin-top: 9px; }
+    .picker-actions > * { flex: 1; }
+
+    .log-card { min-height: 114px; padding: 10px; background: rgba(0,0,0,.22); border: 1px solid rgba(255,255,255,.1); border-radius: 11px; }
+    .log-card-header { display: flex; align-items: center; justify-content: space-between; gap: 9px; margin-bottom: 7px; }
+    .log-card-title { color: var(--text); font-size: 12px; font-weight: 650; }
+    .log { display: grid; gap: 5px; max-height: 134px; overflow: auto; color: var(--muted); font-family: var(--mono); font-size: 8px; line-height: 1.35; }
+    .log-line { white-space: nowrap; }
+    .log-line::before { content: "> "; color: var(--primary); }
+    .honest-note { margin: 10px 0 0; padding: 9px 10px; color: var(--muted); background: rgba(255,255,255,.035); border-left: 2px solid var(--primary); border-radius: 0 8px 8px 0; font-size: 9px; line-height: 1.45; }
+    .api-list { display: grid; gap: 5px; margin: 0; padding: 0; color: var(--muted); font-family: var(--mono); font-size: 8px; list-style: none; }
+    .api-list li::before { content: "ƒ"; margin-right: 7px; color: var(--primary); }
+
+    .search-layer, .toast { position: fixed; z-index: 80; }
+    .search-layer { inset: 0; display: grid; place-items: center; background: rgba(0,0,0,.56); backdrop-filter: blur(5px); }
+    .search-modal { width: min(400px, calc(100vw - 28px)); max-height: min(380px, calc(100vh - 28px)); overflow: hidden; background: var(--dialog); border: 1px solid rgba(255,255,255,.2); border-radius: 22px; box-shadow: 0 26px 80px rgba(0,0,0,.7); transform: scale(.97); animation: search-in .16s var(--ease) forwards; }
+    @keyframes search-in { to { transform: scale(1); } }
+    .search-input-row { display: flex; align-items: center; gap: 10px; min-height: 54px; padding: 0 14px; border-bottom: 1px solid rgba(255,255,255,.1); }
+    .search-input-row svg { color: var(--icon); flex: 0 0 auto; }
+    .search-input { width: 100%; height: 32px; padding: 0; color: var(--text); background: transparent; border: 0; outline: none; font-size: 16px; }
+    .search-results { max-height: 320px; padding: 9px; overflow: auto; }
+    .search-result { display: flex; align-items: flex-start; gap: 10px; width: 100%; padding: 9px; color: var(--text); background: transparent; border: 1px solid transparent; border-radius: 11px; text-align: left; }
+    .search-result:hover { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.15); }
+    .search-result-icon { display: grid; place-items: center; width: 18px; height: 18px; color: var(--icon); flex: 0 0 auto; }
+    .search-result-copy { min-width: 0; }
+    .search-result-title { font-size: 12px; font-weight: 600; }
+    .search-result-desc { margin-top: 3px; overflow: hidden; color: var(--muted); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+    .search-empty { padding: 24px 10px; color: var(--muted); font-size: 11px; text-align: center; }
+    .toast { right: 15px; top: 15px; min-width: 200px; max-width: min(300px, calc(100vw - 30px)); padding: 10px 12px; color: var(--text); background: var(--dialog); border: 1px solid rgba(255,255,255,.25); border-radius: 9px; box-shadow: 0 14px 45px rgba(0,0,0,.5); font-size: 10px; opacity: 0; pointer-events: none; transform: translateY(-6px); transition: opacity .18s ease, transform .18s var(--ease); }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .reopen { position: fixed; bottom: 17px; left: 17px; display: none; min-height: 30px; padding: 0 11px; color: var(--text); background: var(--dialog); border: 1px solid rgba(255,255,255,.22); border-radius: 8px; font-size: 10px; }
+    .reopen.show { display: inline-flex; align-items: center; }
+    .pinch-hint { position: fixed; right: 15px; bottom: 14px; padding: 5px 7px; color: rgba(255,255,255,.34); background: rgba(13,13,15,.76); border: 1px solid rgba(255,255,255,.11); border-radius: 5px; font-family: var(--mono); font-size: 7px; letter-spacing: .08em; pointer-events: none; }
+
+    @media (max-width: 640px) {
+      .window { width: 580px; height: 460px; }
+      .pinch-hint { right: 9px; bottom: 9px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage" id="stage" aria-label="WindUI-Shiny live preview">
+    <section class="window" id="window" aria-label="WindUI-Shiny preview window">
+      <header class="topbar" id="dragbar">
+        <div class="topbar-left">
+          <span class="window-icon" id="windowIcon" aria-hidden="true"></span>
+          <span class="window-title" id="windowTitle">WindUI-Shiny</span>
+          <span class="window-author">Preview</span>
+        </div>
+        <div class="topbar-actions">
+          <button class="topbar-button" id="fullscreenButton" type="button" aria-label="Toggle fullscreen" title="Toggle fullscreen"></button>
+          <button class="topbar-button" id="minimizeButton" type="button" aria-label="Minimize window" title="Minimize window"></button>
+        </div>
+      </header>
+      <div class="window-body" id="windowBody">
+        <aside class="sidebar" aria-label="WindUI-Shiny tabs">
+          <p class="sidebar-caption">CreateWindow / Tabs</p>
+          <nav class="tab-list" id="tabList"></nav>
+          <button class="search-launcher" id="searchLauncher" type="button" aria-label="Search tabs and elements">
+            <span class="search-icon" aria-hidden="true"></span>
+            <span>Search...</span>
+            <span class="search-shortcut">⌘ K</span>
+          </button>
+          <div class="sidebar-footer"><span class="status-dot"></span><span>Dark / Ready</span><span class="sidebar-version">0.0.0</span></div>
+        </aside>
+        <section class="content" id="content" aria-live="polite">
+          <section class="panel active" id="panel-controls" data-search-title="Controls" data-search-desc="Core WindUI elements and callbacks">
+            <header class="panel-header">
+              <div class="panel-heading"><h1 class="panel-title">Controls</h1><p class="panel-copy">Real element families registered by WindUI-Shiny, arranged like a compact Roblox window.</p></div>
+              <span class="panel-badge">TAB 01</span>
+            </header>
+            <code class="script-line"><span class="accent-text">local Window</span> = WindUI:CreateWindow({ Title = <span class="lua-string">"WindUI-Shiny"</span>, Theme = <span class="lua-string">"Dark"</span> })</code>
+            <div class="stack" id="controlsStack">
+              <article class="element" data-search-title="Paragraph Element catalog" data-search-desc="Paragraph with title and description">
+                <div class="element-copy"><span class="element-title"><span class="element-icon paragraph-icon"></span>Element catalog</span><span class="element-desc">Paragraph({ Title = "Element catalog", Desc = "..." })</span></div>
+              </article>
+              <article class="element" data-search-title="Button Run callback" data-search-desc="Button callback mouse-pointer-click">
+                <div class="element-row"><div class="element-copy"><span class="element-title"><span class="element-icon button-icon"></span>Run callback</span><span class="element-desc">Button({ Title = "Run callback", Icon = "mouse-pointer-click" })</span></div><button class="action-button" id="runButton" type="button"><span class="run-icon"></span>Execute</button></div>
+              </article>
+              <article class="element" data-search-title="ButtonKeybind Action shortcut" data-search-desc="Button with keybind callback">
+                <div class="element-row"><div class="element-copy"><span class="element-title"><span class="element-icon button-key-icon"></span>Action shortcut</span><span class="element-desc">ButtonKeybind({ Value = "F" })</span></div><div class="accessories"><span class="keycap clickable" id="buttonKeycap">F</span></div></div>
+              </article>
+              <article class="element" data-search-title="Toggle Enable feature" data-search-desc="Toggle with green switch">
+                <div class="element-row"><div class="element-copy"><span class="element-title"><span class="element-icon toggle-icon"></span>Enable feature</span><span class="element-desc">Toggle({ Value = true })</span></div><button class="switch is-on" type="button" data-label="Enable feature" aria-pressed="true" aria-label="Enable feature"></button></div>
+              </article>
+              <article class="element" data-search-title="Toggle Checkbox notifications" data-search-desc="Checkbox variant of Toggle">
+                <div class="element-row"><div class="element-copy"><span class="element-title"><span class="element-icon check-icon"></span>Show notifications</span><span class="element-desc">Toggle({ Type = "Checkbox", Value = true })</span></div><button class="check is-on" type="button" data-label="Show notifications" aria-pressed="true" aria-label="Show notifications"><span class="checkmark-icon"></span></button></div>
+              </article>
+              <article class="element" data-search-title="ToggleKeybind Auto mode" data-search-desc="Toggle with keybind and switch">
+                <div class="element-row"><div class="element-copy"><span class="element-title"><span class="element-icon toggle-key-icon"></span>Auto mode</span><span class="element-desc">ToggleKeybind({ Keybind = "RightShift" })</span></div><div class="accessories"><span class="keycap clickable" id="toggleKeycap">RightShift</span><button class="switch" type="button" data-label="Auto mode" aria-pressed="false" aria-label="Auto mode"></button></div></div>
+              </article>
+              <article class="element" data-search-title="Slider Intensity" data-search-desc="Slider Min Max Default Step">
+                <div class="element-row"><div class="element-copy"><span class="element-title"><span class="element-icon slider-icon"></span>Intensity</span><span class="element-desc">Slider({ Value = { Min = 0, Max = 100, Default = 65 } })</span></div><div class="slider-wrap" data-slider="65"><span class="range-icon slider-from-icon"></span><div class="slider-track" id="sliderTrack"><div class="slider-fill" id="sliderFill"></div><span class="slider-thumb" id="sliderThumb"></span></div><span class="range-icon slider-to-icon"></span><input class="slider-number" id="sliderValue" value="65" aria-label="Intensity value" inputmode="numeric"></div></div>
+              </article>
+              <article class="element" data-search-title="Stepper Retry count" data-search-desc="Stepper Min Max Step Prefix Suffix">
+                <div class="element-row"><div class="element-copy"><span class="element-title"><span class="element-icon stepper-icon"></span>Retry count</span><span class="element-desc">Stepper({ Value = { Default = 3 }, Min = 0, Max = 9 })</span></div><div class="stepper"><button class="stepper-button" id="stepDown" type="button" aria-label="Decrease retry count"></button><span class="stepper-value" id="stepValue">3</span><button class="stepper-button" id="stepUp" type="button" aria-label="Increase retry count"></button></div></div>
+              </article>
+              <article class="element" data-search-title="Keybind Toggle menu" data-search-desc="Keybind capture mode">
+                <div class="element-row"><div class="element-copy"><span class="element-title"><span class="element-icon keybind-icon"></span>Toggle menu</span><span class="element-desc">Keybind({ Value = "F", CanChange = true })</span></div><span class="keycap clickable" id="mainKeycap">F</span></div>
+              </article>
+              <article class="element" data-search-title="Input Profile name" data-search-desc="Input placeholder Enter Text">
+                <div class="element-row"><div class="element-copy"><span class="element-title"><span class="element-icon input-icon"></span>Profile name</span><span class="element-desc">Input({ Placeholder = "Enter Text..." })</span></div><input class="text-input" id="profileInput" value="WindUI" placeholder="Enter Text..." aria-label="Profile name"></div>
+              </article>
+              <article class="element" data-search-title="Dropdown Mode" data-search-desc="Dropdown options with popup selection">
+                <div class="element-row"><div class="element-copy"><span class="element-title"><span class="element-icon dropdown-icon"></span>Mode</span><span class="element-desc">Dropdown({ Options = { "Balanced", "Safe", "Aggressive" } })</span></div><select class="select-input" id="modeSelect" aria-label="Mode"><option>Balanced</option><option>Safe</option><option>Aggressive</option></select></div>
+              </article>
+              <article class="element" data-search-title="Segmented Layout" data-search-desc="Segmented single selection">
+                <div class="element-row"><div class="element-copy"><span class="element-title"><span class="element-icon segmented-icon"></span>Layout</span><span class="element-desc">Segmented({ Options = { "Compact", "Modern", "Wide" } })</span></div><div class="segmented" id="layoutSegments"><button class="segment active" type="button">Compact</button><button class="segment" type="button">Modern</button><button class="segment" type="button">Wide</button></div></div>
+              </article>
+              <article class="element locked" data-search-title="Locked element" data-search-desc="Locked controls and LockedTitle">
+                <div class="element-row"><div class="element-copy"><span class="element-title"><span class="element-icon lock-icon"></span>Locked element</span><span class="element-desc">Locked = true · LockedTitle = "Unavailable"</span></div><button class="switch" type="button" disabled aria-label="Locked element"></button></div>
+              </article>
+            </div>
+          </section>
+
+          <section class="panel" id="panel-sections" data-search-title="Sections" data-search-desc="Section and MultiSection containers">
+            <header class="panel-header"><div class="panel-heading"><h1 class="panel-title">Sections</h1><p class="panel-copy">Expandable Section and MultiSection containers from the real element registry.</p></div><span class="panel-badge">TAB 02</span></header>
+            <div class="stack">
+              <article class="section-box open" id="advancedSection" data-search-title="Section Advanced controls" data-search-desc="Expandable section with chevron">
+                <button class="section-top" type="button"><span class="section-symbol section-icon"></span><span class="section-copy"><span class="section-title">Advanced controls</span><span class="section-desc">Section({ Opened = true, Icon = "settings-2" })</span></span><span class="section-chevron chevron-icon"></span></button>
+                <div class="section-content"><div class="section-divider"></div><article class="element" data-search-title="Divider Accent divider" data-search-desc="Divider element inside Section"><div class="element-row"><div class="element-copy"><span class="element-title"><span class="element-icon divider-icon"></span>Accent divider</span><span class="element-desc">Divider({ Thickness = 1, Padding = 6 })</span></div><span class="status-text">1 px</span></div></article><article class="element" data-search-title="Space Layout space" data-search-desc="Space element inside Section"><div class="element-row"><div class="element-copy"><span class="element-title"><span class="element-icon space-icon"></span>Layout space</span><span class="element-desc">Space({ Columns = 1 })</span></div><span class="status-text">7 px</span></div></article><article class="element" data-search-title="Section Button Apply" data-search-desc="Section button factory"><div class="element-row"><div class="element-copy"><span class="element-title"><span class="element-icon button-icon"></span>Apply settings</span><span class="element-desc">Section:Button({ Title = "Apply settings" })</span></div><button class="action-button" id="sectionAction" type="button">Apply</button></div></article></div>
+              </article>
+              <article class="multi-section" data-search-title="MultiSection Appearance" data-search-desc="MultiSection with internal tabs and boxed content">
+                <div class="multi-header"><span class="section-symbol multi-icon"></span><div class="multi-heading"><h2 class="multi-title">Appearance</h2><span class="multi-desc">MultiSection({ Box = true, BoxBorder = true })</span></div></div>
+                <div class="multi-tabs" id="multiTabs"><button class="multi-tab active" type="button" data-multi="general">General</button><button class="multi-tab" type="button" data-multi="style">Style</button><button class="multi-tab" type="button" data-multi="details">Details</button></div>
+                <div class="multi-content active" id="multi-general"><article class="element"><div class="element-row"><div class="element-copy"><span class="element-title"><span class="element-icon panel-icon"></span>Panel background</span><span class="element-desc">PanelBackgroundTransparency = 0.95</span></div><span class="status-text">Glass</span></div></article><article class="element"><div class="element-row"><div class="element-copy"><span class="element-title"><span class="element-icon radius-icon"></span>Element radius</span><span class="element-desc">ElementsRadius = 12</span></div><span class="status-text">12 px</span></div></article></div>
+                <div class="multi-content" id="multi-style"><article class="element"><div class="element-row"><div class="element-copy"><span class="element-title"><span class="element-icon modern-icon"></span>Modern layout</span><span class="element-desc">ModernLayout = false by default</span></div><button class="switch" id="modernSwitch" type="button" data-label="Modern layout" aria-pressed="false" aria-label="Modern layout"></button></div></article><article class="element"><div class="element-row"><div class="element-copy"><span class="element-title"><span class="element-icon acrylic-icon"></span>Acrylic</span><span class="element-desc">Acrylic = false by default</span></div><button class="switch" id="acrylicSwitch" type="button" data-label="Acrylic" aria-pressed="false" aria-label="Acrylic"></button></div></article></div>
+                <div class="multi-content" id="multi-details"><p class="panel-copy">MultiSection tabs select one content container at a time. The chevron appears when the section becomes expandable.</p></div>
+              </article>
+            </div>
+          </section>
+
+          <section class="panel" id="panel-themes" data-search-title="Themes" data-search-desc="Official WindUI-Shiny themes">
+            <header class="panel-header"><div class="panel-heading"><h1 class="panel-title">Themes</h1><p class="panel-copy">Only the theme names and palette values registered in WindUI-Shiny are shown here.</p></div><span class="panel-badge" id="themeBadge">DARK</span></header>
+            <div class="stack">
+              <article class="element" data-search-title="SetTheme official themes" data-search-desc="SetTheme Dark Light Rose Plant Red Indigo Sky Violet Amber Emerald Midnight Crimson Monokai Pro Cotton Candy Mellowsi Rainbow"><div class="element-copy"><span class="element-title"><span class="element-icon palette-icon"></span>SetTheme(theme)</span><span class="element-desc">The preview applies the actual Background, Text, Button, Icon, Toggle and Slider values.</span></div><div class="theme-grid" id="themeGrid" style="margin-top: 10px"></div></article>
+              <article class="element" data-search-title="Colorpicker HSV color transparency" data-search-desc="Colorpicker with HSV map Hue Alpha Hex RGB and Apply Cancel"><div class="element-row"><div class="element-copy"><span class="element-title"><span class="element-icon colorpicker-icon"></span>Accent color</span><span class="element-desc">Colorpicker({ Default = Color3.fromRGB(0, 145, 255), Transparency = true })</span></div><div class="color-row"><span class="hex-value" id="accentHex">#0091ff</span><button class="color-swatch" id="colorSwatch" type="button" aria-label="Open accent colorpicker"></button></div></div><div class="color-popover" id="colorPopover" hidden><h3>Accent color</h3><div class="color-editor"><div class="sv-map" id="svMap"><span class="sv-marker" id="svMarker"></span></div><div class="hue-track" id="hueTrack"><span class="hue-marker" id="hueMarker"></span></div><div class="alpha-track" id="alphaTrack"><span class="alpha-marker" id="alphaMarker"></span></div></div><div class="picker-inputs"><div class="picker-field"><label for="hexInput">Hex</label><input id="hexInput" value="#0091ff" spellcheck="false"></div><div class="picker-field"><label for="redInput">Red</label><input id="redInput" value="0" inputmode="numeric"></div><div class="picker-field"><label for="greenInput">Green</label><input id="greenInput" value="145" inputmode="numeric"></div><div class="picker-field"><label for="blueInput">Blue</label><input id="blueInput" value="255" inputmode="numeric"></div><div class="picker-field"><label for="alphaInput">Alpha</label><input id="alphaInput" value="100%" inputmode="numeric"></div></div><div class="picker-actions"><button class="secondary-button" id="cancelColor" type="button">Cancel</button><button class="action-button" id="applyColor" type="button">Apply</button></div></div></article>
+            </div>
+          </section>
+
+          <section class="panel" id="panel-media" data-search-title="Media and code" data-search-desc="Code Progress Stats Image Group Video elements">
+            <header class="panel-header"><div class="panel-heading"><h1 class="panel-title">Media + code</h1><p class="panel-copy">The remaining registered element families, rendered with the source module's real defaults.</p></div><span class="panel-badge">TAB 04</span></header>
+            <div class="stack">
+              <article class="element" data-search-title="Progress Loading progress bar"><div class="element-row"><div class="element-copy"><span class="element-title"><span class="element-icon progress-icon"></span>Loading assets</span><span class="element-desc">Progress({ Value = { Min = 0, Max = 100, Default = 72 }, ShowValue = true })</span></div><span class="status-text" id="progressValue">72%</span></div><div class="progress-bar"><span class="progress-fill" id="progressFill"></span></div></article>
+              <article class="element" data-search-title="Stats runtime statistics"><div class="element-copy"><span class="element-title"><span class="element-icon stats-icon"></span>Runtime stats</span><span class="element-desc">Stats({ Title = "Runtime stats" })</span></div><div class="stats-grid" style="margin-top: 9px"><div class="stat"><span class="stat-label">FPS</span><strong class="stat-value">60</strong><span class="stat-change">stable</span></div><div class="stat"><span class="stat-label">Ping</span><strong class="stat-value">42</strong><span class="stat-change">ms</span></div><div class="stat"><span class="stat-label">Memory</span><strong class="stat-value">28</strong><span class="stat-change">MB</span></div></div></article>
+              <article class="code-element" data-search-title="Code syntax highlighted Lua"><div class="code-label"><span>Code</span><button class="plain-button" id="copyCode" type="button">Copy</button></div><pre class="code-block" id="codeBlock"><span class="lua-keyword">local</span> Window = WindUI:<span class="lua-call">CreateWindow</span>({
+  Title = <span class="lua-string">"WindUI-Shiny"</span>,
+  Theme = <span class="lua-string">"Dark"</span>,
+  Size = UDim2.<span class="lua-call">fromOffset</span>(<span class="lua-number">580</span>, <span class="lua-number">460</span>)
+})</pre></article>
+              <article class="element" data-search-title="Image hero image aspect ratio"><div class="element-copy"><span class="element-title"><span class="element-icon image-icon"></span>Image element</span><span class="element-desc">Image({ AspectRatio = "16:9", Radius = 12 })</span></div><div class="image-element" style="margin-top: 9px"><div class="image-art"><div class="image-caption"><strong>WindUI canvas</strong><span>16:9 / Image</span></div></div></div></article>
+              <article class="element" data-search-title="Group horizontal group"><div class="element-copy"><span class="element-title"><span class="element-icon group-icon"></span>Group element</span><span class="element-desc">Group({ Elements = { Button, Toggle } }) distributes children horizontally.</span></div><div class="segmented" style="justify-content: flex-start; margin-top: 9px"><button class="secondary-button" id="groupButton" type="button">Button</button><button class="switch is-on" type="button" data-label="Grouped toggle" aria-pressed="true" aria-label="Grouped toggle"></button></div></article>
+              <article class="element" data-search-title="Video video element loop volume"><div class="element-copy"><span class="element-title"><span class="element-icon video-icon"></span>Video element</span><span class="element-desc">Video({ Height = 200, Looped = true, Playing = true, Volume = 0.5 })</span></div><div class="video-element" style="margin-top: 9px"><span class="video-center play-icon"></span><div class="video-meta"><span>Video</span><span>Looped · 0.5</span></div></div></article>
+            </div>
+          </section>
+
+          <section class="panel" id="panel-output" data-search-title="Output callbacks" data-search-desc="Simulated callbacks and honest preview note">
+            <header class="panel-header"><div class="panel-heading"><h1 class="panel-title">Output</h1><p class="panel-copy">Callbacks are shown as the values a Lua script would receive; no Roblox runtime is executed here.</p></div><span class="panel-badge">LOG</span></header>
+            <div class="stack">
+              <article class="log-card"><div class="log-card-header"><span class="log-card-title">Callback output</span><button class="plain-button" id="clearLog" type="button">Clear</button></div><div class="log" id="log" aria-live="polite"><div class="log-line">WindUI:CreateWindow({ Theme = "Dark" })</div><div class="log-line">Window:Tab({ Title = "Controls" })</div></div></article>
+              <article class="element"><div class="element-copy"><span class="element-title"><span class="element-icon api-icon"></span>Public API represented</span><span class="element-desc">These are public calls observed at the end of source.lua.</span></div><ul class="api-list" style="margin-top: 10px"><li>WindUI:Notify(options)</li><li>WindUI:SetTheme("Dark")</li><li>WindUI:Popup(options)</li><li>WindUI:CreateWindow(options)</li></ul></article>
+              <p class="honest-note">This is a browser preview of the library's UI model. It does not load, run, or claim to execute the Roblox Lua source file.</p>
+            </div>
+          </section>
+        </section>
+      </div>
+    </section>
+    <button class="reopen" id="reopenButton" type="button">Open WindUI-Shiny</button>
+    <span class="pinch-hint">PINCH TO ZOOM · DRAG WINDOW</span>
+  </main>
+  <div class="search-layer" id="searchLayer" hidden><div class="search-modal" role="dialog" aria-modal="true" aria-label="Search WindUI-Shiny"><div class="search-input-row"><span class="search-icon" aria-hidden="true"></span><input class="search-input" id="searchInput" placeholder="Search..." autocomplete="off"><button class="plain-button" id="closeSearch" type="button" aria-label="Close search">×</button></div><div class="search-results" id="searchResults"></div></div></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script>
+    const $ = (selector, root = document) => root.querySelector(selector);
+    const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+    const stage = $('#stage');
+    const win = $('#window');
+    const dragbar = $('#dragbar');
+    const toast = $('#toast');
+    const log = $('#log');
+    const tabList = $('#tabList');
+    const searchLayer = $('#searchLayer');
+    const searchInput = $('#searchInput');
+    const searchResults = $('#searchResults');
+    let toastTimer;
+    let previewScale = Math.min(1, Math.max(.58, (window.innerWidth - 24) / 580));
+    let manualScale = false;
+    let activeTab = 'controls';
+    let stepValue = 3;
+    let currentKeycap = null;
+    let pendingColor = { r: 0, g: 145, b: 255, alpha: 1 };
+    let appliedColor = { ...pendingColor };
+    let hue = 0.57;
+
+    const themes = {
+      Dark: { background: '#101010', dialog: '#161616', text: '#ffffff', placeholder: '#7a7a7a', button: '#52525b', icon: '#a1a1aa', toggle: '#33c759', slider: '#0091ff', primary: '#0091ff', accent: '#18181b', swatch: '#18181b' },
+      Light: { background: '#e9e9e9', dialog: '#f4f4f5', text: '#000000', placeholder: '#555555', button: '#18181b', icon: '#52525b', toggle: '#33c759', slider: '#0091ff', primary: '#0091ff', accent: '#ffffff', swatch: '#ffffff', light: true },
+      Rose: { background: '#1f0308', dialog: '#4c0519', text: '#fdf2f8', placeholder: '#d67aa6', button: '#e95f74', icon: '#fb7185', toggle: '#33c759', slider: '#0091ff', primary: '#0091ff', accent: '#be185d', swatch: '#be185d' },
+      Plant: { background: '#0a1b0f', dialog: '#052e16', text: '#f0fdf4', placeholder: '#4fbf7a', button: '#16a34a', icon: '#4ade80', toggle: '#33c759', slider: '#0091ff', primary: '#0091ff', accent: '#166534', swatch: '#166534' },
+      Red: { background: '#1c0606', dialog: '#450a0a', text: '#fef2f2', placeholder: '#d95353', button: '#dc2626', icon: '#ef4444', toggle: '#33c759', slider: '#0091ff', primary: '#0091ff', accent: '#991b1b', swatch: '#991b1b' },
+      Indigo: { background: '#0f0a2e', dialog: '#1e1b4b', text: '#f1f5f9', placeholder: '#7078d9', button: '#4f46e5', icon: '#6366f1', toggle: '#33c759', slider: '#0091ff', primary: '#0091ff', accent: '#3730a3', swatch: '#3730a3' },
+      Sky: { background: '#051a26', dialog: '#0a4d66', text: '#e6f7ff', placeholder: '#66b3cc', button: '#00a8cc', icon: '#2db8d9', toggle: '#00d9d9', slider: '#00d4ff', primary: '#00d4ff', accent: '#00d4ff', swatch: '#00d4ff' },
+      Violet: { background: '#1e0a3e', dialog: '#3c1361', text: '#faf5ff', placeholder: '#8f7ee0', button: '#7c3aed', icon: '#8b5cf6', toggle: '#33c759', slider: '#0091ff', primary: '#0091ff', accent: '#6d28d9', swatch: '#6d28d9' },
+      Amber: { background: 'linear-gradient(135deg,#1c1003,#3f210d)', dialog: 'linear-gradient(90deg,#451a03,#6b2e05)', text: '#fffbeb', placeholder: '#d1a326', button: 'linear-gradient(135deg,#d97706,#f59e0b)', icon: '#f59e0b', toggle: 'linear-gradient(135deg,#d97706,#f59e0b)', slider: '#d97706', primary: '#d97706', accent: 'linear-gradient(135deg,#b45309,#d97706)', swatch: 'linear-gradient(135deg,#b45309,#d97706)' },
+      Emerald: { background: '#011411', dialog: '#022c22', text: '#ecfdf5', placeholder: '#3fbf8f', button: '#059669', icon: '#10b981', toggle: '#33c759', slider: '#0091ff', primary: '#0091ff', accent: '#047857', swatch: '#047857' },
+      Midnight: { background: '#0a0f1e', dialog: '#0c1e42', text: '#dbeafe', placeholder: '#2f74d1', button: '#2563eb', icon: '#5591f4', toggle: '#33c759', slider: '#0091ff', primary: '#2563eb', accent: '#1e3a8a', swatch: '#1e3a8a' },
+      Crimson: { background: '#0c0404', dialog: '#450a0a', text: '#fef2f2', placeholder: '#6f757b', button: '#991b1b', icon: '#dc2626', toggle: '#33c759', slider: '#0091ff', primary: '#0091ff', accent: '#b91c1c', swatch: '#b91c1c' },
+      MonokaiPro: { label: 'Monokai Pro', background: '#191622', dialog: '#1e1e1e', text: '#fcfcfa', placeholder: '#6f6f6f', button: '#ab9df2', icon: '#a9dc76', toggle: '#33c759', slider: '#0091ff', primary: '#0091ff', accent: '#fc9867', swatch: '#fc9867' },
+      CottonCandy: { label: 'Cotton Candy', background: '#1a0b2e', dialog: '#2d1b3d', text: '#fdf2f8', placeholder: '#8a5fd3', button: '#d946ef', icon: '#06b6d4', toggle: '#33c759', slider: '#d946ef', primary: '#d946ef', accent: '#ec4899', swatch: '#ec4899' },
+      Mellowsi: { background: '#1c1002', dialog: '#291c13', text: '#f5ebdd', placeholder: '#9c8a73', button: '#342a1e', icon: '#c9b79c', toggle: '#a9873f', slider: '#c9a24d', primary: '#c9a24d', accent: '#342a1e', swatch: '#342a1e' },
+      Rainbow: { background: 'linear-gradient(90deg,#ff0040,#ff4000 20%,#ffff00 40%,#00ff40 60%,#0040ff 80%,#4000ff)', dialog: 'linear-gradient(135deg,#ff0080,#8000ff 25%,#0080ff 50%,#00ff80 75%,#ff8000)', text: '#ffffff', placeholder: '#00ff80', button: 'linear-gradient(60deg,#ff0080,#ff8000 25%,#ffff00 50%,#80ff00 75%,#00ffff)', icon: '#ffffff', toggle: '#00ff80', slider: '#00ffff', primary: '#00ffff', accent: 'linear-gradient(45deg,#00ff41,#00ffff 33%,#0080ff 66%,#8000ff)', swatch: 'linear-gradient(45deg,#00ff41,#00ffff 33%,#0080ff 66%,#8000ff)' }
+    };
+
+    const tabData = [
+      { id: 'controls', title: 'Controls', desc: 'Core elements', icon: 'table-of-contents' },
+      { id: 'sections', title: 'Sections', desc: 'Containers', icon: 'layout-list' },
+      { id: 'themes', title: 'Themes', desc: 'SetTheme', icon: 'palette' },
+      { id: 'media', title: 'Media + code', desc: 'More elements', icon: 'code-2' },
+      { id: 'output', title: 'Output', desc: 'Callbacks', icon: 'terminal' },
+      { id: 'locked', title: 'Locked tab', desc: 'Locked = true', icon: 'lock', locked: true }
+    ];
+
+    const icons = {
+      search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.5 4.5"></path></svg>',
+      x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 6l12 12M18 6 6 18"></path></svg>',
+      wind: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 8h11.5a2.5 2.5 0 1 0-2.3-3.5"></path><path d="M4 12h15a2 2 0 1 1-2 2"></path><path d="M4 16h10a2.5 2.5 0 1 1-2.3 3.5"></path></svg>',
+      maximize: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M7 4H4v3M17 4h3v3M7 20H4v-3M20 17v3h-3"></path></svg>',
+      minimize: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14"></path></svg>',
+      'table-of-contents': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"></path></svg>',
+      'layout-list': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="16" height="5" rx="1"></rect><rect x="4" y="12" width="16" height="8" rx="1"></rect></svg>',
+      palette: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 4a8 8 0 0 0 0 16h1.4a1.6 1.6 0 0 0 0-3.2H12a1.6 1.6 0 0 1 0-3.2h4a4 4 0 0 0 0-8H12Z"></path><path d="M7.5 10.5h.01M10 7.5h.01M15 7.5h.01M17 10.5h.01"></path></svg>',
+      'code-2': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m8 9-3 3 3 3M16 9l3 3-3 3M14 5l-4 14"></path></svg>',
+      terminal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="m7 9 3 3-3 3M12 15h5"></path></svg>',
+      lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="10" width="14" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg>',
+      'mouse-pointer-click': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m9 3 1 9 3-2 2 5 2-1-2-5 4-1L9 3Z"></path><path d="M5 18 3 20M5 14H2M7 7 5 5"></path></svg>',
+      'square-mouse-pointer': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3.5" y="3.5" width="17" height="17" rx="3"></rect><path d="m9 7 1 8 2.4-2 2 4 1.5-.8-2-4 3-.8L9 7Z"></path></svg>',
+      'toggle-right': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="7" width="18" height="10" rx="5"></rect><circle cx="16" cy="12" r="3"></circle></svg>',
+      'sliders-horizontal': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h5M15 7h5M4 17h9M19 17h1"></path><circle cx="12" cy="7" r="3"></circle><circle cx="16" cy="17" r="3"></circle></svg>',
+      sun: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.65 17.65l1.42 1.42M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.65 6.35l1.42-1.42"></path></svg>',
+      'list-plus': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 6h10M5 12h10M5 18h5M19 15v6M16 18h6"></path></svg>',
+      command: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="16" height="16" rx="3"></rect><path d="m8 9 3 3-3 3M13 15h3"></path></svg>',
+      'text-cursor-input': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M8 5h8M12 5v14M8 19h8M5 9v6M19 9v6"></path></svg>',
+      'chevrons-up-down': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m8 9 4-4 4 4M16 15l-4 4-4-4"></path></svg>',
+      'minus': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14"></path></svg>',
+      plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"></path></svg>',
+      check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"></path></svg>',
+      'chevron-down': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 9 6 6 6-6"></path></svg>',
+      settings: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"></path><path d="m19 13.5 1.4 1.1-1.8 3.1-1.7-.7a7.6 7.6 0 0 1-1.8 1l-.2 1.8h-3.6l-.2-1.8a7.6 7.6 0 0 1-1.8-1l-1.7.7-1.8-3.1L5.2 13.5a7.8 7.8 0 0 1 0-3l-1.4-1.1 1.8-3.1 1.7.7a7.6 7.6 0 0 1 1.8-1l.2-1.8h3.6l.2 1.8a7.6 7.6 0 0 1 1.8 1l1.7-.7 1.8 3.1L19 10.5a7.8 7.8 0 0 1 0 3Z"></path></svg>',
+      minusLine: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 12h14"></path></svg>',
+      square: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="5" width="14" height="14" rx="2"></rect></svg>',
+      radius: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="16" height="16" rx="6"></rect><path d="M4 10h6V4"></path></svg>',
+      sparkles: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m12 3 1.3 5.7L19 10l-5.7 1.3L12 17l-1.3-5.7L5 10l5.7-1.3L12 3ZM19 16l.5 2.5L22 19l-2.5.5L19 22l-.5-2.5L16 19l2.5-.5L19 16Z"></path></svg>',
+      image: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="5" width="16" height="14" rx="2"></rect><circle cx="9" cy="10" r="1.5"></circle><path d="m5 17 4-4 3 3 2-2 5 4"></path></svg>',
+      group: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="7" width="6" height="10" rx="2"></rect><rect x="14" y="7" width="6" height="10" rx="2"></rect></svg>',
+      video: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="6" width="18" height="12" rx="2"></rect><path d="m10 9 5 3-5 3V9Z"></path></svg>',
+      progress: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 12h16M4 12a8 8 0 0 1 8-8M4 12a8 8 0 0 0 8 8"></path><path d="M12 4h8v8"></path></svg>',
+      stats: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 19V9M12 19V5M19 19v-7"></path><path d="M3 19h18"></path></svg>',
+      copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="8" y="8" width="11" height="11" rx="2"></rect><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"></path></svg>',
+      play: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="m9 6 9 6-9 6V6Z"></path></svg>'
+    };
+    const icon = (name) => icons[name] || icons.square;
+    const iconify = (selector, name) => { const el = $(selector); if (el) el.innerHTML = icon(name); };
+    const iconifyAll = (selector, name) => $$(selector).forEach((el) => { el.innerHTML = icon(name); });
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 1900);
+    }
+    function addLog(message) {
+      const line = document.createElement('div');
+      line.className = 'log-line';
+      line.textContent = message;
+      log.appendChild(line);
+      log.scrollTop = log.scrollHeight;
+    }
+    function setScale(value) {
+      previewScale = Math.min(1.45, Math.max(.52, value));
+      stage.style.setProperty('--preview-scale', previewScale);
+    }
+    function readDrag() {
+      const styles = getComputedStyle(stage);
+      return { x: parseFloat(styles.getPropertyValue('--drag-x')) || 0, y: parseFloat(styles.getPropertyValue('--drag-y')) || 0 };
+    }
+    function setDrag(x, y) { stage.style.setProperty('--drag-x', `${x}px`); stage.style.setProperty('--drag-y', `${y}px`); }
+
+    function renderTabs() {
+      tabList.innerHTML = tabData.map((tab) => `<button class="tab-button${tab.id === activeTab ? ' active' : ''}${tab.locked ? ' locked' : ''}" type="button" data-tab="${tab.id}"${tab.locked ? ' disabled' : ''}><span class="tab-icon">${icon(tab.icon)}</span><span class="tab-label"><span class="tab-title">${tab.title}</span><span class="tab-desc">${tab.desc}</span></span>${tab.locked ? '<span class="locked-mark">×</span>' : ''}</button>`).join('');
+      $$('.tab-button:not([disabled])').forEach((button) => button.addEventListener('click', () => selectTab(button.dataset.tab)));
+    }
+    function selectTab(id) {
+      const tab = tabData.find((item) => item.id === id);
+      if (!tab || tab.locked) return;
+      activeTab = id;
+      renderTabs();
+      $$('.panel').forEach((panel) => panel.classList.toggle('active', panel.id === `panel-${id}`));
+      addLog(`Window:SelectTab("${tab.title}")`);
+    }
+
+    function applyTheme(name) {
+      const theme = themes[name];
+      if (!theme) return;
+      Object.entries(theme).forEach(([key, value]) => {
+        if (['label', 'swatch', 'light'].includes(key)) return;
+        document.documentElement.style.setProperty(`--${key}`, value);
+      });
+      const isLight = !!theme.light;
+      document.documentElement.style.setProperty('--canvas', isLight ? '#cfcfd2' : '#0b0b0d');
+      document.documentElement.style.setProperty('--muted', isLight ? 'rgba(0,0,0,.62)' : 'rgba(255,255,255,.62)');
+      document.documentElement.style.setProperty('--icon', isLight ? '#52525b' : (theme.icon || '#a1a1aa'));
+      document.documentElement.style.setProperty('--panel', isLight ? 'rgba(0,0,0,.06)' : 'rgba(255,255,255,.05)');
+      document.documentElement.style.setProperty('--element', isLight ? 'rgba(255,255,255,.5)' : 'rgba(255,255,255,.055)');
+      document.documentElement.style.setProperty('--element-hover', isLight ? 'rgba(255,255,255,.72)' : 'rgba(255,255,255,.09)');
+      document.documentElement.style.setProperty('--outline', isLight ? 'rgba(0,0,0,.2)' : 'rgba(255,255,255,.16)');
+      document.documentElement.style.setProperty('--shadow', isLight ? 'rgba(0,0,0,.24)' : 'rgba(0,0,0,.72)');
+      document.documentElement.style.setProperty('--tab-active', isLight ? 'rgba(255,255,255,.8)' : 'rgba(255,255,255,.12)');
+      document.documentElement.style.setProperty('--tab-soft', isLight ? 'rgba(255,255,255,.6)' : 'rgba(255,255,255,.07)');
+      $('#themeBadge').textContent = (theme.label || name).toUpperCase();
+      $$('.theme-option').forEach((button) => button.classList.toggle('active', button.dataset.theme === name));
+      $$('.theme-swatch').forEach((swatch) => { const t = themes[swatch.dataset.theme]; swatch.style.background = t.swatch; });
+      addLog(`WindUI:SetTheme("${name}")`);
+      showToast(`${theme.label || name} theme selected.`);
+    }
+    function renderThemes() {
+      $('#themeGrid').innerHTML = Object.entries(themes).map(([name, theme]) => `<button class="theme-option${name === 'Dark' ? ' active' : ''}" type="button" data-theme="${name}"><span class="theme-swatch" data-theme="${name}" style="background:${theme.swatch}"></span><span class="theme-name">${theme.label || name}</span></button>`).join('');
+      $$('.theme-option').forEach((button) => button.addEventListener('click', () => applyTheme(button.dataset.theme)));
+    }
+
+    function toggleState(button, forced) {
+      const next = typeof forced === 'boolean' ? forced : !button.classList.contains('is-on');
+      button.classList.toggle('is-on', next);
+      button.setAttribute('aria-pressed', String(next));
+      const label = button.dataset.label || button.getAttribute('aria-label') || 'Toggle';
+      addLog(`${label} = ${next}`);
+      showToast(`${label}: ${next ? 'on' : 'off'}`);
+    }
+    function updateSlider(value, shouldLog = true) {
+      const next = Math.max(0, Math.min(100, Number(value) || 0));
+      const percent = `${next}%`;
+      $('#sliderFill').style.width = percent;
+      $('#sliderThumb').style.left = percent;
+      $('#sliderValue').value = next;
+      if (shouldLog) addLog(`Intensity = ${next}`);
+    }
+    function sliderFromPointer(event) {
+      const rect = $('#sliderTrack').getBoundingClientRect();
+      const value = Math.round(((event.clientX - rect.left) / rect.width) * 100);
+      updateSlider(value);
+    }
+
+    function cycleKeycap(element) {
+      if (element.classList.contains('picking')) {
+        element.classList.remove('picking');
+        element.textContent = element.dataset.previous || 'F';
+        return;
+      }
+      element.dataset.previous = element.textContent;
+      element.textContent = '...';
+      element.classList.add('picking');
+      showToast('Press a key to capture it.');
+      currentKeycap = element;
+    }
+    function captureKey(event) {
+      if (!currentKeycap) return;
+      if (['Shift', 'Control', 'Alt', 'Meta'].includes(event.key)) return;
+      const value = event.key === ' ' ? 'Space' : event.key.length === 1 ? event.key.toUpperCase() : event.key;
+      currentKeycap.textContent = value;
+      currentKeycap.classList.remove('picking');
+      addLog(`${currentKeycap.id} = "${value}"`);
+      currentKeycap = null;
+      event.preventDefault();
+    }
+
+    function updateColorUi() {
+      const { r, g, b, alpha } = pendingColor;
+      const hex = `#${[r,g,b].map((value) => value.toString(16).padStart(2, '0')).join('')}`;
+      $('#hexInput').value = hex;
+      $('#redInput').value = r;
+      $('#greenInput').value = g;
+      $('#blueInput').value = b;
+      $('#alphaInput').value = `${Math.round(alpha * 100)}%`;
+      $('#accentHex').textContent = hex;
+      $('#colorSwatch').style.background = `rgba(${r},${g},${b},${alpha})`;
+      document.documentElement.style.setProperty('--picker-color', `rgba(${r},${g},${b},${alpha})`);
+      $('#svMarker').style.left = `${Math.max(3, Math.min(97, pendingColor.sat * 100))}%`;
+      $('#svMarker').style.top = `${Math.max(3, Math.min(97, (1 - pendingColor.value) * 100))}%`;
+      $('#svMap').style.background = `linear-gradient(to bottom, transparent, #000), linear-gradient(to right, #fff, hsl(${hue * 360} 100% 50%))`;
+      $('#hueMarker').style.top = `${Math.max(3, Math.min(97, hue * 100))}%`;
+      $('#alphaMarker').style.top = `${Math.max(3, Math.min(97, (1 - alpha) * 100))}%`;
+    }
+    function rgbToHsv(r, g, b) {
+      r /= 255; g /= 255; b /= 255;
+      const max = Math.max(r,g,b), min = Math.min(r,g,b), d = max - min;
+      let h = 0;
+      if (d) {
+        if (max === r) h = ((g - b) / d) % 6;
+        else if (max === g) h = (b - r) / d + 2;
+        else h = (r - g) / d + 4;
+        h /= 6;
+        if (h < 0) h += 1;
+      }
+      return { h, s: max ? d / max : 0, v: max };
+    }
+    function hsvToRgb(h, s, v) {
+      const i = Math.floor(h * 6), f = h * 6 - i, p = v * (1 - s), q = v * (1 - f * s), t = v * (1 - (1 - f) * s);
+      const values = [[v,t,p],[q,v,p],[p,v,t],[p,q,v],[t,p,v],[v,p,q]][i % 6];
+      return values.map((value) => Math.round(value * 255));
+    }
+    function setPickerFromRgb(r, g, b, alpha = pendingColor.alpha) {
+      const hsv = rgbToHsv(r, g, b);
+      hue = hsv.h;
+      pendingColor = { r, g, b, alpha, sat: hsv.s, value: hsv.v };
+      updateColorUi();
+    }
+    function pickerPointer(type, event) {
+      const rect = event.currentTarget.getBoundingClientRect();
+      const ratio = Math.max(0, Math.min(1, (type === 'sv' ? (event.clientX - rect.left) / rect.width : (event.clientY - rect.top) / rect.height)));
+      if (type === 'sv') {
+        const value = Math.max(0, Math.min(1, 1 - ((event.clientY - rect.top) / rect.height)));
+        const rgb = hsvToRgb(hue, ratio, value);
+        setPickerFromRgb(rgb[0], rgb[1], rgb[2], pendingColor.alpha);
+      } else if (type === 'hue') {
+        hue = ratio;
+        const rgb = hsvToRgb(hue, pendingColor.sat || 1, pendingColor.value || 1);
+        setPickerFromRgb(rgb[0], rgb[1], rgb[2], pendingColor.alpha);
+      } else {
+        pendingColor.alpha = 1 - ratio;
+        updateColorUi();
+      }
+    }
+    function bindPickerPointer(element, type) {
+      let moving = false;
+      element.addEventListener('pointerdown', (event) => { moving = true; element.setPointerCapture(event.pointerId); pickerPointer(type, event); });
+      element.addEventListener('pointermove', (event) => { if (moving) pickerPointer(type, event); });
+      element.addEventListener('pointerup', () => { moving = false; });
+      element.addEventListener('pointercancel', () => { moving = false; });
+    }
+    function parseInputs() {
+      const hex = $('#hexInput').value.trim().replace('#', '');
+      if (/^[0-9a-f]{6}$/i.test(hex)) {
+        setPickerFromRgb(parseInt(hex.slice(0,2),16), parseInt(hex.slice(2,4),16), parseInt(hex.slice(4,6),16));
+        return;
+      }
+      setPickerFromRgb(Math.max(0, Math.min(255, Number($('#redInput').value) || 0)), Math.max(0, Math.min(255, Number($('#greenInput').value) || 0)), Math.max(0, Math.min(255, Number($('#blueInput').value) || 0)), Math.max(0, Math.min(1, (Number(String($('#alphaInput').value).replace('%','')) || 0) / 100)));
+    }
+
+    function openSearch() {
+      searchLayer.hidden = false;
+      searchInput.value = '';
+      renderSearchResults('');
+      requestAnimationFrame(() => searchInput.focus());
+    }
+    function closeSearch() { searchLayer.hidden = true; }
+    function renderSearchResults(query) {
+      const term = query.trim().toLowerCase();
+      const entries = [];
+      tabData.filter((tab) => !tab.locked).forEach((tab) => {
+        const panel = $(`#panel-${tab.id}`);
+        if (!panel) return;
+        const all = [panel, ...$$('[data-search-title]', panel)];
+        all.forEach((item, index) => {
+          const title = item.dataset.searchTitle || tab.title;
+          const desc = item.dataset.searchDesc || tab.desc;
+          if (!term || `${title} ${desc}`.toLowerCase().includes(term)) entries.push({ tab, title, desc, item, parent: index === 0 });
+        });
+      });
+      if (!entries.length) { searchResults.innerHTML = `<div class="search-empty">No results found</div>`; return; }
+      searchResults.innerHTML = entries.slice(0, 14).map((entry, index) => `<button class="search-result" type="button" data-result-index="${index}"><span class="search-result-icon">${icon(entry.parent ? entry.tab.icon : 'square-mouse-pointer')}</span><span class="search-result-copy"><span class="search-result-title">${entry.title}</span><span class="search-result-desc">${entry.desc}</span></span></button>`).join('');
+      $$('.search-result', searchResults).forEach((button, index) => button.addEventListener('click', () => { const entry = entries[index]; selectTab(entry.tab.id); closeSearch(); if (!entry.parent) { entry.item.scrollIntoView({ block: 'center', behavior: 'smooth' }); entry.item.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.02)' }, { transform: 'scale(1)' }], { duration: 360, easing: 'ease-out' }); } }));
+    }
+
+    function initInteractions() {
+      document.body.appendChild($('#colorPopover'));
+      iconify('#windowIcon', 'wind');
+      iconify('#fullscreenButton', 'maximize');
+      iconify('#minimizeButton', 'minimize');
+      iconify('#searchLauncher .search-icon', 'search');
+      iconify('#closeSearch', 'x');
+      iconifyAll('.paragraph-icon', 'type');
+      iconifyAll('.button-icon', 'mouse-pointer-click');
+      iconifyAll('.button-key-icon', 'square-mouse-pointer');
+      iconifyAll('.toggle-icon, .toggle-key-icon', 'toggle-right');
+      iconifyAll('.check-icon', 'check');
+      iconifyAll('.slider-icon', 'sliders-horizontal');
+      iconifyAll('.slider-from-icon', 'sun');
+      iconifyAll('.slider-to-icon', 'sun');
+      iconifyAll('.stepper-icon', 'list-plus');
+      iconifyAll('.keybind-icon', 'command');
+      iconifyAll('.input-icon', 'text-cursor-input');
+      iconifyAll('.dropdown-icon', 'chevrons-up-down');
+      iconifyAll('.segmented-icon', 'square');
+      iconifyAll('.lock-icon', 'lock');
+      iconifyAll('.section-icon', 'settings');
+      iconifyAll('.chevron-icon', 'chevron-down');
+      iconifyAll('.divider-icon', 'minus');
+      iconifyAll('.space-icon', 'square');
+      iconifyAll('.multi-icon', 'layout-list');
+      iconifyAll('.panel-icon', 'square');
+      iconifyAll('.radius-icon', 'radius');
+      iconifyAll('.modern-icon', 'sparkles');
+      iconifyAll('.acrylic-icon', 'sparkles');
+      iconifyAll('.palette-icon', 'palette');
+      iconifyAll('.colorpicker-icon', 'palette');
+      iconifyAll('.progress-icon', 'progress');
+      iconifyAll('.stats-icon', 'stats');
+      iconifyAll('.image-icon', 'image');
+      iconifyAll('.group-icon', 'group');
+      iconifyAll('.video-icon', 'video');
+      iconifyAll('.api-icon', 'terminal');
+      iconifyAll('.run-icon', 'mouse-pointer-click');
+      iconifyAll('.checkmark-icon', 'check');
+      iconifyAll('#stepDown', 'minus');
+      iconifyAll('#stepUp', 'plus');
+      iconifyAll('.play-icon', 'play');
+
+      $$('.switch, .check').forEach((button) => button.addEventListener('click', () => toggleState(button)));
+      $('#runButton').addEventListener('click', () => { addLog('Button callback("WindUI-Shiny")'); showToast('Button callback fired.'); });
+      $('#sectionAction').addEventListener('click', () => { addLog('Section button callback()'); showToast('Section button applied.'); });
+      $('#groupButton').addEventListener('click', () => { addLog('Group.Button callback()'); showToast('Grouped button fired.'); });
+      $('#modeSelect').addEventListener('change', (event) => { addLog(`Mode = "${event.target.value}"`); showToast('Dropdown callback fired.'); });
+      $('#profileInput').addEventListener('change', (event) => addLog(`Profile = "${event.target.value}"`));
+      $('#layoutSegments').addEventListener('click', (event) => { const button = event.target.closest('.segment'); if (!button) return; $$('.segment', $('#layoutSegments')).forEach((item) => item.classList.toggle('active', item === button)); addLog(`Layout = "${button.textContent}"`); });
+      $('#stepDown').addEventListener('click', () => { stepValue = Math.max(0, stepValue - 1); $('#stepValue').textContent = stepValue; addLog(`Retry count = ${stepValue}`); });
+      $('#stepUp').addEventListener('click', () => { stepValue = Math.min(9, stepValue + 1); $('#stepValue').textContent = stepValue; addLog(`Retry count = ${stepValue}`); });
+      $('#sliderTrack').addEventListener('pointerdown', (event) => { $('#sliderTrack').setPointerCapture(event.pointerId); sliderFromPointer(event); });
+      $('#sliderTrack').addEventListener('pointermove', (event) => { if (event.buttons) sliderFromPointer(event); });
+      $('#sliderValue').addEventListener('change', (event) => updateSlider(event.target.value));
+      ['#mainKeycap', '#buttonKeycap', '#toggleKeycap'].forEach((selector) => $(selector).addEventListener('click', (event) => cycleKeycap(event.currentTarget)));
+      $('#modernSwitch').addEventListener('click', () => toggleState($('#modernSwitch')));
+      $('#acrylicSwitch').addEventListener('click', () => toggleState($('#acrylicSwitch')));
+      $('.section-top').addEventListener('click', () => $('#advancedSection').classList.toggle('open'));
+      $$('.multi-tab').forEach((button) => button.addEventListener('click', () => { $$('.multi-tab').forEach((item) => item.classList.toggle('active', item === button)); $$('.multi-content').forEach((panel) => panel.classList.toggle('active', panel.id === `multi-${button.dataset.multi}`)); }));
+      $('#clearLog').addEventListener('click', () => { log.innerHTML = '<div class="log-line">Output cleared</div>'; });
+      $('#copyCode').addEventListener('click', async () => { try { await navigator.clipboard.writeText($('#codeBlock').innerText); } catch {} showToast('Code copied.'); addLog('Code:Copy()'); });
+      $('#searchLauncher').addEventListener('click', openSearch);
+      $('#closeSearch').addEventListener('click', closeSearch);
+      searchInput.addEventListener('input', (event) => renderSearchResults(event.target.value));
+      searchLayer.addEventListener('click', (event) => { if (event.target === searchLayer) closeSearch(); });
+      document.addEventListener('keydown', (event) => {
+        captureKey(event);
+        if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); openSearch(); }
+        if (event.key === 'Escape') { closeSearch(); $('#colorPopover').hidden = true; }
+      });
+      $('#fullscreenButton').addEventListener('click', (event) => { event.stopPropagation(); const full = win.classList.toggle('is-fullscreen'); win.classList.remove('is-minimized'); $('#windowBody').style.visibility = 'visible'; addLog(`Window:ToggleFullscreen() = ${full}`); });
+      $('#minimizeButton').addEventListener('click', (event) => { event.stopPropagation(); const minimized = win.classList.toggle('is-minimized'); $('#windowBody').style.visibility = minimized ? 'hidden' : 'visible'; addLog(`Window:${minimized ? 'Close' : 'Open'}()`); });
+      $('#reopenButton').addEventListener('click', () => { win.classList.remove('is-closed'); $('#reopenButton').classList.remove('show'); showToast('WindUI-Shiny reopened.'); });
+      $('#colorSwatch').addEventListener('click', () => { pendingColor = { ...appliedColor }; updateColorUi(); const rect = $('#colorSwatch').getBoundingClientRect(); const pickerHeight = 365; const top = rect.bottom + pickerHeight + 6 <= window.innerHeight ? rect.bottom + 6 : Math.max(8, rect.top - pickerHeight - 6); document.documentElement.style.setProperty('--picker-top', `${top}px`); document.documentElement.style.setProperty('--picker-left', `${Math.max(8, Math.min(window.innerWidth - 296, rect.right - 288))}px`); $('#colorPopover').hidden = !$('#colorPopover').hidden; });
+      $('#cancelColor').addEventListener('click', () => { pendingColor = { ...appliedColor }; updateColorUi(); $('#colorPopover').hidden = true; });
+      $('#applyColor').addEventListener('click', () => { appliedColor = { ...pendingColor }; updateColorUi(); document.documentElement.style.setProperty('--primary', `rgb(${appliedColor.r},${appliedColor.g},${appliedColor.b})`); document.documentElement.style.setProperty('--slider', `rgb(${appliedColor.r},${appliedColor.g},${appliedColor.b})`); addLog(`Colorpicker callback("${$('#accentHex').textContent}", ${Math.round(appliedColor.alpha * 100)}%)`); showToast('Colorpicker applied.'); $('#colorPopover').hidden = true; });
+      ['#hexInput', '#redInput', '#greenInput', '#blueInput', '#alphaInput'].forEach((selector) => $(selector).addEventListener('change', parseInputs));
+      bindPickerPointer($('#svMap'), 'sv'); bindPickerPointer($('#hueTrack'), 'hue'); bindPickerPointer($('#alphaTrack'), 'alpha');
+    }
+
+    let dragging = false, dragStartX = 0, dragStartY = 0, dragOriginX = 0, dragOriginY = 0;
+    dragbar.addEventListener('pointerdown', (event) => { if (event.target.closest('button') || event.pointerType === 'touch') return; dragging = true; win.classList.add('is-dragging'); dragbar.setPointerCapture(event.pointerId); const current = readDrag(); dragStartX = event.clientX; dragStartY = event.clientY; dragOriginX = current.x; dragOriginY = current.y; });
+    dragbar.addEventListener('pointermove', (event) => { if (dragging) setDrag(dragOriginX + event.clientX - dragStartX, dragOriginY + event.clientY - dragStartY); });
+    const stopDragging = () => { dragging = false; win.classList.remove('is-dragging'); };
+    dragbar.addEventListener('pointerup', stopDragging); dragbar.addEventListener('pointercancel', stopDragging);
+
+    let pinchStartDistance = 0, pinchStartScale = previewScale;
+    let touchMode = 'idle', touchStartX = 0, touchStartY = 0, touchOriginX = 0, touchOriginY = 0, touchMoved = false;
+    let activeScrollEl = null, scrollStartTop = 0;
+    const distance = (a, b) => Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+    const findScrollable = (target) => { const panel = target.closest ? target.closest('.panel') : null; return panel && panel.scrollHeight > panel.clientHeight + 1 ? panel : null; };
+    stage.addEventListener('touchstart', (event) => {
+      if (event.touches.length === 2) { event.preventDefault(); manualScale = true; touchMode = 'pinch'; pinchStartDistance = distance(event.touches[0], event.touches[1]); pinchStartScale = previewScale; return; }
+      if (event.touches.length !== 1) return;
+      const scrollable = findScrollable(event.target);
+      if (scrollable) { touchMode = 'scroll'; touchMoved = false; activeScrollEl = scrollable; scrollStartTop = scrollable.scrollTop; touchStartY = event.touches[0].clientY; return; }
+      const current = readDrag(); touchMode = 'pan'; touchMoved = false; touchStartX = event.touches[0].clientX; touchStartY = event.touches[0].clientY; touchOriginX = current.x; touchOriginY = current.y;
+    }, { passive: false });
+    stage.addEventListener('touchmove', (event) => {
+      if (event.touches.length === 2 && pinchStartDistance) { event.preventDefault(); setScale(pinchStartScale * distance(event.touches[0], event.touches[1]) / pinchStartDistance); return; }
+      if (event.touches.length !== 1) return;
+      if (touchMode === 'scroll' && activeScrollEl) { const deltaY = event.touches[0].clientY - touchStartY; if (!touchMoved && Math.abs(deltaY) < 4) return; touchMoved = true; event.preventDefault(); const max = activeScrollEl.scrollHeight - activeScrollEl.clientHeight; activeScrollEl.scrollTop = Math.max(0, Math.min(max, scrollStartTop - deltaY)); return; }
+      if (touchMode !== 'pan') return;
+      const deltaX = event.touches[0].clientX - touchStartX, deltaY = event.touches[0].clientY - touchStartY;
+      if (!touchMoved && Math.hypot(deltaX, deltaY) < 4) return; touchMoved = true; event.preventDefault(); win.classList.add('is-touch-panning'); setDrag(touchOriginX + deltaX, touchOriginY + deltaY);
+    }, { passive: false });
+    stage.addEventListener('touchend', (event) => { if (event.touches.length < 2) pinchStartDistance = 0; if (event.touches.length === 1 && touchMode === 'pinch') { const current = readDrag(); touchMode = 'pan'; touchMoved = false; touchStartX = event.touches[0].clientX; touchStartY = event.touches[0].clientY; touchOriginX = current.x; touchOriginY = current.y; } else if (event.touches.length === 0) { touchMode = 'idle'; win.classList.remove('is-touch-panning'); activeScrollEl = null; } }, { passive: false });
+    stage.addEventListener('touchcancel', () => { pinchStartDistance = 0; touchMode = 'idle'; win.classList.remove('is-touch-panning'); activeScrollEl = null; }, { passive: false });
+    window.addEventListener('resize', () => { if (!manualScale) setScale(Math.min(1, Math.max(.58, (window.innerWidth - 24) / 580))); });
+
+    renderTabs();
+    renderThemes();
+    initInteractions();
+    setScale(previewScale);
+    updateSlider(65, false);
+    setPickerFromRgb(0, 145, 255, 1);
+    renderSearchResults('');
+  </script>
+</body>
+</html>
