@@ -154,6 +154,13 @@
       stage.style.setProperty('--drag-x', x + 'px');
       stage.style.setProperty('--drag-y', y + 'px');
     };
+    let activeScrollEl = null;
+    let scrollStartTop = 0;
+    const findScrollable = (target) => {
+      const box = target.closest ? target.closest('.container') : null;
+      if (box && box.scrollHeight > box.clientHeight + 1) return box;
+      return null;
+    };
     stage.addEventListener('touchstart', (event) => {
       if (event.touches.length === 2) {
         event.preventDefault();
@@ -164,8 +171,16 @@
         return;
       }
       if (event.touches.length !== 1) return;
+      const scrollable = findScrollable(event.target);
+      if (scrollable) {
+        touchMode = 'scroll';
+        touchMoved = false;
+        activeScrollEl = scrollable;
+        scrollStartTop = scrollable.scrollTop;
+        touchStartY = event.touches[0].clientY;
+        return;
+      }
       const current = readDrag();
-      if (previewScale <= 1 && current.x === 0 && current.y === 0) return;
       touchMode = 'pan';
       touchMoved = false;
       touchStartX = event.touches[0].clientX;
@@ -179,7 +194,18 @@
         setScale(pinchStartScale * distance(event.touches[0], event.touches[1]) / pinchStartDistance);
         return;
       }
-      if (event.touches.length !== 1 || touchMode !== 'pan') return;
+      if (event.touches.length !== 1) return;
+      if (touchMode === 'scroll' && activeScrollEl) {
+        const touch = event.touches[0];
+        const deltaY = touch.clientY - touchStartY;
+        if (!touchMoved && Math.abs(deltaY) < 4) return;
+        touchMoved = true;
+        event.preventDefault();
+        const max = activeScrollEl.scrollHeight - activeScrollEl.clientHeight;
+        activeScrollEl.scrollTop = Math.max(0, Math.min(max, scrollStartTop - deltaY));
+        return;
+      }
+      if (touchMode !== 'pan') return;
       const touch = event.touches[0];
       const deltaX = touch.clientX - touchStartX;
       const deltaY = touch.clientY - touchStartY;
@@ -202,9 +228,10 @@
       } else if (event.touches.length === 0) {
         touchMode = 'idle';
         win.classList.remove('is-touch-panning');
+        activeScrollEl = null;
       }
     }, { passive: false });
-    stage.addEventListener('touchcancel', () => { pinchStartDistance = 0; touchMode = 'idle'; win.classList.remove('is-touch-panning'); }, { passive: false });
+    stage.addEventListener('touchcancel', () => { pinchStartDistance = 0; touchMode = 'idle'; win.classList.remove('is-touch-panning'); activeScrollEl = null; }, { passive: false });
     window.addEventListener('resize', () => { if (!manualScale) setScale(Math.min(1.15, Math.max(.78, (window.innerHeight - 24) / 380))); });
   </script>
 </body>
