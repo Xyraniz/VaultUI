@@ -1,4 +1,4 @@
-local NexusLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Xyraniz/UI-Libs/main/Librarys/NexusLib/source.lua"))()
+local NexusLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Xyraniz/VaultUI/main/Libraries/NexusLib/source.lua"))()
 
 local Window = NexusLib:Window("Synergy Hub", "Zombie Attack", "", Enum.KeyCode.RightControl)
 
