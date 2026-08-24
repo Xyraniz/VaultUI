@@ -50,7 +50,7 @@ Whether you are prototyping a hub, learning how GUI libraries are structured in 
 | 16 | Gostmi | Source | [Source](Libraries/Gostmi/source.lua) | [Example](Libraries/Gostmi/example.lua) | Preview |
 | 17 | Hook GUI | Source | [Source](Libraries/Hook/source.lua) | [Example](Libraries/Hook/example.lua) | Preview |
 | 18 | NexusLib | Source | [Source](Libraries/NexusLib/source.lua) | [Example](Libraries/NexusLib/example.lua) | — |
-| 19 | SynergyUI | Source | [Source](Libraries/SynergyUI/source.lua) | — | — |
+| 19 | SynergyUI | Source | [Source](Libraries/SynergyUI/source.lua) | — | [Preview](Libraries/SynergyUI/README.md) |
 
 > Preview images are available inside each library folder (e.g., `Libraries/Bacon/Screenshot_*.jpg`) and in each library's `README.md`.
 
