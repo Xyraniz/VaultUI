@@ -1,4 +1,4 @@
-local BlekLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/laderite/bleklib/main/library.lua"))()
+local BlekLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Xyraniz/VaultUI/main/Libraries/Blek/source.lua"))()
 
 local win = BlekLib:Create({
     Name = "Blek Library",
