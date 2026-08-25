@@ -1,4 +1,4 @@
-local omni = loadstring(game:HttpGet("https://raw.githubusercontent.com/TweedLeak-LeakScripts/FriseX/main/UI-Library"))()
+local omni = loadstring(game:HttpGet("https://raw.githubusercontent.com/Xyraniz/VaultUI/refs/heads/main/Libraries/FriseX/source.lua"))()
 
 local UI = omni.new({
     Name = "🔮 Frise X v1.1.2 🔮";
