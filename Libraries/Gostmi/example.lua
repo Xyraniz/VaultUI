@@ -1,4 +1,4 @@
-local Library = loadstring(game:HttpGet("https://pastebin.com/raw/iwT1gpP0", true))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Xyraniz/VaultUI/main/Libraries/Gostmi/source.lua", true))()
 local Main = Library.Main("Gostmi_Hub","V")
 local Category = Main.Category("Main","80373024","Crop",0)
 local Tab = Category.Folder("Main")
