@@ -1,13 +1,4 @@
-if getgenv then
-	if getgenv().__SynergyUIExample then
-		pcall(function()
-			getgenv().__SynergyUIExample:Destroy()
-		end)
-	end
-end
-
-local LIB_URL = "https://raw.githubusercontent.com/Xyraniz/SynergyUI/refs/heads/main/dist/main.lua"
-
+local LIB_URL = "https://raw.githubusercontent.com/Xyraniz/VaultUI/main/Libraries/SynergyUI/source.lua"
 local SynergyUI = loadstring(game:HttpGet(LIB_URL))()
 
 local Window = SynergyUI:CreateWindow({
@@ -19,16 +10,8 @@ local Window = SynergyUI:CreateWindow({
 	CloseOnEscape = false,
 	OnOpen = function(window) end,
 	OnClose = function(window) end,
-	OnDestroy = function(window)
-		if getgenv then
-			getgenv().__SynergyUIExample = nil
-		end
-	end,
+	OnDestroy = function(window) end,
 })
-
-if getgenv then
-	getgenv().__SynergyUIExample = Window
-end
 
 local CombatTab = Window:CreateTab("Combat", "sword")
 local VisualsTab = Window:CreateTab("Visuals", "eye")
