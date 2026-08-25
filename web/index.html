@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0d0d0e">
-  <meta name="description" content="VaultUI library shelf: browse Roblox UI libraries, static showcase images and source files.">
+  <meta name="description" content="VaultUI library shelf: browse Roblox UI libraries, MP4 showcase videos and source files.">
   <title>VaultUI — Library shelf</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -39,7 +39,7 @@
           </div>
           <button class="icon-button close-menu" id="drawerClose" type="button" aria-label="Close library menu">×</button>
         </div>
-        <p class="drawer-note">Source files, examples and the static image belonging to each library.</p>
+        <p class="drawer-note">Source files, examples and the MP4 showcase video belonging to each library.</p>
         <nav class="library-list" id="libraryList"></nav>
         <div class="drawer-footer">
           <span class="status-dot"></span>
@@ -68,7 +68,7 @@
             <div class="section-title-group">
               <span class="section-index">01</span>
               <h2 id="showcaseTitle">Showcase</h2>
-              <span class="live-label" id="showcaseMode">STATIC IMAGE</span>
+              <span class="live-label" id="showcaseMode">MP4 VIDEO</span>
             </div>
             <div class="section-actions">
               <div class="zoom-controls" aria-label="Showcase zoom">
@@ -78,15 +78,15 @@
                 <button class="mini-button zoom-button" id="zoomResetButton" type="button" aria-label="Reset showcase zoom" title="Reset zoom">1:1</button>
               </div>
               <button class="mini-button" id="expandShowcaseButton" type="button">Expand</button>
-              <a class="mini-button" id="openShowcaseLink" href="../Libraries/0x37/showcase.png" target="_blank" rel="noreferrer">Open</a>
+              <a class="mini-button" id="openShowcaseLink" href="../Libraries/0x37/showcase.mp4" target="_blank" rel="noreferrer">Open</a>
             </div>
           </div>
           <div class="showcase-canvas" id="showcaseCanvas">
-            <img id="showcaseImage" src="../Libraries/0x37/showcase.png" alt="0x37 showcase image">
+            <video id="showcaseVideo" src="../Libraries/0x37/showcase.mp4" controls preload="metadata" playsinline aria-label="0x37 MP4 showcase video"></video>
             <div class="showcase-empty" id="showcaseEmpty" hidden>
-              <span>There is no showcase image for this library.</span>
+              <span id="showcaseEmptyMessage">There is no MP4 showcase for this library.</span>
             </div>
-            <div class="canvas-corner canvas-corner-left">STATIC IMAGE / ZOOM</div>
+            <div class="canvas-corner canvas-corner-left">MP4 VIDEO / ZOOM</div>
             <div class="canvas-corner canvas-corner-right" id="canvasSize">1280 × 800</div>
           </div>
         </section>
