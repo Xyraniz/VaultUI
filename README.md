@@ -1,12 +1,12 @@
 # VaultUI
 
-**A curated collection of 20 free Roblox UI libraries with source files, runnable examples, MP4 showcase videos and ready-to-use loadstrings.**
+**A curated collection of 20 free Roblox UI libraries with source files, runnable examples, Mega showcase embeds and ready-to-use loadstrings.**
 
 [![Stars](https://img.shields.io/github/stars/Xyraniz/VaultUI?style=for-the-badge&color=gold)](https://github.com/Xyraniz/VaultUI/stargazers)[![Lua](https://img.shields.io/badge/Lua-000080?style=for-the-badge&logo=lua&logoColor=white)](https://www.lua.org/)[![Roblox](https://img.shields.io/badge/Roblox-00A2FF?style=for-the-badge&logo=roblox&logoColor=white)](https://www.roblox.com/)[![Last Updated](https://img.shields.io/badge/last%20updated-August%202026-blue?style=for-the-badge)](https://github.com/Xyraniz/VaultUI/commits/main)[![License](https://img.shields.io/badge/license-MIT%20%26%20Original%20Licenses-green?style=for-the-badge)](#license--attribution)
 
 ## About
 
-**VaultUI** is a centralized archive of Roblox UI libraries organized for developers, scripters and enthusiasts. Each library includes a runnable `example.lua` and a `showcase.mp4` video asset that can be replaced by a real capture when the library is inspected in Roblox; preserved `source.lua` files are included whenever the repository contains them. The web shelf loads those videos directly and never embeds an HTML simulator.
+**VaultUI** is a centralized archive of Roblox UI libraries organized for developers, scripters and enthusiasts. Each library includes a runnable `example.lua`; preserved `source.lua` files are included whenever the repository contains them. The web shelf loads the available showcases through responsive Mega iframes and shows `No Showcase` when a library does not have an embed configured.
 
 The collection is useful when prototyping a hub, studying Luau interface architecture or comparing lightweight UI layers. Each folder keeps its usage example and any preserved library source together so the repository remains easy to browse and migrate.
 
@@ -16,32 +16,32 @@ The collection is useful when prototyping a hub, studying Luau interface archite
 | --- | --- |
 | `source.lua` | Preserved library source supplied by the collection, when available. |
 | `example.lua` | A complete usage sample based on the library's public API. |
-| `showcase.mp4` | An MP4 interface video used by the VaultUI shelf. Replace it with a real Roblox capture without changing the web code. |
+| `web/showcases.js` | The single, editable showcase table. Add a library id and Mega embed URL here. |
 
 ## Libraries
 
 | # | Library | Type | Source | Example | Showcase |
 | --- | --- | --- | --- | --- | --- |
-| 1 | 0x37 | Loadstring + backup | [Source](Libraries/0x37/source.lua) | [Example](Libraries/0x37/example.lua) | [Showcase](Libraries/0x37/showcase.mp4) |
-| 2 | Apple Library | Source | [Source](Libraries/Apple/source.lua) | [Example](Libraries/Apple/example.lua) | [Showcase](Libraries/Apple/showcase.mp4) |
-| 3 | Avilon (Modified) | Source | [Source](Libraries/Avilon-Modified/source.lua) | [Example](Libraries/Avilon-Modified/example.lua) | [Showcase](Libraries/Avilon-Modified/showcase.mp4) |
-| 4 | Aztup | Loadstring + source | [Source](Libraries/Aztup/source.lua) | [Example](Libraries/Aztup/example.lua) | [Showcase](Libraries/Aztup/showcase.mp4) |
-| 5 | BaconLib | Source | [Source](Libraries/Bacon/source.lua) | [Example](Libraries/Bacon/example.lua) | [Showcase](Libraries/Bacon/showcase.mp4) |
-| 6 | BlekLib | Loadstring + source | [Source](Libraries/Blek/source.lua) | [Example](Libraries/Blek/example.lua) | [Showcase](Libraries/Blek/showcase.mp4) |
-| 7 | Criminality UI Lib | Loadstring + source | [Source](Libraries/Criminality-Lib/source.lua) | [Example](Libraries/Criminality-Lib/example.lua) | [Showcase](Libraries/Criminality-Lib/showcase.mp4) |
-| 8 | Daino | Loadstring | — | [Example](Libraries/Daino/example.lua) | [Showcase](Libraries/Daino/showcase.mp4) |
-| 9 | DarkraiX | Source | [Source](Libraries/DarkraiX/source.lua) | [Example](Libraries/DarkraiX/example.lua) | [Showcase](Libraries/DarkraiX/showcase.mp4) |
-| 10 | Dirt | Loadstring + source | [Source](Libraries/Dirt/source.lua) | [Example](Libraries/Dirt/example.lua) | [Showcase](Libraries/Dirt/showcase.mp4) |
-| 11 | Discord Lib | Loadstring | [Source](Libraries/Discord-Lib/source.lua) | [Example](Libraries/Discord-Lib/example.lua) | [Showcase](Libraries/Discord-Lib/showcase.mp4) |
-| 12 | Flux UI | Loadstring + source | [Source](Libraries/Flux/source.lua) | [Example](Libraries/Flux/example.lua) | [Showcase](Libraries/Flux/showcase.mp4) |
-| 13 | FriseX | Loadstring + source | [Source](Libraries/FriseX/source.lua) | [Example](Libraries/FriseX/example.lua) | [Showcase](Libraries/FriseX/showcase.mp4) |
-| 14 | Fuzki | Loadstring + source | [Source](Libraries/Fuzki/source.lua) | [Example](Libraries/Fuzki/example.lua) | [Showcase](Libraries/Fuzki/showcase.mp4) |
-| 15 | Gostmi | Source | [Source](Libraries/Gostmi/source.lua) | [Example](Libraries/Gostmi/example.lua) | [Showcase](Libraries/Gostmi/showcase.mp4) |
-| 16 | Hook GUI | Loadstring | — | [Example](Libraries/Hook/example.lua) | [Showcase](Libraries/Hook/showcase.mp4) |
-| 17 | NexusLib | Source | [Source](Libraries/NexusLib/source.lua) | [Example](Libraries/NexusLib/example.lua) | [Showcase](Libraries/NexusLib/showcase.mp4) |
-| 18 | SynergyUI | Source | [Source](Libraries/SynergyUI/source.lua) | [Example](Libraries/SynergyUI/example.lua) | [Showcase](Libraries/SynergyUI/showcase.mp4) |
-| 19 | Armenta-Lib | Source | [Source](Libraries/Armenta-Lib/source.lua) | [Example](Libraries/Armenta-Lib/example.lua) | [Showcase](Libraries/Armenta-Lib/showcase.mp4) |
-| 20 | WindUI-Shiny | Source | [Source](Libraries/WindUI-Shiny/source.lua) | [Example](Libraries/WindUI-Shiny/example.lua) | [Showcase](Libraries/WindUI-Shiny/showcase.mp4) |
+| 1 | 0x37 | Loadstring + backup | [Source](Libraries/0x37/source.lua) | [Example](Libraries/0x37/example.lua) | No Showcase |
+| 2 | Apple Library | Source | [Source](Libraries/Apple/source.lua) | [Example](Libraries/Apple/example.lua) | No Showcase |
+| 3 | Avilon (Modified) | Source | [Source](Libraries/Avilon-Modified/source.lua) | [Example](Libraries/Avilon-Modified/example.lua) | No Showcase |
+| 4 | Aztup | Loadstring + source | [Source](Libraries/Aztup/source.lua) | [Example](Libraries/Aztup/example.lua) | No Showcase |
+| 5 | BaconLib | Source | [Source](Libraries/Bacon/source.lua) | [Example](Libraries/Bacon/example.lua) | No Showcase |
+| 6 | BlekLib | Loadstring + source | [Source](Libraries/Blek/source.lua) | [Example](Libraries/Blek/example.lua) | No Showcase |
+| 7 | Criminality UI Lib | Loadstring + source | [Source](Libraries/Criminality-Lib/source.lua) | [Example](Libraries/Criminality-Lib/example.lua) | No Showcase |
+| 8 | Daino | Loadstring | — | [Example](Libraries/Daino/example.lua) | No Showcase |
+| 9 | DarkraiX | Source | [Source](Libraries/DarkraiX/source.lua) | [Example](Libraries/DarkraiX/example.lua) | No Showcase |
+| 10 | Dirt | Loadstring + source | [Source](Libraries/Dirt/source.lua) | [Example](Libraries/Dirt/example.lua) | No Showcase |
+| 11 | Discord Lib | Loadstring | [Source](Libraries/Discord-Lib/source.lua) | [Example](Libraries/Discord-Lib/example.lua) | [Mega embed](https://mega.nz/embed/dFtFBS4a#Rm0HKEYLSmSK7Udwy-UzKmTn4VKPekEsL8KAB0niaSo) |
+| 12 | Flux UI | Loadstring + source | [Source](Libraries/Flux/source.lua) | [Example](Libraries/Flux/example.lua) | No Showcase |
+| 13 | FriseX | Loadstring + source | [Source](Libraries/FriseX/source.lua) | [Example](Libraries/FriseX/example.lua) | No Showcase |
+| 14 | Fuzki | Loadstring + source | [Source](Libraries/Fuzki/source.lua) | [Example](Libraries/Fuzki/example.lua) | No Showcase |
+| 15 | Gostmi | Source | [Source](Libraries/Gostmi/source.lua) | [Example](Libraries/Gostmi/example.lua) | No Showcase |
+| 16 | Hook GUI | Loadstring | — | [Example](Libraries/Hook/example.lua) | No Showcase |
+| 17 | NexusLib | Source | [Source](Libraries/NexusLib/source.lua) | [Example](Libraries/NexusLib/example.lua) | No Showcase |
+| 18 | SynergyUI | Source | [Source](Libraries/SynergyUI/source.lua) | [Example](Libraries/SynergyUI/example.lua) | [Mega embed](https://mega.nz/embed/9UdzlJbD#cbWE8v9-Q59CtYhD0zLPXjO7kCMSAROYCUA4SE2seH0) |
+| 19 | Armenta-Lib | Source | [Source](Libraries/Armenta-Lib/source.lua) | [Example](Libraries/Armenta-Lib/example.lua) | [Mega embed](https://mega.nz/embed/MRkRBApL#KFE30TjcbNAfCv-aY8FJSjKAxzEM_eU_6zvRJSydwms) |
+| 20 | WindUI-Shiny | Source | [Source](Libraries/WindUI-Shiny/source.lua) | [Example](Libraries/WindUI-Shiny/example.lua) | No Showcase |
 
 ## Quick Start
 
@@ -55,18 +55,27 @@ window:Button("Click me", function()
 end)
 ```
 
-Each library folder follows the same layout:
+Each library folder keeps the source and runnable example together:
 
 ```
 Libraries/<LibraryName>/
 ├── source.lua
-├── example.lua
-└── showcase.mp4
+└── example.lua
 ```
+
+Showcases are configured centrally in [`web/showcases.js`](web/showcases.js). To add one, insert a row using the library id from [`web/app.js`](web/app.js):
+
+```js
+another_library_id: {
+  embedUrl: 'https://mega.nz/embed/...'
+}
+```
+
+The shelf automatically renders the Mega iframe responsively; entries without a row display `No Showcase`.
 
 ## Contributing
 
-To add a library, create a folder under `Libraries/` with its source, a complete `example.lua` that follows the library's actual public API and a `showcase.mp4` video capture. Keep the video path exactly at `Libraries/<LibraryName>/showcase.mp4` so the shelf and deployment workflow can discover it automatically.
+To add a library, create a folder under `Libraries/` with its source when available and a complete `example.lua` that follows the library's actual public API. If a Mega showcase is available, add one row to `web/showcases.js` using the library id from `web/app.js`; otherwise the shelf will display `No Showcase`.
 
 Report broken links or source issues through the [issue tracker](https://github.com/Xyraniz/VaultUI/issues). Contributions should preserve the original author's attribution and license terms.
 
