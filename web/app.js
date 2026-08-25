@@ -1,268 +1,11 @@
 const libraryBase = window.location.pathname.includes('/web/') ? '../Libraries' : 'Libraries';
+const repositoryApiBase = 'https://api.github.com/repos/Xyraniz/VaultUI';
+const librariesTreeUrl = `${repositoryApiBase}/git/trees/main?recursive=1`;
 
-const libraries = [
-  {
-    id: '0x37',
-    name: '0x37',
-    label: '0x37',
-    number: '01',
-    type: 'Loadstring + backup',
-    description: 'A compact window library with sliders, toggles and direct callbacks.',
-    tags: ['Window', 'Sliders', 'Toggles'],
-    files: {
-      source: `${libraryBase}/0x37/source.lua`,
-      example: `${libraryBase}/0x37/example.lua`
-    },
-  },
-  {
-    id: 'apple',
-    name: 'Apple Library',
-    label: 'Apple Library',
-    number: '02',
-    type: 'Source',
-    description: 'A lightweight library with sections, switches, text fields and notifications.',
-    tags: ['Sections', 'Switches', 'Notifications'],
-    files: {
-      source: `${libraryBase}/Apple/source.lua`,
-      example: `${libraryBase}/Apple/example.lua`
-    },
-  },
-  {
-    id: 'avilon_modified',
-    name: 'Avilon-Modified',
-    label: 'Avilon-Modified',
-    number: '03',
-    type: 'Source',
-    description: 'A responsive window system with pages, sections, themes and configuration controls.',
-    tags: ['Pages', 'Themes', 'Responsive'],
-    files: {
-      source: `${libraryBase}/Avilon-Modified/source.lua`,
-      example: `${libraryBase}/Avilon-Modified/example.lua`
-    },
-  },
-  {
-    id: 'aztup',
-    name: 'Aztup',
-    label: 'Aztup',
-    number: '04',
-    type: 'Loadstring + source',
-    description: 'A straightforward section-based interface with common Roblox controls.',
-    tags: ['Sections', 'Dropdowns', 'Flags'],
-    files: {
-      source: `${libraryBase}/Aztup/source.lua`,
-      example: `${libraryBase}/Aztup/example.lua`
-    },
-  },
-  {
-    id: 'bacon',
-    name: 'BaconLib',
-    label: 'BaconLib',
-    number: '05',
-    type: 'Source',
-    description: 'A compact control panel with text input, dropdown actions, sliders and keybinds.',
-    tags: ['Callbacks', 'Dropdowns', 'Keybinds'],
-    files: {
-      source: `${libraryBase}/Bacon/source.lua`,
-      example: `${libraryBase}/Bacon/example.lua`
-    },
-  },
-  {
-    id: 'blek',
-    name: 'BlekLib',
-    label: 'BlekLib',
-    number: '06',
-    type: 'Loadstring + source',
-    description: 'A tabbed window library with character, interface and startup settings.',
-    tags: ['Tabs', 'Character', 'Startup'],
-    files: {
-      source: `${libraryBase}/Blek/source.lua`,
-      example: `${libraryBase}/Blek/example.lua`
-    },
-  },
-  {
-    id: 'criminality_lib',
-    name: 'Criminality UI Lib',
-    label: 'Criminality UI Lib',
-    number: '07',
-    type: 'Loadstring + source',
-    description: 'A sector-based layout with buttons, toggles, sliders, dropdowns and color controls.',
-    tags: ['Sectors', 'Callbacks', 'Colors'],
-    files: {
-      source: `${libraryBase}/Criminality-Lib/source.lua`,
-      example: `${libraryBase}/Criminality-Lib/example.lua`
-    },
-  },
-  {
-    id: 'daino',
-    name: 'Daino',
-    label: 'Daino',
-    number: '08',
-    type: 'Loadstring',
-    description: 'A tap-based interface with buttons, labels, toggles, sliders and dropdowns.',
-    tags: ['Taps', 'Sliders', 'Dropdowns'],
-    files: {
-      example: `${libraryBase}/Daino/example.lua`
-    },
-  },
-  {
-    id: 'darkraix',
-    name: 'Darkrai X',
-    label: 'Darkrai X',
-    number: '09',
-    type: 'Source',
-    description: 'A classic tabbed interface with buttons, toggles, sliders, dropdowns and textboxes.',
-    tags: ['Tabs', 'Controls', 'Textboxes'],
-    files: {
-      source: `${libraryBase}/DarkraiX/source.lua`,
-      example: `${libraryBase}/DarkraiX/example.lua`
-    },
-  },
-  {
-    id: 'dirt',
-    name: 'Dirt',
-    label: 'Dirt',
-    number: '10',
-    type: 'Loadstring + source',
-    description: 'A flag-driven window library with search, player lists and numeric inputs.',
-    tags: ['Flags', 'Search', 'Player list'],
-    files: {
-      source: `${libraryBase}/Dirt/source.lua`,
-      example: `${libraryBase}/Dirt/example.lua`
-    },
-  },
-  {
-    id: 'discord_lib',
-    name: 'Discord Lib',
-    label: 'Discord Lib',
-    number: '11',
-    type: 'Loadstring',
-    description: 'A server and channel layout covering actions, toggles, sliders, dropdowns and binds.',
-    tags: ['Servers', 'Channels', 'Binds'],
-    files: {
-      source: `${libraryBase}/Discord-Lib/source.lua`,
-      example: `${libraryBase}/Discord-Lib/example.lua`
-    },
-  },
-  {
-    id: 'flux',
-    name: 'Flux UI',
-    label: 'Flux UI',
-    number: '12',
-    type: 'Loadstring + source',
-    description: 'A tabbed utility window with notifications and a broad set of input controls.',
-    tags: ['Tabs', 'Notifications', 'Inputs'],
-    files: {
-      source: `${libraryBase}/Flux/source.lua`,
-      example: `${libraryBase}/Flux/example.lua`
-    },
-  },
-  {
-    id: 'frisex',
-    name: 'FriseX',
-    label: 'FriseX',
-    number: '13',
-    type: 'Loadstring + source',
-    description: 'A configurable page and section system with toggles, actions and themed notifications.',
-    tags: ['Pages', 'Sections', 'Themes'],
-    files: {
-      source: `${libraryBase}/FriseX/source.lua`,
-      example: `${libraryBase}/FriseX/example.lua`
-    },
-  },
-  {
-    id: 'fuzki',
-    name: 'Fuzki',
-    label: 'Fuzki',
-    number: '14',
-    type: 'Loadstring + source',
-    description: 'A section-oriented interface with labels, buttons, toggles, binds, textboxes and sliders.',
-    tags: ['Sections', 'Keybinds', 'Sliders'],
-    files: {
-      source: `${libraryBase}/Fuzki/source.lua`,
-      example: `${libraryBase}/Fuzki/example.lua`
-    },
-  },
-  {
-    id: 'gostmi',
-    name: 'Gostmi',
-    label: 'Gostmi',
-    number: '15',
-    type: 'Source',
-    description: 'A source-preserved Roblox interface library ready for custom control layouts.',
-    tags: ['Source', 'Controls', 'Layout'],
-    files: {
-      source: `${libraryBase}/Gostmi/source.lua`,
-      example: `${libraryBase}/Gostmi/example.lua`
-    },
-  },
-  {
-    id: 'hook',
-    name: 'Hook GUI',
-    label: 'Hook GUI',
-    number: '16',
-    type: 'Loadstring',
-    description: 'A compact control surface for buttons, toggles, sliders and common interaction patterns.',
-    tags: ['Controls', 'Toggles', 'Sliders'],
-    files: {
-      example: `${libraryBase}/Hook/example.lua`
-    },
-  },
-  {
-    id: 'nexuslib',
-    name: 'NexusLib',
-    label: 'NexusLib',
-    number: '17',
-    type: 'Source',
-    description: 'A source-preserved library for arranging window modules and interface settings.',
-    tags: ['Modules', 'Settings', 'Source'],
-    files: {
-      source: `${libraryBase}/NexusLib/source.lua`,
-      example: `${libraryBase}/NexusLib/example.lua`
-    },
-  },
-  {
-    id: 'synergyui',
-    name: 'SynergyUI',
-    label: 'SynergyUI',
-    number: '18',
-    type: 'Source',
-    description: 'A dark Roblox UI library with tabs, overlays and animated controls.',
-    tags: ['Dark theme', 'Tabs', 'Overlays'],
-    files: {
-      source: `${libraryBase}/SynergyUI/source.lua`,
-      example: `${libraryBase}/SynergyUI/example.lua`
-    },
-  },
-  {
-    id: 'armenta_lib',
-    name: 'Armenta-Lib',
-    label: 'Armenta-Lib',
-    number: '19',
-    type: 'Source',
-    description: 'A responsive FyyUI menu with tab factories, themes and callback-driven controls.',
-    tags: ['FyyUI.Menu', 'Themes', 'Callbacks'],
-    files: {
-      source: `${libraryBase}/Armenta-Lib/source.lua`,
-      example: `${libraryBase}/Armenta-Lib/example.lua`
-    },
-  },
-  {
-    id: 'windui_shiny',
-    name: 'WindUI-Shiny',
-    label: 'WindUI-Shiny',
-    number: '20',
-    type: 'Source',
-    description: 'A source-grounded WindUI window with tabs, themes, modern elements and callback states.',
-    tags: ['WindUI', 'Themes', 'Elements'],
-    files: {
-      source: `${libraryBase}/WindUI-Shiny/source.lua`,
-      example: `${libraryBase}/WindUI-Shiny/example.lua`
-    },
-  }
-];
+let libraries = [];
 
 const state = {
-  library: libraries[0],
+  library: null,
   file: 'source',
   text: '',
   cache: new Map(),
@@ -309,6 +52,72 @@ const elements = {
   toast: $('#toast')
 };
 
+function slugify(value) {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '');
+}
+
+function displayName(folderName) {
+  return folderName.replace(/[-_]+/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+function libraryUrl(folderName, fileName) {
+  return `${libraryBase}/${encodeURIComponent(folderName)}/${fileName}`;
+}
+
+function libraryFromDirectoryEntry(entry, fileNames, number) {
+  const hasSource = fileNames.has('source.lua');
+  const hasExample = fileNames.has('example.lua');
+  const name = displayName(entry.name);
+  const files = {};
+
+  if (hasSource) files.source = libraryUrl(entry.name, 'source.lua');
+  if (hasExample) files.example = libraryUrl(entry.name, 'example.lua');
+
+  return {
+    id: slugify(entry.name),
+    folder: entry.name,
+    name,
+    label: name,
+    number: String(number).padStart(2, '0'),
+    type: hasSource && hasExample ? 'Source + example' : hasSource ? 'Source' : 'Example',
+    description: `Preserved ${name} library with its available source and runnable example files.`,
+    tags: [hasSource ? 'Source' : 'Loadstring', hasExample ? 'Example' : 'Archive'],
+    files,
+  };
+}
+
+async function fetchJson(url) {
+  const response = await fetch(url, {
+    cache: 'no-cache',
+    headers: { Accept: 'application/vnd.github+json' },
+  });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  return response.json();
+}
+
+async function discoverLibraries() {
+  const tree = await fetchJson(librariesTreeUrl);
+  const folders = new Map();
+
+  tree.tree
+    .filter((entry) => entry.type === 'blob' && entry.path.startsWith('Libraries/'))
+    .forEach((entry) => {
+      const parts = entry.path.split('/');
+      const [, folderName, fileName] = parts;
+      if (parts.length !== 3 || !folderName || !fileName) return;
+      if (!folders.has(folderName)) folders.set(folderName, new Set());
+      folders.get(folderName).add(fileName.toLowerCase());
+    });
+
+  return [...folders.entries()]
+    .filter(([, fileNames]) => fileNames.has('source.lua') || fileNames.has('example.lua'))
+    .sort(([left], [right]) => left.localeCompare(right, undefined, { numeric: true }))
+    .map(([folderName, fileNames], index) => libraryFromDirectoryEntry({ name: folderName }, fileNames, index + 1));
+}
+
 function showToast(message) {
   elements.toast.textContent = message;
   elements.toast.classList.add('show');
@@ -333,6 +142,11 @@ function toggleDrawer() {
 }
 
 function renderLibraryList() {
+  if (!libraries.length) {
+    elements.libraryList.innerHTML = '<p class="library-empty">No libraries available.</p>';
+    return;
+  }
+
   elements.libraryList.innerHTML = libraries.map((library) => `
     <button class="library-item ${library.id === state.library.id ? 'active' : ''}" type="button" data-library="${library.id}">
       <span class="library-number">${library.number}</span>
@@ -349,8 +163,30 @@ function renderLibraryList() {
   });
 }
 
+function renderCatalogError(message) {
+  elements.libraryList.innerHTML = '<p class="library-empty">Library catalog unavailable.</p>';
+  elements.currentCrumb.textContent = 'Unavailable';
+  elements.libraryEyebrow.textContent = 'LIBRARY / UNAVAILABLE';
+  elements.libraryName.textContent = 'Library catalog unavailable';
+  elements.libraryDescription.textContent = message;
+  elements.libraryTags.innerHTML = '';
+  elements.sourceLink.removeAttribute('href');
+  elements.sourceLink.classList.add('disabled');
+  elements.sourceLink.setAttribute('aria-disabled', 'true');
+  elements.openShowcaseButton.disabled = true;
+  elements.openShowcaseButton.textContent = 'No Showcase';
+  elements.exampleTab.hidden = true;
+  showShowcaseUnavailable('The library catalog could not be loaded.');
+  elements.fileStatus.textContent = 'Unavailable';
+  elements.codeContent.textContent = message;
+  elements.lineNumbers.textContent = '×';
+  elements.filePath.textContent = 'Libraries/';
+}
+
 function renderHeader() {
   const library = state.library;
+  if (!library) return;
+
   elements.currentCrumb.textContent = library.name;
   elements.libraryEyebrow.textContent = `LIBRARY / ${library.name.toUpperCase()}`;
   elements.libraryName.textContent = library.name;
@@ -412,14 +248,14 @@ function handleShowcaseFrameError() {
 }
 
 function renderLineNumbers(text) {
-  const lines = Math.max(1, text.split('\\n').length);
-  elements.lineNumbers.textContent = Array.from({ length: lines }, (_, index) => index + 1).join('\\n');
+  const lines = Math.max(1, text.split('\n').length);
+  elements.lineNumbers.textContent = Array.from({ length: lines }, (_, index) => index + 1).join('\n');
 }
 
 function filePathFor(kind = state.file) {
   const fileUrl = state.library.files[kind] || state.library.files.example || state.library.files.source;
-  const folder = fileUrl ? fileUrl.split('/').slice(-2, -1)[0] : state.library.id;
-  return `Libraries/${folder}/${kind}.lua`;
+  const fileName = fileUrl ? fileUrl.split('/').pop() : `${kind}.lua`;
+  return `Libraries/${state.library.folder}/${fileName}`;
 }
 
 function renderCode(text) {
@@ -432,6 +268,8 @@ function renderCode(text) {
 }
 
 async function loadFile(kind = state.file) {
+  if (!state.library) return;
+
   state.file = kind;
   $$('.code-tab').forEach((tab) => {
     const active = tab.dataset.file === kind;
@@ -449,7 +287,7 @@ async function loadFile(kind = state.file) {
   if (!url) {
     state.text = '';
     elements.fileStatus.textContent = 'Not available';
-    elements.codeContent.textContent = 'This library does not include an example.lua file.';
+    elements.codeContent.textContent = `This library does not include a ${kind}.lua file.`;
     return;
   }
 
@@ -481,11 +319,11 @@ async function selectLibrary(id) {
     return;
   }
   state.library = library;
-  state.file = 'source';
+  state.file = library.files.source ? 'source' : 'example';
   renderLibraryList();
   renderHeader();
   renderShowcase();
-  await loadFile('source');
+  await loadFile(state.file);
   closeDrawer();
   window.history.replaceState(null, '', `#${library.id}`);
   if (window.innerWidth <= 700) window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -532,7 +370,7 @@ function toggleShowcaseExpanded(force) {
   elements.showcaseCard.classList.toggle('focused', expanded);
   document.body.classList.toggle('overlay-open', expanded || elements.codeCard.classList.contains('expanded'));
   elements.expandShowcaseButton.textContent = expanded ? 'Minimize' : 'Expand';
-  const hasShowcase = Boolean(getShowcase(state.library.id));
+  const hasShowcase = Boolean(state.library && getShowcase(state.library.id));
   elements.openShowcaseButton.innerHTML = !hasShowcase ? 'No Showcase' : expanded ? 'Minimize showcase <span>↙</span>' : 'Open showcase <span>↗</span>';
 }
 
@@ -579,14 +417,20 @@ function initEvents() {
   });
 }
 
-function init() {
-  const hashLibrary = libraries.find((library) => library.id === window.location.hash.slice(1));
-  if (hashLibrary) state.library = hashLibrary;
-  renderLibraryList();
-  renderHeader();
-  renderShowcase();
+async function init() {
   initEvents();
-  loadFile('source');
+  try {
+    libraries = await discoverLibraries();
+    if (!libraries.length) throw new Error('No library folders with source.lua or example.lua were found.');
+    const hashLibrary = libraries.find((library) => library.id === window.location.hash.slice(1));
+    state.library = hashLibrary || libraries[0];
+    renderLibraryList();
+    renderHeader();
+    renderShowcase();
+    await loadFile(state.library.files.source ? 'source' : 'example');
+  } catch (error) {
+    renderCatalogError('The catalog is generated from the repository folders and could not be reached right now.');
+  }
 }
 
 init();
