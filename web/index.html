@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0d0d0e">
-  <meta name="description" content="VaultUI library shelf: browse Roblox UI libraries, MP4 showcase videos and source files.">
+  <meta name="description" content="VaultUI library shelf: browse Roblox UI libraries, Mega showcases and source files.">
   <title>VaultUI — Library shelf</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -39,7 +39,7 @@
           </div>
           <button class="icon-button close-menu" id="drawerClose" type="button" aria-label="Close library menu">×</button>
         </div>
-        <p class="drawer-note">Source files, examples and the MP4 showcase video belonging to each library.</p>
+        <p class="drawer-note">Source files, examples and the Mega showcase belonging to each library.</p>
         <nav class="library-list" id="libraryList"></nav>
         <div class="drawer-footer">
           <span class="status-dot"></span>
@@ -68,26 +68,18 @@
             <div class="section-title-group">
               <span class="section-index">01</span>
               <h2 id="showcaseTitle">Showcase</h2>
-              <span class="live-label" id="showcaseMode">MP4 VIDEO</span>
+              <span class="live-label" id="showcaseMode">MEGA EMBED</span>
             </div>
             <div class="section-actions">
-              <div class="zoom-controls" aria-label="Showcase zoom">
-                <button class="mini-button zoom-button" id="zoomOutButton" type="button" aria-label="Zoom out" title="Zoom out">−</button>
-                <span class="zoom-label" id="zoomLabel">100%</span>
-                <button class="mini-button zoom-button" id="zoomInButton" type="button" aria-label="Zoom in" title="Zoom in">+</button>
-                <button class="mini-button zoom-button" id="zoomResetButton" type="button" aria-label="Reset showcase zoom" title="Reset zoom">1:1</button>
-              </div>
               <button class="mini-button" id="expandShowcaseButton" type="button">Expand</button>
-              <a class="mini-button" id="openShowcaseLink" href="../Libraries/0x37/showcase.mp4" target="_blank" rel="noreferrer">Open</a>
+              <a class="mini-button" id="openShowcaseLink" href="#" target="_blank" rel="noreferrer" hidden>Open in Mega</a>
             </div>
           </div>
           <div class="showcase-canvas" id="showcaseCanvas">
-            <video id="showcaseVideo" src="../Libraries/0x37/showcase.mp4" controls preload="metadata" playsinline aria-label="0x37 MP4 showcase video"></video>
+            <iframe id="showcaseFrame" title="0x37 Mega showcase" frameborder="0" allow="fullscreen" allowfullscreen hidden></iframe>
             <div class="showcase-empty" id="showcaseEmpty" hidden>
-              <span id="showcaseEmptyMessage">There is no MP4 showcase for this library.</span>
+              <span id="showcaseEmptyMessage">No Showcase</span>
             </div>
-            <div class="canvas-corner canvas-corner-left">MP4 VIDEO / ZOOM</div>
-            <div class="canvas-corner canvas-corner-right" id="canvasSize">1280 × 800</div>
           </div>
         </section>
 
@@ -120,6 +112,7 @@
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <script src="app.js?v=3" defer></script>
+  <script src="showcases.js?v=1" defer></script>
+  <script src="app.js?v=4" defer></script>
 </body>
 </html>
