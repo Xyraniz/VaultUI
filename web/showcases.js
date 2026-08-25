@@ -2,6 +2,12 @@ const showcaseTable = Object.freeze({
   armenta_lib: {
     embedUrl: 'https://mega.nz/embed/MRkRBApL#KFE30TjcbNAfCv-aY8FJSjKAxzEM_eU_6zvRJSydwms'
   },
+  aztup: {
+    embedUrl: 'https://mega.nz/embed/BQsiHbLZ#5HmpL81nfRptb5WdK7_neQLpwA4zpv8wfqMt37dMEws'
+  },
+  bacon: {
+    embedUrl: 'https://mega.nz/embed/EZshGTAI#91w4D-Ur7h8xfGmL81Gs0IhfoOATmF7aDvzLyC0B18w'
+  },
   discord_lib: {
     embedUrl: 'https://mega.nz/embed/dFtFBS4a#Rm0HKEYLSmSK7Udwy-UzKmTn4VKPekEsL8KAB0niaSo'
   },
@@ -19,4 +25,3 @@ window.getShowcase = getShowcase;
 
 void window.showcaseTable;
 void window.getShowcase;
-
