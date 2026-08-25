@@ -3,16 +3,16 @@ const showcaseTable = Object.freeze({
     embedUrl: 'https://files.catbox.moe/zl4njb.mp4'
   },
   aztup: {
-    embedUrl: 'https://mega.nz/embed/BQsiHbLZ#5HmpL81nfRptb5WdK7_neQLpwA4zpv8wfqMt37dMEws'
+    embedUrl: 'https://files.catbox.moe/di65fq.mp4'
   },
   bacon: {
-    embedUrl: 'https://mega.nz/embed/EZshGTAI#91w4D-Ur7h8xfGmL81Gs0IhfoOATmF7aDvzLyC0B18w'
+    embedUrl: 'https://files.catbox.moe/bpo9er.mp4'
   },
   discord_lib: {
-    embedUrl: 'https://mega.nz/embed/dFtFBS4a#Rm0HKEYLSmSK7Udwy-UzKmTn4VKPekEsL8KAB0niaSo'
+    embedUrl: 'https://files.catbox.moe/wq7znk.mp4'
   },
   synergyui: {
-    embedUrl: 'https://mega.nz/embed/9UdzlJbD#cbWE8v9-Q59CtYhD0zLPXjO7kCMSAROYCUA4SE2seH0'
+    embedUrl: 'https://files.catbox.moe/cw0lli.mp4'
   }
 });
 
