@@ -14,7 +14,7 @@ const libraries = [
       example: `${libraryBase}/0x37/example.lua`
     },
     showcase: {
-      url: `${libraryBase}/0x37/showcase.png`,
+      url: `${libraryBase}/0x37/showcase.mp4`,
       size: '1280 × 800'
     }
   },
@@ -31,7 +31,7 @@ const libraries = [
       example: `${libraryBase}/Apple/example.lua`
     },
     showcase: {
-      url: `${libraryBase}/Apple/showcase.png`,
+      url: `${libraryBase}/Apple/showcase.mp4`,
       size: '1280 × 800'
     }
   },
@@ -48,7 +48,7 @@ const libraries = [
       example: `${libraryBase}/Avilon-Modified/example.lua`
     },
     showcase: {
-      url: `${libraryBase}/Avilon-Modified/showcase.png`,
+      url: `${libraryBase}/Avilon-Modified/showcase.mp4`,
       size: '1280 × 800'
     }
   },
@@ -65,7 +65,7 @@ const libraries = [
       example: `${libraryBase}/Aztup/example.lua`
     },
     showcase: {
-      url: `${libraryBase}/Aztup/showcase.png`,
+      url: `${libraryBase}/Aztup/showcase.mp4`,
       size: '1280 × 800'
     }
   },
@@ -82,7 +82,7 @@ const libraries = [
       example: `${libraryBase}/Bacon/example.lua`
     },
     showcase: {
-      url: `${libraryBase}/Bacon/showcase.png`,
+      url: `${libraryBase}/Bacon/showcase.mp4`,
       size: '900 × 760'
     }
   },
@@ -99,7 +99,7 @@ const libraries = [
       example: `${libraryBase}/Blek/example.lua`
     },
     showcase: {
-      url: `${libraryBase}/Blek/showcase.png`,
+      url: `${libraryBase}/Blek/showcase.mp4`,
       size: '1280 × 800'
     }
   },
@@ -116,7 +116,7 @@ const libraries = [
       example: `${libraryBase}/Criminality-Lib/example.lua`
     },
     showcase: {
-      url: `${libraryBase}/Criminality-Lib/showcase.png`,
+      url: `${libraryBase}/Criminality-Lib/showcase.mp4`,
       size: '1280 × 800'
     }
   },
@@ -132,7 +132,7 @@ const libraries = [
       example: `${libraryBase}/Daino/example.lua`
     },
     showcase: {
-      url: `${libraryBase}/Daino/showcase.png`,
+      url: `${libraryBase}/Daino/showcase.mp4`,
       size: '1280 × 800'
     }
   },
@@ -149,7 +149,7 @@ const libraries = [
       example: `${libraryBase}/DarkraiX/example.lua`
     },
     showcase: {
-      url: `${libraryBase}/DarkraiX/showcase.png`,
+      url: `${libraryBase}/DarkraiX/showcase.mp4`,
       size: '1280 × 800'
     }
   },
@@ -166,7 +166,7 @@ const libraries = [
       example: `${libraryBase}/Dirt/example.lua`
     },
     showcase: {
-      url: `${libraryBase}/Dirt/showcase.png`,
+      url: `${libraryBase}/Dirt/showcase.mp4`,
       size: '1280 × 800'
     }
   },
@@ -183,7 +183,7 @@ const libraries = [
       example: `${libraryBase}/Discord-Lib/example.lua`
     },
     showcase: {
-      url: `${libraryBase}/Discord-Lib/showcase.png`,
+      url: `${libraryBase}/Discord-Lib/showcase.mp4`,
       size: '1280 × 800'
     }
   },
@@ -200,7 +200,7 @@ const libraries = [
       example: `${libraryBase}/Flux/example.lua`
     },
     showcase: {
-      url: `${libraryBase}/Flux/showcase.png`,
+      url: `${libraryBase}/Flux/showcase.mp4`,
       size: '1280 × 800'
     }
   },
@@ -217,7 +217,7 @@ const libraries = [
       example: `${libraryBase}/FriseX/example.lua`
     },
     showcase: {
-      url: `${libraryBase}/FriseX/showcase.png`,
+      url: `${libraryBase}/FriseX/showcase.mp4`,
       size: '1280 × 800'
     }
   },
@@ -234,7 +234,7 @@ const libraries = [
       example: `${libraryBase}/Fuzki/example.lua`
     },
     showcase: {
-      url: `${libraryBase}/Fuzki/showcase.png`,
+      url: `${libraryBase}/Fuzki/showcase.mp4`,
       size: '1280 × 800'
     }
   },
@@ -251,7 +251,7 @@ const libraries = [
       example: `${libraryBase}/Gostmi/example.lua`
     },
     showcase: {
-      url: `${libraryBase}/Gostmi/showcase.png`,
+      url: `${libraryBase}/Gostmi/showcase.mp4`,
       size: '1280 × 800'
     }
   },
@@ -267,7 +267,7 @@ const libraries = [
       example: `${libraryBase}/Hook/example.lua`
     },
     showcase: {
-      url: `${libraryBase}/Hook/showcase.png`,
+      url: `${libraryBase}/Hook/showcase.mp4`,
       size: '1280 × 800'
     }
   },
@@ -284,7 +284,7 @@ const libraries = [
       example: `${libraryBase}/NexusLib/example.lua`
     },
     showcase: {
-      url: `${libraryBase}/NexusLib/showcase.png`,
+      url: `${libraryBase}/NexusLib/showcase.mp4`,
       size: '1280 × 800'
     }
   },
@@ -301,7 +301,7 @@ const libraries = [
       example: `${libraryBase}/SynergyUI/example.lua`
     },
     showcase: {
-      url: `${libraryBase}/SynergyUI/showcase.png`,
+      url: `${libraryBase}/SynergyUI/showcase.mp4`,
       size: '1280 × 820'
     }
   },
@@ -318,7 +318,7 @@ const libraries = [
       example: `${libraryBase}/Armenta-Lib/example.lua`
     },
     showcase: {
-      url: `${libraryBase}/Armenta-Lib/showcase.png`,
+      url: `${libraryBase}/Armenta-Lib/showcase.mp4`,
       size: '1280 × 820'
     }
   },
@@ -335,7 +335,7 @@ const libraries = [
       example: `${libraryBase}/WindUI-Shiny/example.lua`
     },
     showcase: {
-      url: `${libraryBase}/WindUI-Shiny/showcase.png`,
+      url: `${libraryBase}/WindUI-Shiny/showcase.mp4`,
       size: '1280 × 900'
     }
   }
@@ -369,13 +369,14 @@ const elements = {
   showcaseCard: $('#showcaseCard'),
   expandShowcaseButton: $('#expandShowcaseButton'),
   openShowcaseLink: $('#openShowcaseLink'),
-  showcaseImage: $('#showcaseImage'),
+  showcaseVideo: $('#showcaseVideo'),
   showcaseCanvas: $('#showcaseCanvas'),
   zoomOutButton: $('#zoomOutButton'),
   zoomInButton: $('#zoomInButton'),
   zoomResetButton: $('#zoomResetButton'),
   zoomLabel: $('#zoomLabel'),
   showcaseEmpty: $('#showcaseEmpty'),
+  showcaseEmptyMessage: $('#showcaseEmptyMessage'),
   showcaseMode: $('#showcaseMode'),
   canvasSize: $('#canvasSize'),
   exampleTab: $('#exampleTab'),
@@ -425,7 +426,7 @@ function renderLibraryList() {
         <span class="library-name">${library.label}</span>
         <span class="library-type">${library.type}</span>
       </span>
-      <span class="library-badge">PNG</span>
+      <span class="library-badge">MP4</span>
     </button>
   `).join('');
 
@@ -458,19 +459,35 @@ function renderHeader() {
   document.title = `VaultUI — ${library.name}`;
 }
 
+function showShowcaseUnavailable(message = 'There is no MP4 showcase for this library.') {
+  elements.showcaseVideo.hidden = true;
+  elements.showcaseEmptyMessage.textContent = message;
+  elements.showcaseEmpty.hidden = false;
+  elements.showcaseMode.textContent = 'UNAVAILABLE';
+}
+
 function renderShowcase() {
   const showcase = state.library.showcase;
-  elements.showcaseImage.hidden = true;
+  elements.showcaseVideo.pause();
+  elements.showcaseVideo.removeAttribute('src');
+  elements.showcaseVideo.load();
+  elements.showcaseVideo.hidden = true;
   elements.showcaseEmpty.hidden = true;
 
-  if (showcase && showcase.url) {
-    elements.showcaseMode.textContent = 'STATIC IMAGE';
-    elements.showcaseImage.alt = `${state.library.name} showcase image`;
-    elements.showcaseImage.src = showcase.url;
-    elements.showcaseImage.hidden = false;
-  } else {
-    elements.showcaseMode.textContent = 'EMPTY';
-    elements.showcaseEmpty.hidden = false;
+  if (showcase && showcase.url && /\.mp4$/i.test(showcase.url)) {
+    elements.showcaseMode.textContent = 'MP4 VIDEO';
+    elements.showcaseVideo.setAttribute('aria-label', `${state.library.name} MP4 showcase video`);
+    elements.showcaseVideo.src = showcase.url;
+    elements.showcaseVideo.hidden = false;
+    return;
+  }
+
+  showShowcaseUnavailable();
+}
+
+function handleShowcaseVideoError() {
+  if (!elements.showcaseVideo.hidden) {
+    showShowcaseUnavailable('The MP4 showcase could not be loaded. Add showcase.mp4 to this library folder.');
   }
 }
 
@@ -634,6 +651,7 @@ function initEvents() {
   elements.zoomOutButton.addEventListener('click', () => setShowcaseZoom(state.showcaseZoom - 0.1));
   elements.zoomInButton.addEventListener('click', () => setShowcaseZoom(state.showcaseZoom + 0.1));
   elements.zoomResetButton.addEventListener('click', () => setShowcaseZoom(1));
+  elements.showcaseVideo.addEventListener('error', handleShowcaseVideoError);
   elements.expandCodeButton.addEventListener('click', () => toggleCodeExpanded());
   elements.minimizeCodeButton.addEventListener('click', toggleCodeMinimized);
 
