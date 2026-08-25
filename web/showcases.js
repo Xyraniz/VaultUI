@@ -1,6 +1,6 @@
 const showcaseTable = Object.freeze({
   armenta_lib: {
-    embedUrl: 'https://mega.nz/embed/MRkRBApL#KFE30TjcbNAfCv-aY8FJSjKAxzEM_eU_6zvRJSydwms'
+    embedUrl: 'https://files.catbox.moe/zl4njb.mp4'
   },
   aztup: {
     embedUrl: 'https://mega.nz/embed/BQsiHbLZ#5HmpL81nfRptb5WdK7_neQLpwA4zpv8wfqMt37dMEws'
