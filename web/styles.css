@@ -49,7 +49,7 @@ button, [role='button'] { cursor: pointer; }
 .menu-button span { display: block; width: 15px; height: 1px; background: currentColor; }
 
 .workspace { position: relative; display: grid; grid-template-columns: 268px minmax(0, 1fr); min-height: 0; }
-.library-drawer { display: flex; flex-direction: column; min-width: 0; padding: 28px 18px 18px; background: var(--page-soft); border-right: 1px solid var(--line); }
+.library-drawer { position: sticky; top: 64px; display: flex; flex-direction: column; min-width: 0; height: calc(100vh - 64px); padding: 28px 18px 18px; overflow-y: auto; overscroll-behavior: contain; background: var(--page-soft); border-right: 1px solid var(--line); -webkit-overflow-scrolling: touch; }
 .drawer-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
 .drawer-header h2 { margin: 7px 0 0; color: var(--text); font-size: 17px; font-weight: 600; letter-spacing: -.025em; }
 .eyebrow { color: var(--dim); font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: .12em; }
@@ -148,7 +148,7 @@ body.overlay-open .topbar { z-index: 1; }
   .breadcrumb-muted, .breadcrumb-slash { display: none; }
   .topbar-actions { display: none; }
   .workspace { display: block; }
-  .library-drawer { position: fixed; z-index: 45; top: 58px; bottom: 0; left: 0; width: min(285px, calc(100vw - 42px)); padding: 24px 16px 16px; box-shadow: 24px 0 50px rgba(0,0,0,.48); transform: translateX(-102%); transition: transform .24s var(--ease); }
+  .library-drawer { position: fixed; z-index: 45; top: 58px; bottom: 0; left: 0; height: auto; width: min(285px, calc(100vw - 42px)); padding: 24px 16px 16px; box-shadow: 24px 0 50px rgba(0,0,0,.48); transform: translateX(-102%); transition: transform .24s var(--ease); }
   .library-drawer.open { transform: translateX(0); }
   .close-menu { display: grid; place-items: center; }
   .drawer-backdrop { position: fixed; z-index: 40; inset: 58px 0 0; display: block; visibility: hidden; padding: 0; background: rgba(0,0,0,.7); opacity: 0; transition: visibility .24s ease, opacity .24s ease; }
