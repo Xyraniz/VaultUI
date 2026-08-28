@@ -1,5 +1,19 @@
+-- WindUI Shiny — readable build
+--
+-- This file is a formatted and semantically labeled version of the modified
+-- WindUI-Shiny.lua from Wind-UI-Boreal. The implementation and module order
+-- are preserved; the module registry, constructors, cache entries and comments were clarified.
+--
+-- Source: https://raw.githubusercontent.com/jonathabejose-alt/Wind-UI-Boreal/refs/heads/main/WindUI-Shiny.lua
+-- Version: v0.0.3
+-- BuildDate: 2026-07-15
+-- License: MIT
+--
+-- Main areas: Creator, icon loading, themes, notifications, key systems,
+-- UI elements, tabs/sidebar, configuration, acrylic effects and WindUI API.
 local WindUIModules = { cache = {} }
 do
+    -- Module: IconModule
     do
         local function buildModule()
             local b = (cloneref or clonereference or function(b)
@@ -231,6 +245,7 @@ do
             return cacheEntry.value
         end
     end
+    -- Module: Creator
     do
         local function buildModule()
             return {
@@ -360,6 +375,7 @@ do
             return cacheEntry.value
         end
     end
+    -- Module: LocalizationModule
     do
         local function buildModule()
             local b = (cloneref or clonereference or function(b)
@@ -1108,7 +1124,7 @@ d.Heartbeat
                     }).IconFrame
                     J.Parent = H
                 elseif string.find(v, 'http') then
-                    local J = 'WindUI_SY/' .. A .. '/assets/.' .. B .. '-' .. x .. '.png'
+                    local J = 'WindUI/' .. A .. '/assets/.' .. B .. '-' .. x .. '.png'
                     local L, M = pcall(function()
                         task.spawn(function()
                             local L = p.Request and p.Request({
@@ -1226,6 +1242,7 @@ d.Heartbeat
             return cacheEntry.value
         end
     end
+    -- Module: ButtonModule
     do
         local function buildModule()
             local b = {}
@@ -1254,6 +1271,7 @@ d.Heartbeat
             return cacheEntry.value
         end
     end
+    -- Module: NotificationModule
     do
         local function buildModule()
             local b = {}
@@ -1392,6 +1410,7 @@ d.Heartbeat
             return cacheEntry.value
         end
     end
+    -- Module: Sha256Module
     do
         local function buildModule()
             local b = WindUIModules.LocalizationModule()
@@ -1986,6 +2005,7 @@ d.Heartbeat
             return cacheEntry.value
         end
     end
+    -- Module: PlatoboostService
     do
         local function buildModule()
             local b = 4294967296
@@ -2771,6 +2791,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: PandaDevelopmentService
     do
         local function buildModule()
             local aa = (cloneref or clonereference or function(aa)
@@ -2858,6 +2879,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: LuarmorService
     do
         local function buildModule()
             local aa = {}
@@ -2905,6 +2927,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: JunkieDevelopmentService
     do
         local function buildModule()
             local aa = {}
@@ -2970,6 +2993,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: KeySystemServices
     do
         local function buildModule()
             return {
@@ -3012,6 +3036,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: PopupModule
     do
         local function buildModule()
             local aa = {}
@@ -3133,6 +3158,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: DialogModule
     do
         local function buildModule()
             local aa = WindUIModules.LocalizationModule()
@@ -3280,6 +3306,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: KeySystemModule
     do
         local function buildModule()
             local aa = {}
@@ -3775,6 +3802,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: ViewportUtilities
     do
         local function buildModule()
             local aa = (cloneref or clonereference or function(aa)
@@ -3806,6 +3834,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: AcrylicBlurModule
     do
         local function buildModule()
             local aa = (cloneref or clonereference or function(aa)
@@ -3959,6 +3988,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: AcrylicPaintModule
     do
         local function buildModule()
             local aa = WindUIModules.LocalizationModule()
@@ -4059,6 +4089,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: AcrylicModule
     do
         local function buildModule()
             local aa = (cloneref or clonereference or function(aa)
@@ -4126,6 +4157,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: DefaultThemes
     do
         local function buildModule()
             local aa = {}
@@ -4323,6 +4355,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: LabelModule
     do
         local function buildModule()
             return function(aa)
@@ -4663,6 +4696,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: PanelModule
     do
         local function buildModule()
             local aa = {}
@@ -4761,6 +4795,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: SpaceModule
     do
         local function buildModule()
             local aa = {}
@@ -4967,6 +5002,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: DividerModule
     do
         local function buildModule()
             local aa = WindUIModules.LocalizationModule()
@@ -4996,6 +5032,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: TagModule
     do
         local function buildModule()
             local aa = WindUIModules.LocalizationModule()
@@ -5167,6 +5204,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: WatermarkModule
     do
         local function buildModule()
             local aa = {}
@@ -5328,6 +5366,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: ConfigManagerModule
     do
         local function buildModule()
             local aa = {}
@@ -5507,480 +5546,538 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: OpenButtonModule
     do
         local function buildModule()
-            local aa = {
-                ConfigName = 'default_config',
+            local aa = (cloneref or clonereference or function(aa)
+                return aa
+            end)
+
+            local ab = aa(game:GetService('RunService'))
+            local ac = aa(game:GetService('HttpService'))
+
+            local ad
+
+            local ae
+            ae = {
+                Folder = nil,
                 Path = nil,
-                Data = {},
-                Elements = {},
-                Loading = false,
-                PendingSave = false,
-                Window = nil,
+                Configs = {},
+                Parser = {
+                    Colorpicker = {
+                        Save = function(af)
+                            return {
+                                __type = af.__type,
+                                value = af.Default:ToHex(),
+                                transparency = af.Transparency or nil,
+                            }
+                        end,
+                        Load = function(af, ag)
+                            if af and af.Update then
+                                af:Update(Color3.fromHex(ag.value), ag.transparency or nil)
+                            end
+                        end,
+                    },
+                    Dropdown = {
+                        Save = function(af)
+                            return {
+                                __type = af.__type,
+                                value = af.Value,
+                            }
+                        end,
+                        Load = function(af, ag)
+                            if af and af.Select then
+                                af:Select(ag.value, true)
+                            end
+                        end,
+                    },
+                    Segmented = {
+                        Save = function(af)
+                            return {
+                                __type = af.__type,
+                                value = af.Get and af:Get() or af.Value,
+                            }
+                        end,
+                        Load = function(af, ag)
+                            if af and af.Set then
+                                af:Set(ag.value, true)
+                            end
+                        end,
+                    },
+                    Input = {
+                        Save = function(af)
+                            return {
+                                __type = af.__type,
+                                value = af.Value,
+                            }
+                        end,
+                        Load = function(af, ag)
+                            if af and af.Set then
+                                af:Set(ag.value)
+                            end
+                        end,
+                    },
+                    Keybind = {
+                        Save = function(af)
+                            return {
+                                __type = af.__type,
+                                value = af.Value,
+                            }
+                        end,
+                        Load = function(af, ag)
+                            if af and af.Set then
+                                af:Set(ag.value)
+                            end
+                        end,
+                    },
+                    ButtonKeybind = {
+                        Save = function(af)
+                            return {
+                                __type = af.__type,
+                                value = af.Value,
+                            }
+                        end,
+                        Load = function(af, ag)
+                            if af and af.Set and ag.value ~= nil then
+                                af:Set(ag.value)
+                            end
+                        end,
+                    },
+                    Slider = {
+                        Save = function(af)
+                            return {
+                                __type = af.__type,
+                                value = af.Value.Default,
+                            }
+                        end,
+                        Load = function(af, ag)
+                            if af and af.Set then
+                                af:Set(tonumber(ag.value))
+                            end
+                        end,
+                    },
+                    Stepper = {
+                        Save = function(af)
+                            return {
+                                __type = af.__type,
+                                value = af.Value,
+                                min = af.Min,
+                                max = af.Max,
+                                step = af.Step,
+                            }
+                        end,
+                        Load = function(af, ag)
+                            if af and af.SetRange and ag.min ~= nil and ag.max ~= nil then
+                                af:SetRange(tonumber(ag.min), tonumber(ag.max), false)
+                            end
+
+                            if af and af.SetStep and ag.step ~= nil then
+                                af:SetStep(tonumber(ag.step))
+                            end
+
+                            if af and af.Set and ag.value ~= nil then
+                                af:Set(tonumber(ag.value), false)
+                            end
+                        end,
+                    },
+                    Progress = {
+                        Save = function(af)
+                            return {
+                                __type = af.__type,
+                                value = af.Value,
+                                min = af.Min,
+                                max = af.Max,
+                            }
+                        end,
+                        Load = function(af, ag)
+                            if af and af.SetRange and ag.min ~= nil and ag.max ~= nil then
+                                af:SetRange(tonumber(ag.min), tonumber(ag.max), false)
+                            end
+
+                            if af and af.Set then
+                                af:Set(tonumber(ag.value), false, false)
+                            end
+                        end,
+                    },
+                    Stats = {
+                        Save = function(af)
+                            return {
+                                __type = af.__type,
+                                items = af.Items,
+                            }
+                        end,
+                        Load = function(af, ag)
+                            if af and af.Set and typeof(ag.items) == 'table' then
+                                af:Set(ag.items, true)
+                            end
+                        end,
+                    },
+                    Toggle = {
+                        Save = function(af)
+                            return {
+                                __type = af.__type,
+                                value = af.Value,
+                            }
+                        end,
+                        Load = function(af, ag)
+                            if af and af.Set then
+                                af:Set(ag.value)
+                            end
+                        end,
+                    },
+                    ToggleKeybind = {
+                        Save = function(af)
+                            return {
+                                __type = af.__type,
+                                value = af.Value,
+                                keybind = af.Keybind,
+                            }
+                        end,
+                        Load = function(af, ag)
+                            if af and af.Set and ag.value ~= nil then
+                                af:Set(ag.value)
+                            end
+
+                            if af and af.SetKeybind and ag.keybind then
+                                af:SetKeybind(ag.keybind)
+                            end
+                        end,
+                    },
+                },
             }
 
-            local ab = (cloneref or clonereference or function(value)
-                return value
-            end)
-            local ac = ab(game:GetService('HttpService'))
-
-            local function sanitizeSegment(value, fallback)
-                local result = tostring(value or fallback or 'default_config')
-                result = result:gsub('[^%w%._%-]', '_')
-                return result ~= '' and result or (fallback or 'default_config')
-            end
-
-            local function ensureFolder(path)
-                if type(makefolder) ~= 'function' then
+            function ae.Init(af, ag)
+                if not ag.Folder then
+                    warn('[ WindUI.ConfigManager ] Window.Folder is not specified.')
                     return false
                 end
-                if type(isfolder) == 'function' and isfolder(path) then
-                    return true
-                end
-                local ok = pcall(makefolder, path)
-                return ok or (type(isfolder) == 'function' and isfolder(path))
-            end
-
-            local function readData()
-                if type(isfile) ~= 'function' or type(readfile) ~= 'function' or not isfile(aa.Path) then
-                    return {}
-                end
-                local ok, raw = pcall(readfile, aa.Path)
-                if not ok or type(raw) ~= 'string' or raw == '' then
-                    return {}
-                end
-                local decodedOk, decoded = pcall(ac.JSONDecode, ac, raw)
-                return decodedOk and type(decoded) == 'table' and decoded or {}
-            end
-
-            local function writeData()
-                if type(writefile) ~= 'function' then
-                    return false
-                end
-                ensureFolder('WindUI_SY')
-                ensureFolder('WindUI_SY/Settings')
-                local ok, encoded = pcall(ac.JSONEncode, ac, aa.Data)
-                if not ok then
-                    return false
-                end
-                local wrote, err = pcall(writefile, aa.Path, encoded)
-                return wrote and err ~= false
-            end
-
-            local function colorToHex(color)
-                if typeof(color) ~= 'Color3' then
-                    return nil
-                end
-                if type(color.ToHex) == 'function' then
-                    local ok, value = pcall(function()
-                        return color:ToHex()
-                    end)
-                    if ok and value then
-                        return value
-                    end
-                end
-                return string.format(
-                    '%02x%02x%02x',
-                    math.floor(color.R * 255 + 0.5),
-                    math.floor(color.G * 255 + 0.5),
-                    math.floor(color.B * 255 + 0.5)
-                )
-            end
-
-            local function colorFromValue(value)
-                if typeof(value) == 'Color3' then
-                    return value
-                end
-                if type(value) == 'string' then
-                    local ok, color = pcall(Color3.fromHex, value)
-                    if ok then
-                        return color
-                    end
-                end
-                if type(value) == 'table' and tonumber(value.r) and tonumber(value.g) and tonumber(value.b) then
-                    return Color3.new(tonumber(value.r), tonumber(value.g), tonumber(value.b))
-                end
-                return nil
-            end
-
-            local function copySerializable(value, depth)
-                depth = depth or 0
-                if depth > 8 then
-                    return nil
-                end
-                if typeof(value) == 'Color3' then
-                    return {__color = colorToHex(value)}
-                end
-                if typeof(value) == 'EnumItem' then
-                    return value.Name
-                end
-                if type(value) ~= 'table' then
-                    return value
-                end
-                local result = {}
-                for key, item in pairs(value) do
-                    if type(key) == 'string' or type(key) == 'number' then
-                        local copied = copySerializable(item, depth + 1)
-                        if copied ~= nil then
-                            result[key] = copied
-                        end
-                    end
-                end
-                return result
-            end
-
-            local function optionTitle(value)
-                if type(value) == 'table' then
-                    return value.Title or value.Value or value.Name
-                end
-                return value
-            end
-
-            local function getCurrentValue(element)
-                if not element then
-                    return nil
-                end
-                if element.__type == 'Colorpicker' then
-                    return element.Default
-                end
-                if type(element.GetSelected) == 'function' then
-                    local ok, value = pcall(element.GetSelected, element)
-                    if ok then
-                        return value
-                    end
-                end
-                if type(element.GetValue) == 'function' then
-                    local ok, value = pcall(element.GetValue, element)
-                    if ok then
-                        return value
-                    end
-                end
-                if element.__type == 'Slider' and type(element.Value) == 'table' then
-                    return element.Value.Default
-                end
-                if element.Value ~= nil then
-                    return element.Value
-                end
-                if type(element.Get) == 'function' then
-                    local ok, value = pcall(element.Get, element)
-                    if ok then
-                        return value
-                    end
-                end
-                return nil
-            end
-
-            local function serializeValue(element)
-                if not element or type(element) ~= 'table' then
-                    return nil
-                end
-
-                local elementType = element.__type
-                if elementType == 'Toggle' then
-                    if type(element.Value) == 'boolean' then
-                        return element.Value
-                    end
-                    return nil
-                elseif elementType == 'ToggleKeybind' then
-                    return {
-                        value = type(element.Value) == 'boolean' and element.Value or false,
-                        keybind = element.Keybind,
-                    }
-                elseif elementType == 'Slider' then
-                    local value = type(element.Value) == 'table' and element.Value.Default or element.Value
-                    return tonumber(value)
-                elseif elementType == 'Stepper' or elementType == 'Progress' then
-                    return tonumber(element.Value)
-                elseif elementType == 'Keybind' then
-                    return tostring(element.Value or 'F')
-                elseif elementType == 'Input' then
-                    return tostring(element.Value or '')
-                elseif elementType == 'Dropdown' then
-                    local value = getCurrentValue(element)
-                    if element.Multi then
-                        local result = {}
-                        if type(value) == 'table' then
-                            for _, item in ipairs(value) do
-                                local title = optionTitle(item)
-                                if title ~= nil then
-                                    result[#result + 1] = copySerializable(title)
-                                end
-                            end
-                        end
-                        return result
-                    end
-                    return copySerializable(optionTitle(value))
-                elseif elementType == 'Segmented' then
-                    local value = getCurrentValue(element)
-                    if element.Multi then
-                        local result = {}
-                        if type(value) == 'table' then
-                            for _, item in ipairs(value) do
-                                result[#result + 1] = copySerializable(item)
-                            end
-                        end
-                        return result
-                    end
-                    return copySerializable(value)
-                elseif elementType == 'Colorpicker' then
-                    local color = element.Default or element.Value
-                    local hex = colorToHex(color)
-                    if not hex then
-                        return nil
-                    end
-                    return {
-                        color = hex,
-                        transparency = tonumber(element.Transparency),
-                    }
-                elseif elementType == 'Stats' then
-                    if type(element.GetItems) == 'function' then
-                        local ok, items = pcall(element.GetItems, element)
-                        if ok then
-                            return copySerializable(items)
-                        end
-                    end
-                    return copySerializable(element.Items)
-                end
-
-                return nil
-            end
-
-            local function applyValue(element, data)
-                if not element or type(data) == 'nil' then
+                if ab:IsStudio() or not writefile then
+                    warn("[ WindUI.ConfigManager ] The config system doesn't work in the studio.")
                     return false
                 end
 
-                local elementType = element.__type
-                if elementType == 'Toggle' then
-                    if type(data) == 'boolean' and type(element.Set) == 'function' then
-                        element:Set(data)
-                        return true
-                    end
-                elseif elementType == 'ToggleKeybind' then
-                    if type(data) == 'table' then
-                        if type(data.value) == 'boolean' and type(element.Set) == 'function' then
-                            element:Set(data.value)
-                        end
-                        if data.keybind and type(element.SetKeybind) == 'function' then
-                            element:SetKeybind(data.keybind)
-                        end
-                        return true
-                    elseif type(data) == 'boolean' and type(element.Set) == 'function' then
-                        element:Set(data)
-                        return true
-                    end
-                elseif elementType == 'Dropdown' then
-                    if type(element.Select) == 'function' then
-                        element:Select(data, true)
-                        return true
-                    end
-                elseif elementType == 'Segmented' then
-                    if type(element.Set) == 'function' then
-                        element:Set(data, true)
-                        return true
-                    end
-                elseif elementType == 'Colorpicker' then
-                    local color = type(data) == 'table' and colorFromValue(data.color or data.value) or colorFromValue(data)
-                    if color and type(element.Set) == 'function' then
-                        element:Set(color, type(data) == 'table' and tonumber(data.transparency) or nil)
-                        return true
-                    end
-                elseif elementType == 'Stats' then
-                    if type(element.Set) == 'function' and type(data) == 'table' then
-                        element:Set(data)
-                        return true
-                    end
-                elseif elementType == 'Slider'
-                    or elementType == 'Stepper'
-                    or elementType == 'Progress'
-                    or elementType == 'Keybind'
-                    or elementType == 'Input'
-                then
-                    if type(element.Set) == 'function' then
-                        element:Set(data)
-                        return true
+                ad = ag
+                ae.Folder = ad.Folder
+                ae.Path = 'WindUI/' .. tostring(ae.Folder) .. '/config/'
+
+                if not isfolder(ae.Path) then
+                    makefolder(ae.Path)
+                end
+
+                local ah = ae:AllConfigs()
+
+                for ai, aj in next, ah do
+                    local ak = ae.Path .. aj .. '.json'
+                    if isfile and readfile and isfile(ak) then
+                        ae.Configs[aj] = readfile(ak)
                     end
                 end
 
-                return false
+                return ae
             end
 
-            function aa.Init(_, window)
-                aa.Window = window
-                aa.ConfigName = sanitizeSegment(window and window.ConfigName, 'default_config')
-                aa.Path = 'WindUI_SY/Settings/' .. aa.ConfigName .. '.json'
-                aa.Elements = {}
-                aa.Loading = false
-                aa.PendingSave = false
-                ensureFolder('WindUI_SY')
-                ensureFolder('WindUI_SY/Settings')
-                aa.Data = readData()
-                return aa
-            end
-
-            function aa.Get(_, key)
-                return aa.Data[key]
-            end
-
-            function aa.Set(_, key, value)
-                if type(key) ~= 'string' then
-                    return value
-                end
-                aa.Data[key] = value
-                aa:ScheduleSave()
-                return value
-            end
-
-            function aa.Capture(_, flag, element)
-                if aa.Loading then
-                    return
-                end
-                local value = serializeValue(element)
-                if value ~= nil then
-                    aa.Data[flag] = value
-                    aa:ScheduleSave()
-                end
-            end
-
-            function aa.Save(_)
-                aa.PendingSave = false
-                return writeData()
-            end
-
-            function aa.ScheduleSave(_)
-                if aa.Loading then
-                    return aa
-                end
-                aa.PendingSave = true
-                aa:Save()
-                return aa
-            end
-
-            function aa.Register(_, flag, element)
-                if type(flag) ~= 'string' or not element then
-                    return element
+            function ae.SetPath(af, ag)
+                if not ag then
+                    warn('[ WindUI.ConfigManager ] Custom path is not specified.')
+                    return false
                 end
 
-                aa.Elements[flag] = element
-                local elementType = element.__type
-                local supported = {
-                    Toggle = true,
-                    ToggleKeybind = true,
-                    Slider = true,
-                    Stepper = true,
-                    Keybind = true,
-                    Input = true,
-                    Dropdown = true,
-                    Segmented = true,
-                    Colorpicker = true,
-                    Progress = true,
-                    Stats = true,
+                ae.Path = ag
+                if not ag:match('/$') then
+                    ae.Path = ag .. '/'
+                end
+
+                if not isfolder(ae.Path) then
+                    makefolder(ae.Path)
+                end
+
+                return true
+            end
+
+            function ae.CreateConfig(af, ag, ah)
+                local ai = {
+                    Path = ae.Path .. ag .. '.json',
+                    Elements = {},
+                    CustomData = {},
+                    AutoLoad = ah or false,
+                    Version = 1.2,
                 }
 
-                if supported[elementType] then
-                    if type(element.Set) == 'function' and not element.__WindUISynergySetWrapped then
-                        local originalSet = element.Set
-                        element.__WindUISynergySetWrapped = true
-                        element.Set = function(self, value, ...)
-                            local result = {pcall(originalSet, self, value, ...)}
-                            if not result[1] then
-                                error(result[2], 0)
-                            end
-                            if not aa.Loading then
-                                aa:Capture(flag, self)
-                            end
-                            table.remove(result, 1)
-                            return table.unpack(result)
+                if not ag then
+                    return false, 'No config file is selected'
+                end
+
+                function ai.SetAsCurrent(aj)
+                    ad:SetCurrentConfig(ai)
+                end
+
+                function ai.Register(aj, ak, al)
+                    ai.Elements[ak] = al
+                end
+
+                function ai.Unregister(aj, ak)
+                    ai.Elements[ak] = nil
+                end
+
+                function ai.Set(aj, ak, al)
+                    ai.CustomData[ak] = al
+                end
+
+                function ai.Get(aj, ak)
+                    return ai.CustomData[ak]
+                end
+
+                function ai.SetAutoLoad(aj, ak)
+                    ai.AutoLoad = ak
+                end
+
+                function ai.Save(aj)
+                    if ad.PendingFlags then
+                        for ak, al in next, ad.PendingFlags do
+                            ai:Register(ak, al)
                         end
                     end
 
-                    if type(element.Callback) == 'function' and not element.__WindUISynergyCallbackWrapped then
-                        local originalCallback = element.Callback
-                        element.__WindUISynergyCallbackWrapped = true
-                        element.Callback = function(...)
-                            local result = {pcall(originalCallback, ...)}
-                            if not result[1] then
-                                warn('[ WindUI ] Callback error: ' .. tostring(result[2]))
-                            end
-                            if not aa.Loading then
-                                aa:Capture(flag, element)
-                            end
-                            table.remove(result, 1)
-                            return table.unpack(result)
-                        end
-                    end
-
-                    local extraMethods = {
-                        'Select',
-                        'Deselect',
-                        'Toggle',
-                        'Refresh',
-                        'SetOptions',
-                        'SetKeybind',
-                        'SetPlaceholder',
-                        'SetColor',
-                        'SetRange',
-                        'SetStep',
-                        'SetPrecision',
-                        'SetPrefix',
-                        'SetSuffix',
-                        'SetFormat',
-                        'Update',
-                        'Add',
-                        'Remove',
-                        'Clear',
+                    local ak = {
+                        __version = ai.Version,
+                        __elements = {},
+                        __autoload = ai.AutoLoad,
+                        __custom = ai.CustomData,
                     }
-                    for _, methodName in ipairs(extraMethods) do
-                        local method = element[methodName]
-                        local marker = '__WindUISynergy' .. methodName .. 'Wrapped'
-                        if type(method) == 'function' and not element[marker] then
-                            local originalMethod = method
-                            element[marker] = true
-                            element[methodName] = function(self, ...)
-                                local result = {pcall(originalMethod, self, ...)}
-                                if not result[1] then
-                                    error(result[2], 0)
+
+                    for al, am in next, ai.Elements do
+                        if not am then
+                            ai.Elements[al] = nil
+                        else
+                            local an = ae.Parser[am.__type]
+                            if an and an.Save then
+                                local ao, ap = pcall(function()
+                                    return an.Save(am)
+                                end)
+                                if ao and ap ~= nil then
+                                    ak.__elements[tostring(al)] = ap
+                                elseif not ao then
+                                    warn(
+                                        "[ WindUI.ConfigManager ] Failed to save flag '"
+                                            .. tostring(al)
+                                            .. "': "
+                                            .. tostring(ap)
+                                    )
                                 end
-                                if not aa.Loading then
-                                    aa:Capture(flag, self)
-                                end
-                                table.remove(result, 1)
-                                return table.unpack(result)
                             end
                         end
                     end
+
+                    local al = ac:JSONEncode(ak)
+                    if writefile then
+                        writefile(ai.Path, al)
+                    end
+
+                    return ak
                 end
 
-                if aa.Data[flag] ~= nil and supported[elementType] then
-                    aa.Loading = true
-                    applyValue(element, aa.Data[flag])
-                    aa.Loading = false
+                function ai.Load(aj)
+                    if isfile and not isfile(ai.Path) then
+                        return false, 'Config file does not exist'
+                    end
+
+                    local ak, al = pcall(function()
+                        local ak = readfile
+                            or function()
+                                warn("[ WindUI.ConfigManager ] The config system doesn't work in the studio.")
+                                return nil
+                            end
+                        return ac:JSONDecode(ak(ai.Path))
+                    end)
+
+                    if not ak then
+                        return false, 'Failed to parse config file'
+                    end
+
+                    if not al.__version then
+                        local am = {
+                            __version = ai.Version,
+                            __elements = al,
+                            __custom = {},
+                        }
+                        al = am
+                    end
+
+                    if ad.PendingFlags then
+                        for am, an in next, ad.PendingFlags do
+                            ai:Register(am, an)
+                        end
+                    end
+
+                    ad.PendingConfigData = ad.PendingConfigData or {}
+
+                    for am, an in next, (al.__elements or {}) do
+                        local ao = an and an.__type and ae.Parser[an.__type] or nil
+                        local ap = ai.Elements[am]
+
+                        if ap and ao then
+                            task.spawn(function()
+                                local aq, ar = pcall(function()
+                                    ao.Load(ap, an)
+                                end)
+
+                                if not aq then
+                                    warn(
+                                        "[ WindUI.ConfigManager ] Failed to load flag '"
+                                            .. tostring(am)
+                                            .. "': "
+                                            .. tostring(ar)
+                                    )
+                                end
+                            end)
+                        elseif ao then
+                            ad.PendingConfigData[am] = an
+                        end
+                    end
+
+                    ai.CustomData = al.__custom or {}
+
+                    return ai.CustomData
                 end
-                return element
-            end
 
-            function aa.Unregister(_, flag)
-                aa.Elements[flag] = nil
-            end
+                function ai.Delete(aj)
+                    if not delfile then
+                        return false, 'delfile function is not available'
+                    end
 
-            function aa.Load(_)
-                aa.Data = readData()
-                aa.Loading = true
-                for flag, element in pairs(aa.Elements) do
-                    if aa.Data[flag] ~= nil then
-                        applyValue(element, aa.Data[flag])
+                    if not isfile(ai.Path) then
+                        return false, 'Config file does not exist'
+                    end
+
+                    local ak, al = pcall(function()
+                        delfile(ai.Path)
+                    end)
+
+                    if not ak then
+                        return false, 'Failed to delete config file: ' .. tostring(al)
+                    end
+
+                    ae.Configs[ag] = nil
+
+                    if ad.CurrentConfig == ai then
+                        ad.CurrentConfig = nil
+                    end
+
+                    return true, 'Config deleted successfully'
+                end
+
+                function ai.GetData(aj)
+                    return {
+                        elements = ai.Elements,
+                        custom = ai.CustomData,
+                        autoload = ai.AutoLoad,
+                    }
+                end
+
+                if isfile(ai.Path) then
+                    local aj, ak = pcall(function()
+                        return ac:JSONDecode(readfile(ai.Path))
+                    end)
+
+                    if aj and ak and ak.__autoload then
+                        ai.AutoLoad = true
+
+                        task.spawn(function()
+                            task.wait(0.5)
+                            local al, am = pcall(function()
+                                return ai:Load()
+                            end)
+                            if al then
+                                if ad.Debug then
+                                    print('[ WindUI.ConfigManager ] AutoLoaded config: ' .. ag)
+                                end
+                            else
+                                warn(
+                                    '[ WindUI.ConfigManager ] Failed to AutoLoad config: '
+                                        .. ag
+                                        .. ' - '
+                                        .. tostring(am)
+                                )
+                            end
+                        end)
                     end
                 end
-                aa.Loading = false
-                aa.PendingSave = false
-                return aa.Data
+
+                ai:SetAsCurrent()
+                ae.Configs[ag] = ai
+                return ai
             end
 
-            function aa.GetAll(_)
-                return aa.Data
+            function ae.Config(af, ag, ah)
+                return ae:CreateConfig(ag, ah)
             end
 
-            return aa
+            function ae.GetAutoLoadConfigs(af)
+                local ag = {}
+
+                for ah, ai in pairs(ae.Configs) do
+                    if ai.AutoLoad then
+                        table.insert(ag, ah)
+                    end
+                end
+
+                return ag
+            end
+
+            function ae.DeleteConfig(af, ag)
+                if not delfile then
+                    return false, 'delfile function is not available'
+                end
+
+                local ah = ae.Path .. ag .. '.json'
+
+                if not isfile(ah) then
+                    return false, 'Config file does not exist'
+                end
+
+                local ai, aj = pcall(function()
+                    delfile(ah)
+                end)
+
+                if not ai then
+                    return false, 'Failed to delete config file: ' .. tostring(aj)
+                end
+
+                ae.Configs[ag] = nil
+
+                if ad.CurrentConfig and ad.CurrentConfig.Path == ah then
+                    ad.CurrentConfig = nil
+                end
+
+                return true, 'Config deleted successfully'
+            end
+
+            function ae.AllConfigs(af)
+                if not listfiles then
+                    return {}
+                end
+
+                local ag = {}
+                if not isfolder(ae.Path) then
+                    makefolder(ae.Path)
+                    return ag
+                end
+
+                for ah, ai in next, listfiles(ae.Path) do
+                    local aj = ai:match('([^\\/]+)%.json$')
+                    if aj then
+                        table.insert(ag, aj)
+                    end
+                end
+
+                return ag
+            end
+
+            function ae.GetConfig(af, ag)
+                return ae.Configs[ag]
+            end
+
+            return ae
         end
         function WindUIModules.OpenButtonModule(): typeof(buildModule())
             local aa = WindUIModules.cache.OpenButtonModule
@@ -5991,6 +6088,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: TooltipModule
     do
         local function buildModule()
             local aa = {}
@@ -6248,6 +6346,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: ColorPickerUtilities
     do
         local function buildModule()
             local aa = {}
@@ -6414,6 +6513,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: ElementFrameModule
     do
         local function buildModule()
             local aa = WindUIModules.LocalizationModule()
@@ -7178,6 +7278,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: ParagraphElement
     do
         local function buildModule()
             local aa = WindUIModules.LocalizationModule()
@@ -7236,6 +7337,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: ButtonElement
     do
         local function buildModule()
             local aa = WindUIModules.LocalizationModule()
@@ -7334,6 +7436,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: ButtonKeybindElement
     do
         local function buildModule()
             local aa = (cloneref or clonereference or function(aa)
@@ -7582,6 +7685,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: ToggleUtilities
     do
         local function buildModule()
             local aa = {}
@@ -7899,6 +8003,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: ToggleElementHelper
     do
         local function buildModule()
             local aa = {}
@@ -7988,6 +8093,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: ToggleElement
     do
         local function buildModule()
             local aa = WindUIModules.LocalizationModule()
@@ -8088,6 +8194,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: ToggleKeybindElement
     do
         local function buildModule()
             local aa = (cloneref or clonereference or function(aa)
@@ -8223,7 +8330,7 @@ d.Heartbeat
                             then
                                 ak.Picking = false
                                 ak.UIElements.Keybind.Frame.Frame.TextLabel.Text = at
-                                ak:SetKeybind(at)
+                                ak.Keybind = at
 
                                 ar:Disconnect()
                                 au:Disconnect()
@@ -8321,6 +8428,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: SliderElement
     do
         local function buildModule()
             local aa = (cloneref or clonereference or function(aa)
@@ -8748,6 +8856,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: StepperElement
     do
         local function buildModule()
             local aa = (cloneref or clonereference or function(aa)
@@ -9218,6 +9327,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: KeybindElement
     do
         local function buildModule()
             local aa = (cloneref or clonereference or function(aa)
@@ -9347,7 +9457,7 @@ d.Heartbeat
                                         aj.Picking = false
 
                                         aj.UIElements.Keybind.Frame.Frame.TextLabel.Text = an
-                                        aj:Set(an)
+                                        aj.Value = an
 
                                         al:Disconnect()
                                         ao:Disconnect()
@@ -9392,6 +9502,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: InputElement
     do
         local function buildModule()
             local aa = WindUIModules.LocalizationModule()
@@ -9512,6 +9623,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: DropdownUtilities
     do
         local function buildModule()
             local aa = {}
@@ -10193,6 +10305,7 @@ d.Heartbeat
             return aa.c
         end
     end
+    -- Module: DropdownElement
     do
         local function buildModule()
             local aa = (cloneref or clonereference or function(aa)
@@ -10596,6 +10709,7 @@ workspace.CurrentCamera
             return aa.c
         end
     end
+    -- Module: SegmentedElement
     do
         local function buildModule()
             local aa = WindUIModules.LocalizationModule()
@@ -11266,6 +11380,7 @@ workspace.CurrentCamera
             return aa.c
         end
     end
+    -- Module: ProgressUtilities
     do
         local function buildModule()
             local aa = {}
@@ -11517,6 +11632,7 @@ workspace.CurrentCamera
             return aa.c
         end
     end
+    -- Module: CodeUtilities
     do
         local function buildModule()
             local aa = {}
@@ -11723,6 +11839,7 @@ workspace.CurrentCamera
             return aa.c
         end
     end
+    -- Module: CodeElement
     do
         local function buildModule()
             local aa = WindUIModules.LocalizationModule()
@@ -11798,6 +11915,7 @@ workspace.CurrentCamera
             return aa.c
         end
     end
+    -- Module: ColorpickerElement
     do
         local function buildModule()
             local aa = WindUIModules.LocalizationModule()
@@ -12505,6 +12623,7 @@ workspace.CurrentCamera
             return aa.c
         end
     end
+    -- Module: ProgressElement
     do
         local function buildModule()
             local aa = WindUIModules.LocalizationModule()
@@ -12870,6 +12989,7 @@ workspace.CurrentCamera
             return aa.c
         end
     end
+    -- Module: StatsElement
     do
         local function buildModule()
             local aa = WindUIModules.LocalizationModule()
@@ -13199,6 +13319,7 @@ workspace.CurrentCamera
             return aa.c
         end
     end
+    -- Module: SectionElement
     do
         local function buildModule()
             local aa = WindUIModules.LocalizationModule()
@@ -13798,6 +13919,7 @@ workspace.CurrentCamera
             return aa.c
         end
     end
+    -- Module: MultiSectionElement
     do
         local function buildModule()
             local aa = WindUIModules.LocalizationModule()
@@ -14997,6 +15119,7 @@ workspace.CurrentCamera
             return aa.c
         end
     end
+    -- Module: ImageElement
     do
         local function buildModule()
             local aa = WindUIModules.LocalizationModule()
@@ -15060,6 +15183,7 @@ workspace.CurrentCamera
             return aa.c
         end
     end
+    -- Module: GroupElement
     do
         local function buildModule()
             local aa = WindUIModules.LocalizationModule()
@@ -15151,6 +15275,7 @@ workspace.CurrentCamera
             return aa.c
         end
     end
+    -- Module: VideoElement
     do
         local function buildModule()
             local aa = WindUIModules.LocalizationModule()
@@ -15324,6 +15449,7 @@ workspace.CurrentCamera
             return aa.c
         end
     end
+    -- Module: TabModule
     do
         local function buildModule()
             return {
@@ -15410,8 +15536,36 @@ ar, as = ao:New(aq)
                             if aq.Flag and typeof(aq.Flag) == 'string' then
                                 af.FlagIndex = af.FlagIndex or {}
                                 af.FlagIndex[aq.Flag] = as
-                                if af.ConfigManager then
-                                    af.ConfigManager:Register(aq.Flag, as)
+
+                                if af.CurrentConfig then
+                                    af.CurrentConfig:Register(aq.Flag, as)
+
+                                    if af.PendingConfigData and af.PendingConfigData[aq.Flag] then
+                                        local at = af.PendingConfigData[aq.Flag]
+
+                                        local au = af.ConfigManager
+                                        if au.Parser[at.__type] then
+                                            task.defer(function()
+                                                local av, aw = pcall(function()
+                                                    au.Parser[at.__type].Load(as, at)
+                                                end)
+
+                                                if av then
+                                                    af.PendingConfigData[aq.Flag] = nil
+                                                else
+                                                    warn(
+                                                        "[ WindUI ] Failed to apply pending config for '"
+                                                            .. aq.Flag
+                                                            .. "': "
+                                                            .. tostring(aw)
+                                                    )
+                                                end
+                                            end)
+                                        end
+                                    end
+                                else
+                                    af.PendingFlags = af.PendingFlags or {}
+                                    af.PendingFlags[aq.Flag] = as
                                 end
                             end
 
@@ -15468,8 +15622,13 @@ ar, as = ao:New(aq)
                                     if af.FlagIndex and af.FlagIndex[aq.Flag] == as then
                                         af.FlagIndex[aq.Flag] = nil
                                     end
-                                    if af.ConfigManager then
-                                        af.ConfigManager:Unregister(aq.Flag)
+
+                                    if af.CurrentConfig and af.CurrentConfig.Unregister then
+                                        af.CurrentConfig:Unregister(aq.Flag)
+                                    end
+
+                                    if af.PendingFlags and af.PendingFlags[aq.Flag] == as then
+                                        af.PendingFlags[aq.Flag] = nil
                                     end
                                 end
 
@@ -15523,6 +15682,7 @@ ar, as = ao:New(aq)
             return aa.c
         end
     end
+    -- Module: SidebarModule
     do
         local function buildModule()
             local aa = (cloneref or clonereference or function(aa)
@@ -16118,6 +16278,7 @@ ar, as = ao:New(aq)
             return aa.c
         end
     end
+    -- Module: DefaultElementIcons
     do
         local function buildModule()
             local aa = {}
@@ -16430,6 +16591,7 @@ aB, b = al:New(aA)
             return aa.c
         end
     end
+    -- Module: SearchModule
     do
         local function buildModule()
             return {
@@ -16458,6 +16620,7 @@ aB, b = al:New(aA)
             return aa.c
         end
     end
+    -- Module: WindowModule
     do
         local function buildModule()
             local aa = (cloneref or clonereference or function(aa)
@@ -16979,6 +17142,7 @@ aB, b = al:New(aA)
             return aa.c
         end
     end
+    -- Module: WindUIApi
     do
         local function buildModule()
             local aa = (cloneref or clonereference or function(aa)
@@ -17092,8 +17256,7 @@ aB, b = al:New(aA)
                     IconSize = au.IconSize or 22,
                     IconThemed = au.IconThemed,
                     IconRadius = au.IconRadius or 0,
-                    Folder = au.Folder or au.ConfigFolder or 'Default',
-                    ConfigName = au.ConfigName or 'default_config',
+                    Folder = au.Folder,
                     Resizable = au.Resizable ~= false,
                     Background = au.Background,
                     BackgroundVideo = au.BackgroundVideo,
@@ -17124,7 +17287,6 @@ aB, b = al:New(aA)
                     HidePanelBackground = au.HidePanelBackground or false,
                     AutoScale = au.AutoScale ~= false,
                     OpenButton = au.OpenButton,
-                    HideOpenButtonOnClose = au.HideOpenButtonOnClose == true,
                     BottomDragBarEnabled = not (au.BottomDragBarEnabled == false or au.BottomDragEnabled == false),
                     WatermarkConfig = au.Watermark,
 
@@ -17140,6 +17302,7 @@ aB, b = al:New(aA)
                     CanResize = au.Resizable ~= false,
                     IsOpenButtonEnabled = true,
 
+                    CurrentConfig = nil,
                     ConfigManager = nil,
                     AcrylicPaint = nil,
                     CurrentTab = nil,
@@ -17159,6 +17322,8 @@ aB, b = al:New(aA)
 
                     ElementConfig = {},
 
+                    PendingFlags = {},
+                    PendingConfigData = {},
                     FlagIndex = {},
 
                     Shortcuts = {},
@@ -17191,11 +17356,11 @@ aB, b = al:New(aA)
                 av.Topbar.ButtonsType = av.Topbar.ButtonsType or 'Default'
 
                 if not ae:IsStudio() and av.Folder and writefile then
-                    if not isfolder('WindUI_SY/' .. av.Folder) then
-                        makefolder('WindUI_SY/' .. av.Folder)
+                    if not isfolder('WindUI/' .. av.Folder) then
+                        makefolder('WindUI/' .. av.Folder)
                     end
-                    if not isfolder('WindUI_SY/' .. av.Folder .. '/assets') then
-                        makefolder('WindUI_SY/' .. av.Folder .. '/assets')
+                    if not isfolder('WindUI/' .. av.Folder .. '/assets') then
+                        makefolder('WindUI/' .. av.Folder .. '/assets')
                     end
                     if not isfolder(av.Folder) then
                         makefolder(av.Folder)
@@ -17209,7 +17374,9 @@ aB, b = al:New(aA)
                     CornerRadius = UDim.new(0, av.UICorner),
                 })
 
-                av.ConfigManager = at:Init(av)
+                if av.Folder then
+                    av.ConfigManager = at:Init(av)
+                end
 
                 if av.Acrylic then
                     local ay = ag.AcrylicPaint({ UseAcrylic = av.Acrylic })
@@ -17367,7 +17534,13 @@ aB, b = al:New(aA)
                     Name = 'Blur',
                 })
 
-                av.IsPC = not ad.TouchEnabled
+                if ad.TouchEnabled and not ad.KeyboardEnabled then
+                    av.IsPC = false
+                elseif ad.KeyboardEnabled then
+                    av.IsPC = true
+                else
+                    av.IsPC = nil
+                end
 
                 local d
                 if av.User then
@@ -18182,17 +18355,6 @@ aB, b = al:New(aA)
                     av.ToggleKey = B
                 end
 
-                function av.SetOpenButtonVisible(A, B)
-                    local C = B == true
-                    if av.OpenButtonMain then
-                        av.OpenButtonMain:Visible(C)
-                        if av.OpenButtonMain.Button then
-                            av.OpenButtonMain.Button.Visible = C
-                        end
-                    end
-                    return av
-                end
-
                 function av.SetTitle(A, B)
                     av.Title = B
                     x.Text = B
@@ -18419,7 +18581,7 @@ aB, b = al:New(aA)
                         end
 
                         if av.OpenButtonMain and av.IsOpenButtonEnabled then
-                            av:SetOpenButtonVisible(false)
+                            av.OpenButtonMain:Visible(false)
                         end
 
                         al(
@@ -18472,9 +18634,8 @@ aB, b = al:New(aA)
                         end)
                     end)
                 end
-                                function av.Close(C, D)
+                function av.Close(C)
                     local F = {}
-                    local forceHide = (C == true) or (D == true) or (type(C) == "table" and C.ForceHide)
 
                     if av.OnCloseCallback then
                         task.spawn(function()
@@ -18488,14 +18649,6 @@ aB, b = al:New(aA)
 
                     av.CanDropdown = false
                     av.Closed = true
-
-                    if av.OpenButtonMain then
-                        if forceHide then
-                            av:SetOpenButtonVisible(false)
-                        else
-                            av:SetOpenButtonVisible(not av.IsPC)
-                        end
-                    end
 
                     al(av.UIElements.Main.Background, 0.32, {
                         ImageTransparency = 1,
@@ -18553,19 +18706,8 @@ aB, b = al:New(aA)
                         task.wait(0.4)
                         av.UIElements.Main.Visible = false
 
-                        if av.Destroyed then
-                            if av.OpenButtonMain then
-                                av:SetOpenButtonVisible(false)
-                            end
-                            return
-                        end
-
-                        if forceHide then
-                            av:SetOpenButtonVisible(false)
-                        elseif av.OpenButtonMain and not av.IsPC and av.IsOpenButtonEnabled then
-                            av:SetOpenButtonVisible(true)
-                        elseif av.OpenButtonMain then
-                            av:SetOpenButtonVisible(false)
+                        if av.OpenButtonMain and not av.Destroyed and not av.IsPC and av.IsOpenButtonEnabled then
+                            av.OpenButtonMain:Visible(true)
                         end
                     end)
 
@@ -18676,11 +18818,46 @@ aB, b = al:New(aA)
                     return av
                 end
 
-                function av.SaveConfig(C)
-                    return av.ConfigManager and av.ConfigManager:Save() or false
-                end
-                function av.LoadConfig(C)
-                    return av.ConfigManager and av.ConfigManager:Load() or false
+                function av.SetCurrentConfig(C, F)
+                    av.CurrentConfig = F
+
+                    if not F then
+                        return
+                    end
+
+                    if av.PendingFlags then
+                        for G, H in next, av.PendingFlags do
+                            if F.Register then
+                                F:Register(G, H)
+                            end
+                        end
+                    end
+
+                    if av.PendingConfigData and next(av.PendingConfigData) ~= nil then
+                        local G = av.ConfigManager and av.ConfigManager.Parser
+
+                        for H, J in next, av.PendingConfigData do
+                            local L = av.FlagIndex and av.FlagIndex[H]
+                            local M = G and J and J.__type and G[J.__type]
+
+                            if L and M and M.Load then
+                                local N, O = pcall(function()
+                                    M.Load(L, J)
+                                end)
+
+                                if N then
+                                    av.PendingConfigData[H] = nil
+                                else
+                                    warn(
+                                        "[ WindUI ] Failed to apply pending config for '"
+                                            .. tostring(H)
+                                            .. "': "
+                                            .. tostring(O)
+                                    )
+                                end
+                            end
+                        end
+                    end
                 end
 
                 function av.GetFlagElement(C, F)
