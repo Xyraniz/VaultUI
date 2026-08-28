@@ -4684,6 +4684,96 @@ d.Heartbeat
 
                         Icon = Color3.fromHex('#ffffff'),
                     },
+
+                    Graphite = {
+                        Name = 'Graphite',
+
+                        Accent = Color3.fromRGB(58, 58, 62),
+                        Dialog = Color3.fromRGB(22, 22, 24),
+                        Outline = Color3.fromRGB(145, 145, 150),
+                        Text = Color3.fromRGB(232, 232, 235),
+                        Placeholder = Color3.fromRGB(118, 118, 124),
+                        Background = Color3.fromRGB(15, 15, 17),
+                        Button = Color3.fromRGB(82, 82, 88),
+                        Icon = Color3.fromRGB(174, 174, 180),
+                        Toggle = Color3.fromRGB(150, 150, 156),
+                        Slider = Color3.fromRGB(132, 132, 140),
+                        Checkbox = Color3.fromRGB(150, 150, 156),
+                        PanelBackground = Color3.fromRGB(22, 22, 25),
+                        PanelBackgroundTransparency = 0.56,
+                        TabBackground = Color3.fromRGB(38, 38, 42),
+                        TabBackgroundHover = Color3.fromRGB(72, 72, 78),
+                        TabBackgroundHoverTransparency = 0.72,
+                        TabBackgroundActive = Color3.fromRGB(92, 92, 100),
+                        TabBackgroundActiveTransparency = 0.52,
+                        TabTextTransparency = 0.05,
+                        TabTextTransparencyActive = 0,
+                        TabIconTransparency = 0.12,
+                        TabIconTransparencyActive = 0,
+                        TabBorderTransparency = 0.72,
+                        TabBorderTransparencyActive = 0.35,
+                        Primary = Color3.fromRGB(145, 145, 152),
+                    },
+
+                    ['Deep Blue'] = {
+                        Name = 'Deep Blue',
+
+                        Accent = Color3.fromRGB(25, 42, 68),
+                        Dialog = Color3.fromRGB(10, 18, 31),
+                        Outline = Color3.fromRGB(75, 105, 145),
+                        Text = Color3.fromRGB(220, 231, 245),
+                        Placeholder = Color3.fromRGB(99, 119, 146),
+                        Background = Color3.fromRGB(6, 12, 22),
+                        Button = Color3.fromRGB(45, 69, 101),
+                        Icon = Color3.fromRGB(132, 158, 193),
+                        Toggle = Color3.fromRGB(69, 112, 168),
+                        Slider = Color3.fromRGB(62, 101, 154),
+                        Checkbox = Color3.fromRGB(69, 112, 168),
+                        PanelBackground = Color3.fromRGB(8, 16, 28),
+                        PanelBackgroundTransparency = 0.54,
+                        TabBackground = Color3.fromRGB(18, 34, 56),
+                        TabBackgroundHover = Color3.fromRGB(43, 72, 108),
+                        TabBackgroundHoverTransparency = 0.7,
+                        TabBackgroundActive = Color3.fromRGB(55, 91, 136),
+                        TabBackgroundActiveTransparency = 0.48,
+                        TabTextTransparency = 0.04,
+                        TabTextTransparencyActive = 0,
+                        TabIconTransparency = 0.1,
+                        TabIconTransparencyActive = 0,
+                        TabBorderTransparency = 0.68,
+                        TabBorderTransparencyActive = 0.3,
+                        Primary = Color3.fromRGB(69, 112, 168),
+                    },
+
+                    ['Rose Gray'] = {
+                        Name = 'Rose Gray',
+
+                        Accent = Color3.fromRGB(111, 72, 88),
+                        Dialog = Color3.fromRGB(35, 24, 30),
+                        Outline = Color3.fromRGB(178, 137, 154),
+                        Text = Color3.fromRGB(242, 228, 234),
+                        Placeholder = Color3.fromRGB(151, 119, 132),
+                        Background = Color3.fromRGB(24, 16, 21),
+                        Button = Color3.fromRGB(126, 91, 106),
+                        Icon = Color3.fromRGB(202, 168, 182),
+                        Toggle = Color3.fromRGB(174, 119, 143),
+                        Slider = Color3.fromRGB(158, 108, 130),
+                        Checkbox = Color3.fromRGB(174, 119, 143),
+                        PanelBackground = Color3.fromRGB(32, 20, 27),
+                        PanelBackgroundTransparency = 0.52,
+                        TabBackground = Color3.fromRGB(58, 37, 47),
+                        TabBackgroundHover = Color3.fromRGB(105, 70, 84),
+                        TabBackgroundHoverTransparency = 0.68,
+                        TabBackgroundActive = Color3.fromRGB(132, 87, 106),
+                        TabBackgroundActiveTransparency = 0.46,
+                        TabTextTransparency = 0.03,
+                        TabTextTransparencyActive = 0,
+                        TabIconTransparency = 0.08,
+                        TabIconTransparencyActive = 0,
+                        TabBorderTransparency = 0.65,
+                        TabBorderTransparencyActive = 0.28,
+                        Primary = Color3.fromRGB(174, 119, 143),
+                    },
                 }
             end
         end
@@ -19946,16 +20036,118 @@ function ad.AddTheme(au, av)
     return av
 end
 
+ad.ThemeBackgrounds = {
+    Graphite = 'rbxassetid://125317741803293',
+    ['Deep Blue'] = 'rbxassetid://93570551206870',
+    ['Rose Gray'] = 'rbxassetid://132234483581300',
+}
+ad.ThemeBackgroundTransparency = 0.22
+
+function ad.SetThemeBackground(au, av)
+    ad.ThemeBackgrounds = av or {}
+    return ad.ThemeBackgrounds
+end
+
 function ad.SetTheme(au, av)
     if ad.Themes[av] then
         ad.Theme = ad.Themes[av]
         am.SetTheme(ad.Themes[av])
+
+        local background = ad.ThemeBackgrounds[av]
+        if background and ad.Window and ad.Window.SetBackgroundImage then
+            ad.Window:SetBackgroundImage(background)
+            if ad.Window.SetBackgroundImageTransparency then
+                ad.Window:SetBackgroundImageTransparency(ad.ThemeBackgroundTransparency)
+            end
+        end
 
         if ad.OnThemeChangeFunction then
             ad.OnThemeChangeFunction(av)
         end
 
         return ad.Themes[av]
+    end
+    return nil
+end
+
+function ad.GetThemeBackground(au, av)
+    return ad.ThemeBackgrounds[av]
+end
+
+function ad.GetThemeBackgrounds(au)
+    return ad.ThemeBackgrounds
+end
+
+local function buildThemeOptionValues(au, av)
+    local themes = {}
+    if au and type(au) == 'table' then
+        for an, _ in next, au do
+            if an and an ~= 'Dark' and an ~= 'Light' then
+                table.insert(themes, an)
+            end
+        end
+        table.sort(themes, function(ao, ap)
+            return tostring(ao) < tostring(ap)
+        end)
+    end
+
+    if av then
+        for _, an in ipairs(av) do
+            local found = false
+            for _, ap in ipairs(themes) do
+                if ap == an then
+                    found = true
+                    break
+                end
+            end
+            if not found then
+                table.insert(themes, an)
+            end
+        end
+    end
+
+    return themes
+end
+
+function ad.CreateThemeDropdown(au, av, aw)
+    aw = aw or {}
+    local tab = av
+    if tab and tab.IsTab then
+        local flag = aw.Flag or 'InterfaceTheme'
+        local title = aw.Title or 'loc:control.theme'
+        local titleKeys = aw.TitleKeys or {}
+        local showBackgroundTag = aw.ShowBackgroundTag
+        if showBackgroundTag == nil then
+            showBackgroundTag = true
+        end
+
+        local themeNames = buildThemeOptionValues(ad.Themes, aw.Values)
+        local values = {}
+        for _, an in ipairs(themeNames) do
+            local displayTitle = titleKeys[an] or an
+            if showBackgroundTag and ad.ThemeBackgrounds[an] ~= nil and not titleKeys[an] then
+                displayTitle = displayTitle .. '  ·  Background'
+            end
+            table.insert(values, { Title = displayTitle, Value = an })
+        end
+
+        local currentValue = aw.Value or (ad.Theme and ad.Theme.Name) or (values[1] and values[1].Value)
+
+        return tab:Dropdown({
+            Title = title,
+            Flag = flag,
+            Values = values,
+            Value = currentValue,
+            Callback = function(themeName)
+                if type(themeName) == 'table' then
+                    themeName = themeName.Value or themeName.Title
+                end
+                ad:SetTheme(themeName)
+                if aw.Callback then
+                    aw.Callback(themeName)
+                end
+            end,
+        })
     end
     return nil
 end
