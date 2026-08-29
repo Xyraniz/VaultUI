@@ -38,6 +38,61 @@ jobs:
           cp -R web/. _site/
           cp -R Libraries/. _site/Libraries/
           touch _site/.nojekyll
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+
+          def slugify(value):
+              import re
+              value = value.lower()
+              value = re.sub(r'[^a-z0-9]+', '_', value)
+              return value.strip('_')
+
+          def display_name(folder_name):
+              import re
+              name = re.sub(r'[-_]+', ' ', folder_name)
+              return re.sub(r'\b\w', lambda m: m.group(0).upper(), name)
+
+          base = Path('Libraries')
+          folders = []
+          for entry in sorted(base.iterdir(), key=lambda p: p.name):
+              if not entry.is_dir():
+                  continue
+              files = {f.name.lower() for f in entry.iterdir() if f.is_file()}
+              if 'source.lua' not in files and 'example.lua' not in files:
+                  continue
+              folders.append((entry.name, files))
+
+          def library_url(folder_name, file_name):
+              from urllib.parse import quote
+              return f'Libraries/{quote(folder_name)}/{file_name}'
+
+          catalog = []
+          for index, (folder_name, files) in enumerate(folders, start=1):
+              has_source = 'source.lua' in files
+              has_example = 'example.lua' in files
+              name = display_name(folder_name)
+              lib_files = {}
+              if has_source:
+                  lib_files['source'] = library_url(folder_name, 'source.lua')
+              if has_example:
+                  lib_files['example'] = library_url(folder_name, 'example.lua')
+              catalog.append({
+                  'id': slugify(folder_name),
+                  'folder': folder_name,
+                  'name': name,
+                  'label': name,
+                  'number': str(index).zfill(2),
+                  'type': 'Source + example' if has_source and has_example else ('Source' if has_source else 'Example'),
+                  'description': f'Preserved {name} library with its available source and runnable example files.',
+                  'tags': ['Source' if has_source else 'Loadstring', 'Example' if has_example else 'Archive'],
+                  'files': lib_files,
+              })
+
+          out = Path('_site/catalog.json')
+          out.write_text(json.dumps(catalog, indent=2), encoding='utf-8')
+          print(f'Wrote {out} with {len(catalog)} libraries')
+          PY
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
