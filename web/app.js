@@ -1,4 +1,5 @@
 const libraryBase = window.location.pathname.includes('/web/') ? '../Libraries' : 'Libraries';
+const catalogUrl = window.location.pathname.includes('/web/') ? '../catalog.json' : 'catalog.json';
 const repositoryApiBase = 'https://api.github.com/repos/Xyraniz/VaultUI';
 const librariesTreeUrl = `${repositoryApiBase}/git/trees/main?recursive=1`;
 
@@ -99,6 +100,14 @@ async function fetchJson(url) {
 }
 
 async function discoverLibraries() {
+  try {
+    const response = await fetch(catalogUrl, { cache: 'no-cache' });
+    if (response.ok) {
+      const catalog = await response.json();
+      if (Array.isArray(catalog) && catalog.length) return catalog;
+    }
+  } catch (error) {}
+
   const tree = await fetchJson(librariesTreeUrl);
   const folders = new Map();
 
