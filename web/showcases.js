@@ -6,10 +6,10 @@ const showcaseTable = Object.freeze({
     embedUrl: 'https://files.catbox.moe/5gwc7y.mp4'
   },
   armenta_lib: {
-    embedUrl: 'https://files.catbox.moe/zl4njb.mp4'
+    embedUrl: 'https://www.youtube.com/embed/svxssTh00O4?si=UMnueGury7wCeA_5'
   },
   aztup: {
-    embedUrl: 'https://files.catbox.moe/di65fq.mp4'
+    embedUrl: 'https://www.youtube.com/embed/0ivUX4me6r4?si=zs-fVfcySE0Ix-s7'
   },
   avilon_modified: {
     embedUrl: 'https://files.catbox.moe/duv7ak.mp4'
@@ -21,7 +21,7 @@ const showcaseTable = Object.freeze({
     embedUrl: 'https://files.catbox.moe/wq7znk.mp4'
   },
   flux: {
-    embedUrl: 'https://files.catbox.moe/1mg3kd.mp4'
+    embedUrl: 'https://www.youtube.com/embed/0HE4YBxqWxY?si=IDI92_LwGOMHLBQ8'
   },
   synergyui: {
     embedUrl: 'https://files.catbox.moe/cw0lli.mp4'
