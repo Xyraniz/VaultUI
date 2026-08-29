@@ -15,7 +15,7 @@ const showcaseTable = Object.freeze({
     embedUrl: 'https://files.catbox.moe/duv7ak.mp4'
   },
   bacon: {
-    embedUrl: 'https://files.catbox.moe/bpo9er.mp4'
+    embedUrl: 'https://www.youtube.com/embed/4g5VNQDMXlQ?si=BfYe_0sCPDZlW8NN'
   },
   discord_lib: {
     embedUrl: 'https://files.catbox.moe/wq7znk.mp4'
