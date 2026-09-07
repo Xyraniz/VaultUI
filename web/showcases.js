@@ -28,6 +28,9 @@ const showcaseTable = Object.freeze({
   },
   concorde: {
     imageUrl: 'https://i.postimg.cc/hv0dNJkx/image.png'
+  },
+  mentality: {
+    imageUrl: 'https://i.postimg.cc/qRRSNnLH/image.png'
   }
 });
 
