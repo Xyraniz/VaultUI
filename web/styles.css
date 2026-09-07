@@ -96,6 +96,7 @@ button, [role='button'] { cursor: pointer; }
 .mini-button { min-height: 27px; padding: 0 8px; border-radius: 5px; font-family: var(--mono); font-size: 9px; }
 .showcase-canvas { position: relative; display: grid; place-items: center; width: 100%; aspect-ratio: 16 / 9; min-height: 0; overflow: auto; background: radial-gradient(circle at center, #19191c 0, #111113 55%, #0f0f10 100%); }
 .showcase-canvas iframe { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; background: #000; }
+.showcase-canvas .showcase-image { display: block; width: 100%; height: 100%; object-fit: contain; background: #000; }
 .showcase-empty { display: grid; place-items: center; width: 100%; height: 100%; min-height: 0; color: var(--muted); background: var(--code); border: 0; font-size: 12px; }
 .showcase-card.focused { position: fixed; z-index: 60; inset: 24px; display: flex; flex-direction: column; border-color: var(--line-strong); box-shadow: 0 28px 100px rgba(0,0,0,.7); }
 .showcase-card.focused .showcase-canvas { flex: 1; min-height: 0; overflow: auto; }
