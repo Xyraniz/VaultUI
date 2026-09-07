@@ -36,6 +36,10 @@ Concorde is a compact, dark-themed Roblox UI library included in `Libraries/Conc
 
 The catalog also supports image-based showcases. Concorde uses the supplied [showcase image](https://i.postimg.cc/hv0dNJkx/image.png), which is rendered responsively in the same showcase panel used for video and embedded demos.
 
+## Mentality
+
+Mentality is already structured as a reusable library rather than a one-off interface. It exposes a complete `Window` → `Page` → `Section` hierarchy with themed controls, notifications, keybinds, flags, config helpers, and responsive input handling. VaultUI includes a reviewed example covering toggles, buttons, sliders, dropdowns, labels, textboxes, callbacks, and value accessors. Its image showcase is available at [the supplied Mentality preview](https://i.postimg.cc/qRRSNnLH/image.png).
+
 ## Contributing
 
 Contributions are welcome. When adding or updating a library, include an accurate example whenever possible, preserve the original author's attribution, and respect the library's license terms.
