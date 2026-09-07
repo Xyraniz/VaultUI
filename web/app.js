@@ -33,6 +33,7 @@ const elements = {
   expandShowcaseButton: $('#expandShowcaseButton'),
   openShowcaseLink: $('#openShowcaseLink'),
   showcaseFrame: $('#showcaseFrame'),
+  showcaseImage: $('#showcaseImage'),
   showcaseCanvas: $('#showcaseCanvas'),
   showcaseEmpty: $('#showcaseEmpty'),
   showcaseEmptyMessage: $('#showcaseEmptyMessage'),
@@ -218,7 +219,8 @@ function renderHeader() {
   elements.openShowcaseButton.innerHTML = showcase ? 'Open showcase <span>↗</span>' : 'No Showcase';
   elements.openShowcaseLink.hidden = !showcase;
   if (showcase) {
-    elements.openShowcaseLink.href = showcase.embedUrl;
+    elements.openShowcaseLink.href = showcase.embedUrl || showcase.imageUrl;
+    elements.openShowcaseLink.textContent = showcase.imageUrl && !showcase.embedUrl ? 'Open image' : 'Open in Mega';
   } else {
     elements.openShowcaseLink.removeAttribute('href');
   }
@@ -228,6 +230,8 @@ function renderHeader() {
 function showShowcaseUnavailable(message = 'No Showcase') {
   elements.showcaseFrame.hidden = true;
   elements.showcaseFrame.removeAttribute('src');
+  elements.showcaseImage.hidden = true;
+  elements.showcaseImage.removeAttribute('src');
   elements.showcaseEmptyMessage.textContent = message;
   elements.showcaseEmpty.hidden = false;
   elements.showcaseMode.textContent = 'UNAVAILABLE';
@@ -237,6 +241,8 @@ function renderShowcase() {
   const showcase = getShowcase(state.library.id);
   elements.showcaseFrame.hidden = true;
   elements.showcaseFrame.removeAttribute('src');
+  elements.showcaseImage.hidden = true;
+  elements.showcaseImage.removeAttribute('src');
   elements.showcaseEmpty.hidden = true;
 
   if (showcase && showcase.embedUrl) {
@@ -244,6 +250,14 @@ function renderShowcase() {
     elements.showcaseFrame.title = `${state.library.name} Mega showcase`;
     elements.showcaseFrame.src = showcase.embedUrl;
     elements.showcaseFrame.hidden = false;
+    return;
+  }
+
+  if (showcase && showcase.imageUrl) {
+    elements.showcaseMode.textContent = 'IMAGE SHOWCASE';
+    elements.showcaseImage.alt = `${state.library.name} showcase`;
+    elements.showcaseImage.src = showcase.imageUrl;
+    elements.showcaseImage.hidden = false;
     return;
   }
 
@@ -404,6 +418,7 @@ function initEvents() {
   elements.openShowcaseButton.addEventListener('click', () => toggleShowcaseExpanded());
   elements.expandShowcaseButton.addEventListener('click', () => toggleShowcaseExpanded());
   elements.showcaseFrame.addEventListener('error', handleShowcaseFrameError);
+  elements.showcaseImage.addEventListener('error', () => showShowcaseUnavailable('The showcase image could not be loaded.'));
   elements.expandCodeButton.addEventListener('click', () => toggleCodeExpanded());
   elements.minimizeCodeButton.addEventListener('click', toggleCodeMinimized);
 

@@ -25,6 +25,9 @@ const showcaseTable = Object.freeze({
   },
   synergyui: {
     embedUrl: 'https://files.catbox.moe/cw0lli.mp4'
+  },
+  concorde: {
+    imageUrl: 'https://i.postimg.cc/hv0dNJkx/image.png'
   }
 });
 
