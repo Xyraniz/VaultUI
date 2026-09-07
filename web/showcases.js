@@ -31,6 +31,9 @@ const showcaseTable = Object.freeze({
   },
   mentality: {
     imageUrl: 'https://i.postimg.cc/qRRSNnLH/image.png'
+  },
+  nexonix: {
+    imageUrl: 'https://i.postimg.cc/tTn0rWVh/595166592-8f262887-3711-411d-8915-beae1d7c86da.png'
   }
 });
 

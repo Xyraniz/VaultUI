@@ -40,6 +40,10 @@ The catalog also supports image-based showcases. Concorde uses the supplied [sho
 
 Mentality is already structured as a reusable library rather than a one-off interface. It exposes a complete `Window` → `Page` → `Section` hierarchy with themed controls, notifications, keybinds, flags, config helpers, and responsive input handling. VaultUI includes a reviewed example covering toggles, buttons, sliders, dropdowns, labels, textboxes, callbacks, and value accessors. Its image showcase is available at [the supplied Mentality preview](https://i.postimg.cc/qRRSNnLH/image.png).
 
+## Nexonix
+
+Nexonix is a reusable window/page/section UI library with themed controls, notifications, search support, keybinds, flags, and configuration folders. Its source was reviewed and corrected to return the library table from `loadstring`, while retaining the original global compatibility path. The included example covers the main controls and callback flow. The catalog uses the supplied [Nexonix showcase image](https://i.postimg.cc/tTn0rWVh/595166592-8f262887-3711-411d-8915-beae1d7c86da.png).
+
 ## Contributing
 
 Contributions are welcome. When adding or updating a library, include an accurate example whenever possible, preserve the original author's attribution, and respect the library's license terms.
