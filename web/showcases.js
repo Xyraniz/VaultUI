@@ -34,6 +34,9 @@ const showcaseTable = Object.freeze({
   },
   nexonix: {
     imageUrl: 'https://i.postimg.cc/tTn0rWVh/595166592-8f262887-3711-411d-8915-beae1d7c86da.png'
+  },
+  elastic: {
+    imageUrl: 'https://i.postimg.cc/3wWD3sJ2/image.png'
   }
 });
 
