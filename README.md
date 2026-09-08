@@ -32,6 +32,8 @@ For the most accurate usage details, refer to the example provided with the sele
 
 VindUI-Reborn is included as a reusable library with acrylic-style windows, searchable tabs, sub-tabs, notifications, modals, cards, sliders, dropdowns, textboxes, color pickers, keybinds, and configuration helpers. Its preserved source returns the `NullUI` library table through the `CreateWindow` entry point, and the example exercises the main component handles and callbacks. The catalog uses the supplied [VindUI-Reborn showcase image](https://i.postimg.cc/5tWZJV3V/image.png).
 
+Euphoria is included as a reusable library with responsive scaling, draggable windows, tabs, modules, sliders, textboxes, checkboxes, dropdowns, dividers, and queued notifications. The example covers both direct tab controls and nested module controls. Its catalog entry uses the supplied [Euphoria showcase image](https://i.postimg.cc/rsG95B49/image.png).
+
 ## Contributing
 
 Contributions are welcome. When adding or updating a library, include an accurate example whenever possible, preserve the original author's attribution, and respect the library's license terms.
