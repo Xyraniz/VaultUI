@@ -37,6 +37,9 @@ const showcaseTable = Object.freeze({
   },
   elastic: {
     imageUrl: 'https://i.postimg.cc/3wWD3sJ2/image.png'
+  },
+  vindui_reborn: {
+    imageUrl: 'https://i.postimg.cc/5tWZJV3V/image.png'
   }
 });
 
