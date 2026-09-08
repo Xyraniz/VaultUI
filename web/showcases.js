@@ -45,10 +45,10 @@ const showcaseTable = Object.freeze({
     imageUrl: 'https://i.postimg.cc/rsG95B49/image.png'
   },
   maclib: {
-    imageUrl: 'assets/maclib-showcase.png'
+    imageUrl: 'https://i.postimg.cc/xTn9Bwdz/483312443-2d96552b-baee-4c49-927d-ebe0e1f7f908.png'
   },
   ragebot: {
-    imageUrl: 'assets/ragebot-showcase.svg'
+    imageUrl: 'https://i.postimg.cc/521dXLz9/image.png'
   }
 });
 
