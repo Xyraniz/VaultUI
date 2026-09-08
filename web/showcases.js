@@ -46,6 +46,9 @@ const showcaseTable = Object.freeze({
   },
   maclib: {
     imageUrl: 'assets/maclib-showcase.png'
+  },
+  ragebot: {
+    imageUrl: 'assets/ragebot-showcase.svg'
   }
 });
 
