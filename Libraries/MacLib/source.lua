@@ -1,6 +1,6 @@
-local MacLib = {
-	Options = {},
-	Folder = "Maclib",
+local MacLib = { 
+	Options = {}, 
+	Folder = "Maclib", 
 	GetService = function(service)
 		return cloneref and cloneref(game:GetService(service)) or game:GetService(service)
 	end
@@ -53,7 +53,7 @@ local function GetGui()
 	newGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 	newGui.DisplayOrder = 2147483647
 
-	local parent = RunService:IsStudio()
+	local parent = RunService:IsStudio() 
 		and LocalPlayer:FindFirstChild("PlayerGui")
 		or (gethui and gethui())
 		or (cloneref and cloneref(MacLib.GetService("CoreGui")) or MacLib.GetService("CoreGui"))
@@ -667,7 +667,7 @@ function MacLib:Window(Settings)
 	local function ChangeState(State)
 		Tween(divider, TweenInfo.new(0.2, TweenSettings.EasingStyle), {
 			BackgroundTransparency = State == "Idle" and TweenSettings.DefaultTransparency or TweenSettings.HoverTransparency
-		}):Play()
+		}):Play()  
 	end
 
 	dividerInteract.MouseEnter:Connect(function()
@@ -1171,10 +1171,10 @@ function MacLib:Window(Settings)
 			end
 		end
 		DrawQuad(
-			camera:ScreenPointToRay(tl.x, tl.y, zIndex).Origin,
-			camera:ScreenPointToRay(tr.x, tr.y, zIndex).Origin,
-			camera:ScreenPointToRay(bl.x, bl.y, zIndex).Origin,
-			camera:ScreenPointToRay(br.x, br.y, zIndex).Origin,
+			camera:ScreenPointToRay(tl.x, tl.y, zIndex).Origin, 
+			camera:ScreenPointToRay(tr.x, tr.y, zIndex).Origin, 
+			camera:ScreenPointToRay(bl.x, bl.y, zIndex).Origin, 
+			camera:ScreenPointToRay(br.x, br.y, zIndex).Origin, 
 			parts
 		)
 		if fetchProps then
@@ -1249,7 +1249,7 @@ function MacLib:Window(Settings)
 			Enum.FontWeight.Medium,
 			Enum.FontStyle.Normal
 		)
-		checkmark.Text = "✓"
+		checkmark.Text = "â"
 		checkmark.TextColor3 = Color3.fromRGB(255, 255, 255)
 		checkmark.TextSize = 13
 		checkmark.TextTransparency = 1
@@ -1967,7 +1967,7 @@ function MacLib:Window(Settings)
 						end,
 						Degrees = function(sliderValue, precision)
 							local formattedValue = precision and string.format("%." .. precision .. "f", sliderValue) or tostring(sliderValue)
-							return formattedValue .. "°"
+							return formattedValue .. "Â°"
 						end,
 						Percent = function(sliderValue, precision)
 							local percentage = (sliderValue - SliderFunctions.Settings.Minimum) / (SliderFunctions.Settings.Maximum - SliderFunctions.Settings.Minimum) * 100
@@ -2484,7 +2484,7 @@ function MacLib:Window(Settings)
 					local dropdownName = Instance.new("TextLabel")
 					dropdownName.Name = "DropdownName"
 					dropdownName.FontFace = Font.new(assets.interFont)
-					dropdownName.Text = Settings.Default and (DropdownFunctions.Settings.Name .. " • " .. table.concat(Selected, ", ")) or (DropdownFunctions.Settings.Name .. "...")
+					dropdownName.Text = Settings.Default and (DropdownFunctions.Settings.Name .. " â¢ " .. table.concat(Selected, ", ")) or (DropdownFunctions.Settings.Name .. "...")
 					dropdownName.RichText = true
 					dropdownName.TextColor3 = Color3.fromRGB(255, 255, 255)
 					dropdownName.TextSize = 13
@@ -2710,7 +2710,7 @@ function MacLib:Window(Settings)
 						end
 
 						if #Selected > 0 then
-							dropdownName.Text = DropdownFunctions.Settings.Name .. " • " .. table.concat(Selected, ", ")
+							dropdownName.Text = DropdownFunctions.Settings.Name .. " â¢ " .. table.concat(Selected, ", ")
 						else
 							dropdownName.Text = DropdownFunctions.Settings.Name .. "..."
 						end
@@ -2802,7 +2802,7 @@ function MacLib:Window(Settings)
 						local checkmark = Instance.new("TextLabel")
 						checkmark.Name = "Checkmark"
 						checkmark.FontFace = Font.new(assets.interFont)
-						checkmark.Text = "✓"
+						checkmark.Text = "â"
 						checkmark.TextColor3 = Color3.fromRGB(255, 255, 255)
 						checkmark.TextSize = 13
 						checkmark.TextTransparency = 1
@@ -4017,7 +4017,7 @@ function MacLib:Window(Settings)
 						modifierInputs.Blue.Text = tostring(math.floor(c.b * 255 + 0.5))
 						modifierInputs.Alpha.Text = clampInput(modifierInputs.Alpha.Text, 0, 1)
 
-						local hexColor = string.format("#%02X%02X%02X",
+						local hexColor = string.format("#%02X%02X%02X", 
 							math.floor(c.r * 255 + 0.5),
 							math.floor(c.g * 255 + 0.5),
 							math.floor(c.b * 255 + 0.5))
@@ -4639,7 +4639,7 @@ function MacLib:Window(Settings)
 
 				if isStudio then
 					configSection:Label({Text = "Config system unavailable. (Environment isStudio)"})
-					return "Config system unavailable."
+					return "Config system unavailable." 
 				end
 
 				local inputPath = nil
@@ -4897,7 +4897,7 @@ function MacLib:Window(Settings)
 		local interactable = Instance.new("TextButton")
 		interactable.Name = "Interactable"
 		interactable.FontFace = Font.new(assets.interFont)
-		interactable.Text = "✓"
+		interactable.Text = "â"
 		interactable.TextColor3 = Color3.fromRGB(255, 255, 255)
 		interactable.TextSize = 17
 		interactable.TextTransparency = 0.2
@@ -4931,8 +4931,8 @@ function MacLib:Window(Settings)
 
 		local styles = {
 			None = function() interactable:Destroy() end,
-			Confirm = function() interactable.Text = "✓" end,
-			Cancel = function() interactable.Text = "✗" end
+			Confirm = function() interactable.Text = "â" end,
+			Cancel = function() interactable.Text = "â" end
 		}
 
 		local style = styles[Settings.Style] or function() interactable:Destroy() end
@@ -5266,7 +5266,7 @@ function MacLib:Window(Settings)
 
 	function WindowFunctions:Unload()
 		if onUnloadCallback then
-			onUnloadCallback()
+			onUnloadCallback()  
 		end
 		macLib:Destroy()
 		unloaded = true
@@ -5375,8 +5375,8 @@ function MacLib:Window(Settings)
 		["Toggle"] = {
 			Save = function(Flag, data)
 				return {
-					type = "Toggle",
-					flag = Flag,
+					type = "Toggle", 
+					flag = Flag, 
 					state = data.State or false
 				}
 			end,
@@ -5389,8 +5389,8 @@ function MacLib:Window(Settings)
 		["Slider"] = {
 			Save = function(Flag, data)
 				return {
-					type = "Slider",
-					flag = Flag,
+					type = "Slider", 
+					flag = Flag, 
 					value = (data.Value and tostring(data.Value)) or false
 				}
 			end,
@@ -5403,8 +5403,8 @@ function MacLib:Window(Settings)
 		["Input"] = {
 			Save = function(Flag, data)
 				return {
-					type = "Input",
-					flag = Flag,
+					type = "Input", 
+					flag = Flag, 
 					text = data.Text
 				}
 			end,
@@ -5417,8 +5417,8 @@ function MacLib:Window(Settings)
 		["Keybind"] = {
 			Save = function(Flag, data)
 				return {
-					type = "Keybind",
-					flag = Flag,
+					type = "Keybind", 
+					flag = Flag, 
 					bind = (typeof(data.Bind) == "EnumItem" and data.Bind.Name) or nil
 				}
 			end,
@@ -5431,8 +5431,8 @@ function MacLib:Window(Settings)
 		["Dropdown"] = {
 			Save = function(Flag, data)
 				return {
-					type = "Dropdown",
-					flag = Flag,
+					type = "Dropdown", 
+					flag = Flag, 
 					value = data.Value
 				}
 			end,
@@ -5449,8 +5449,8 @@ function MacLib:Window(Settings)
 				end
 
 				return {
-					type = "Colorpicker",
-					flag = Flag,
+					type = "Colorpicker", 
+					flag = Flag, 
 					color = Color3ToHex(data.Color) or nil,
 					alpha = data.Alpha
 				}
@@ -5464,7 +5464,7 @@ function MacLib:Window(Settings)
 				end
 
 				if MacLib.Options[Flag] and data.color then
-					MacLib.Options[Flag]:SetColor(HexToColor3(data.color))
+					MacLib.Options[Flag]:SetColor(HexToColor3(data.color)) 
 					if data.alpha then
 						MacLib.Options[Flag]:SetAlpha(data.alpha)
 					end
@@ -5535,7 +5535,7 @@ function MacLib:Window(Settings)
 			if option.IgnoreConfig then continue end
 
 			table.insert(data.objects, ClassParser[option.Class].Save(flag, option))
-		end
+		end	
 
 		local success, encoded = pcall(HttpService.JSONEncode, HttpService, data)
 		if not success then
@@ -5561,8 +5561,8 @@ function MacLib:Window(Settings)
 
 		for _, option in next, decoded.objects do
 			if ClassParser[option.type] then
-				task.spawn(function()
-					ClassParser[option.type].Load(option.flag, option)
+				task.spawn(function() 
+					ClassParser[option.type].Load(option.flag, option) 
 				end)
 			end
 		end
