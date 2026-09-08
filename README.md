@@ -30,16 +30,6 @@ end)
 
 For the most accurate usage details, refer to the example provided with the selected library.
 
-VindUI-Reborn is included as a reusable library with acrylic-style windows, searchable tabs, sub-tabs, notifications, modals, cards, sliders, dropdowns, textboxes, color pickers, keybinds, and configuration helpers. Its preserved source returns the `NullUI` library table through the `CreateWindow` entry point, and the example exercises the main component handles and callbacks. The catalog uses the supplied [VindUI-Reborn showcase image](https://i.postimg.cc/5tWZJV3V/image.png).
-
-Euphoria is included as a reusable library with responsive scaling, draggable windows, tabs, modules, sliders, textboxes, checkboxes, dropdowns, dividers, and queued notifications. The example covers both direct tab controls and nested module controls. Its catalog entry uses the supplied [Euphoria showcase image](https://i.postimg.cc/rsG95B49/image.png).
-
-MacLib is included as a reusable macOS-inspired library with windows, tab groups, sections, notifications, global settings, buttons, toggles, sliders, inputs, keybinds, dropdowns, color pickers, paragraphs, and configuration helpers. Its catalog entry includes a runnable example and the supplied [MacLib showcase image](https://i.ibb.co/5g36K8K9/483312443-2d96552b-baee-4c49-927d-ebe0e1f7f908.png).
-
-Ragebot is included as a reusable dark control interface converted from the attached standalone script. The preserved controls remain intact while the library now exposes `Ragebot.new`, `Ragebot.CreateWindow`, `SetVisible`, `ToggleVisibility`, `GetVisible`, and `Destroy`. Its catalog entry includes a local visual showcase because the original attachment did not include a separate image.
-
-Vision v2 is included as a reusable Roblox UI library with its original `Create`/`Tab`/`Section` API, animated controls, theme helpers, notifications, keybinds, and cleanup support. Its catalog entry includes a runnable example and a local copy of the supplied [Vision v2 showcase image](https://i.postimg.cc/wMp3fFMF/image.png) so the image remains available without relying on an external host.
-
 ## Contributing
 
 Contributions are welcome. When adding or updating a library, include an accurate example whenever possible, preserve the original author's attribution, and respect the library's license terms.
