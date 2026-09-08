@@ -49,6 +49,9 @@ const showcaseTable = Object.freeze({
   },
   ragebot: {
     imageUrl: 'https://i.postimg.cc/521dXLz9/image.png'
+  },
+  vision_v2: {
+    imageUrl: 'assets/vision-v2-showcase.png'
   }
 });
 
