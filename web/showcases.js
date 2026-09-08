@@ -40,6 +40,9 @@ const showcaseTable = Object.freeze({
   },
   vindui_reborn: {
     imageUrl: 'https://i.postimg.cc/5tWZJV3V/image.png'
+  },
+  euphoria: {
+    imageUrl: 'https://i.postimg.cc/rsG95B49/image.png'
   }
 });
 
