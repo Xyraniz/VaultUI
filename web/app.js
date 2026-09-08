@@ -28,10 +28,8 @@ const elements = {
   libraryDescription: $('#libraryDescription'),
   libraryTags: $('#libraryTags'),
   sourceLink: $('#sourceLink'),
-  openShowcaseButton: $('#openShowcaseButton'),
   showcaseCard: $('#showcaseCard'),
   expandShowcaseButton: $('#expandShowcaseButton'),
-  openShowcaseLink: $('#openShowcaseLink'),
   showcaseFrame: $('#showcaseFrame'),
   showcaseImage: $('#showcaseImage'),
   showcaseCanvas: $('#showcaseCanvas'),
@@ -47,8 +45,6 @@ const elements = {
   filePath: $('#filePath'),
   expandCodeButton: $('#expandCodeButton'),
   minimizeCodeButton: $('#minimizeCodeButton'),
-  copyActiveButton: $('#copyActiveButton'),
-  downloadActiveButton: $('#downloadActiveButton'),
   copyFileButton: $('#copyFileButton'),
   downloadFileButton: $('#downloadFileButton'),
   toast: $('#toast')
@@ -183,8 +179,6 @@ function renderCatalogError(message) {
   elements.sourceLink.removeAttribute('href');
   elements.sourceLink.classList.add('disabled');
   elements.sourceLink.setAttribute('aria-disabled', 'true');
-  elements.openShowcaseButton.disabled = true;
-  elements.openShowcaseButton.textContent = 'No Showcase';
   elements.exampleTab.hidden = true;
   showShowcaseUnavailable('The library catalog could not be loaded.');
   elements.fileStatus.textContent = 'Unavailable';
@@ -214,16 +208,6 @@ function renderHeader() {
     elements.sourceLink.textContent = 'Source unavailable';
   }
   elements.exampleTab.hidden = !library.files.example;
-  const showcase = getShowcase(library.id);
-  elements.openShowcaseButton.disabled = !showcase;
-  elements.openShowcaseButton.innerHTML = showcase ? 'Open showcase <span>↗</span>' : 'No Showcase';
-  elements.openShowcaseLink.hidden = !showcase;
-  if (showcase) {
-    elements.openShowcaseLink.href = showcase.embedUrl || showcase.imageUrl;
-    elements.openShowcaseLink.textContent = showcase.imageUrl && !showcase.embedUrl ? 'Open image' : 'Open in Mega';
-  } else {
-    elements.openShowcaseLink.removeAttribute('href');
-  }
   document.title = `VaultUI — ${library.name}`;
 }
 
@@ -393,8 +377,6 @@ function toggleShowcaseExpanded(force) {
   elements.showcaseCard.classList.toggle('focused', expanded);
   document.body.classList.toggle('overlay-open', expanded || elements.codeCard.classList.contains('expanded'));
   elements.expandShowcaseButton.textContent = expanded ? 'Minimize' : 'Expand';
-  const hasShowcase = Boolean(state.library && getShowcase(state.library.id));
-  elements.openShowcaseButton.innerHTML = !hasShowcase ? 'No Showcase' : expanded ? 'Minimize showcase <span>↙</span>' : 'Open showcase <span>↗</span>';
 }
 
 function toggleCodeExpanded(force) {
@@ -415,7 +397,6 @@ function initEvents() {
   elements.drawerClose.addEventListener('click', closeDrawer);
   elements.drawerBackdrop.addEventListener('click', closeDrawer);
 
-  elements.openShowcaseButton.addEventListener('click', () => toggleShowcaseExpanded());
   elements.expandShowcaseButton.addEventListener('click', () => toggleShowcaseExpanded());
   elements.showcaseFrame.addEventListener('error', handleShowcaseFrameError);
   elements.showcaseImage.addEventListener('error', () => showShowcaseUnavailable('The showcase image could not be loaded.'));
@@ -423,9 +404,7 @@ function initEvents() {
   elements.minimizeCodeButton.addEventListener('click', toggleCodeMinimized);
 
   $$('.code-tab').forEach((tab) => tab.addEventListener('click', () => loadFile(tab.dataset.file)));
-  elements.copyActiveButton.addEventListener('click', () => copyText(state.text, `${fileLabel()} copied.`));
   elements.copyFileButton.addEventListener('click', () => copyText(state.text, `${fileLabel()} copied.`));
-  elements.downloadActiveButton.addEventListener('click', () => downloadText(state.text, `${state.library.name}-${state.file}.lua`));
   elements.downloadFileButton.addEventListener('click', () => downloadText(state.text, `${state.library.name}-${state.file}.lua`));
 
   document.addEventListener('keydown', (event) => {
