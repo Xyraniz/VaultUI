@@ -38,6 +38,8 @@ MacLib is included as a reusable macOS-inspired library with windows, tab groups
 
 Ragebot is included as a reusable dark control interface converted from the attached standalone script. The preserved controls remain intact while the library now exposes `Ragebot.new`, `Ragebot.CreateWindow`, `SetVisible`, `ToggleVisibility`, `GetVisible`, and `Destroy`. Its catalog entry includes a local visual showcase because the original attachment did not include a separate image.
 
+Vision v2 is included as a reusable Roblox UI library with its original `Create`/`Tab`/`Section` API, animated controls, theme helpers, notifications, keybinds, and cleanup support. Its catalog entry includes a runnable example and a local copy of the supplied [Vision v2 showcase image](https://i.postimg.cc/wMp3fFMF/image.png) so the image remains available without relying on an external host.
+
 ## Contributing
 
 Contributions are welcome. When adding or updating a library, include an accurate example whenever possible, preserve the original author's attribution, and respect the library's license terms.
