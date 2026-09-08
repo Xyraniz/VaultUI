@@ -43,6 +43,9 @@ const showcaseTable = Object.freeze({
   },
   euphoria: {
     imageUrl: 'https://i.postimg.cc/rsG95B49/image.png'
+  },
+  maclib: {
+    imageUrl: 'assets/maclib-showcase.png'
   }
 });
 
