@@ -67,6 +67,9 @@ const showcaseTable = Object.freeze({
   },
   fluriore: {
     imageUrl: 'https://i.postimg.cc/52b5mnq9/image.png'
+  },
+  midnight: {
+    imageUrl: 'https://i.postimg.cc/yYz0VvGc/image.png'
   }
 });
 
