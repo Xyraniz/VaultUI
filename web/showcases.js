@@ -67,9 +67,3 @@ const showcaseTable = Object.freeze({
 function getShowcase(libraryId) {
   return showcaseTable[libraryId] || null;
 }
-
-window.showcaseTable = showcaseTable;
-window.getShowcase = getShowcase;
-
-void window.showcaseTable;
-void window.getShowcase;
