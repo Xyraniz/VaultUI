@@ -32,7 +32,6 @@ const elements = {
   expandShowcaseButton: $('#expandShowcaseButton'),
   showcaseFrame: $('#showcaseFrame'),
   showcaseImage: $('#showcaseImage'),
-  showcaseCanvas: $('#showcaseCanvas'),
   showcaseEmpty: $('#showcaseEmpty'),
   showcaseEmptyMessage: $('#showcaseEmptyMessage'),
   showcaseMode: $('#showcaseMode'),
@@ -160,7 +159,7 @@ function renderLibraryList() {
         <span class="library-name">${library.label}</span>
         <span class="library-type">${library.type}</span>
       </span>
-      <span class="library-badge">${getShowcase(library.id) ? 'MEGA' : 'NO'}</span>
+      <span class="library-badge">${getShowcase(library.id) ? 'SHOWCASE' : 'NO'}</span>
     </button>
   `).join('');
 
@@ -230,8 +229,8 @@ function renderShowcase() {
   elements.showcaseEmpty.hidden = true;
 
   if (showcase && showcase.embedUrl) {
-    elements.showcaseMode.textContent = 'MEGA EMBED';
-    elements.showcaseFrame.title = `${state.library.name} Mega showcase`;
+    elements.showcaseMode.textContent = 'SHOWCASE EMBED';
+    elements.showcaseFrame.title = `${state.library.name} Showcase`;
     elements.showcaseFrame.src = showcase.embedUrl;
     elements.showcaseFrame.hidden = false;
     return;
@@ -250,7 +249,7 @@ function renderShowcase() {
 
 function handleShowcaseFrameError() {
   if (!elements.showcaseFrame.hidden) {
-    showShowcaseUnavailable('The Mega showcase could not be loaded.');
+    showShowcaseUnavailable('The showcase could not be loaded.');
   }
 }
 
