@@ -70,6 +70,9 @@ const showcaseTable = Object.freeze({
   },
   midnight: {
     imageUrl: 'https://i.postimg.cc/yYz0VvGc/image.png'
+  },
+  vice: {
+    imageUrl: 'https://i.postimg.cc/d0zL50PB/image.png'
   }
 });
 
