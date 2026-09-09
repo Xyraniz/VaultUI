@@ -64,6 +64,9 @@ const showcaseTable = Object.freeze({
   },
   weave: {
     imageUrl: 'https://i.postimg.cc/fbvxFXCd/image.png'
+  },
+  fluriore: {
+    imageUrl: 'https://i.postimg.cc/52b5mnq9/image.png'
   }
 });
 
