@@ -79,6 +79,9 @@ const showcaseTable = Object.freeze({
   },
   wisteria: {
     imageUrl: 'https://i.postimg.cc/Z5JNtnQv/image.png'
+  },
+  lumen: {
+    imageUrl: 'https://i.postimg.cc/25b8PfCR/image.png'
   }
 });
 
