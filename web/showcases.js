@@ -61,6 +61,9 @@ const showcaseTable = Object.freeze({
   },
   winware: {
     imageUrl: 'https://i.postimg.cc/QMcK1SQW/image.png'
+  },
+  weave: {
+    imageUrl: 'https://i.postimg.cc/fbvxFXCd/image.png'
   }
 });
 
