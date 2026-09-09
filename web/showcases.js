@@ -73,6 +73,9 @@ const showcaseTable = Object.freeze({
   },
   vice: {
     imageUrl: 'https://i.postimg.cc/d0zL50PB/image.png'
+  },
+  zolar: {
+    imageUrl: 'https://i.postimg.cc/bvRBTZtY/attachments-1786226403945-png.png'
   }
 });
 
