@@ -55,6 +55,9 @@ const showcaseTable = Object.freeze({
   },
   venyx: {
     imageUrl: 'https://i.postimg.cc/kXynQKSN/image.png'
+  },
+  idkthisone: {
+    imageUrl: 'https://i.ibb.co/gZLNTfH5/image.png'
   }
 });
 
