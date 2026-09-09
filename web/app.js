@@ -49,12 +49,6 @@ const elements = {
   toast: $('#toast')
 };
 
-const socialElements = {
-  title: $('#ogTitle'),
-  image: $('#ogImage'),
-  url: $('#ogUrl'),
-};
-
 function slugify(value) {
   return value
     .toLowerCase()
@@ -213,21 +207,7 @@ function renderHeader() {
     elements.sourceLink.textContent = 'Source unavailable';
   }
   elements.exampleTab.hidden = !library.files.example;
-
-  const hasLibraryHash = Boolean(window.location.hash.slice(1));
-  const showcase = getShowcase(library.id);
-  document.title = hasLibraryHash ? library.name : 'VaultUI — Library shelf';
-  if (socialElements.title) {
-    socialElements.title.content = hasLibraryHash ? library.name : 'VaultUI — Library shelf';
-  }
-  if (socialElements.image) {
-    socialElements.image.content = hasLibraryHash && showcase && showcase.imageUrl ? showcase.imageUrl : '';
-  }
-  if (socialElements.url) {
-    socialElements.url.content = hasLibraryHash
-      ? `${window.location.origin}${window.location.pathname}${window.location.hash}`
-      : `${window.location.origin}${window.location.pathname}`;
-  }
+  document.title = `VaultUI — ${library.name}`;
 }
 
 function showShowcaseUnavailable(message = 'No Showcase') {
@@ -346,12 +326,12 @@ async function selectLibrary(id) {
   }
   state.library = library;
   state.file = library.files.source ? 'source' : 'example';
-  window.history.replaceState(null, '', `#${library.id}`);
   renderLibraryList();
   renderHeader();
   renderShowcase();
   await loadFile(state.file);
   closeDrawer();
+  window.history.replaceState(null, '', `#${library.id}`);
   if (window.innerWidth <= 700) window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
