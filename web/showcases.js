@@ -76,6 +76,9 @@ const showcaseTable = Object.freeze({
   },
   zolar: {
     imageUrl: 'https://i.postimg.cc/bvRBTZtY/attachments-1786226403945-png.png'
+  },
+  wisteria: {
+    imageUrl: 'https://i.postimg.cc/Z5JNtnQv/image.png'
   }
 });
 
