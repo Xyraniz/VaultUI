@@ -58,6 +58,9 @@ const showcaseTable = Object.freeze({
   },
   idkthisone: {
     imageUrl: 'https://i.ibb.co/gZLNTfH5/image.png'
+  },
+  winware: {
+    imageUrl: 'https://i.postimg.cc/QMcK1SQW/image.png'
   }
 });
 
