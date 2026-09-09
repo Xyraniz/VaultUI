@@ -52,6 +52,9 @@ const showcaseTable = Object.freeze({
   },
   vision_v2: {
     imageUrl: 'https://i.postimg.cc/wMp3fFMF/image.png'
+  },
+  venyx: {
+    imageUrl: 'https://i.postimg.cc/kXynQKSN/image.png'
   }
 });
 
