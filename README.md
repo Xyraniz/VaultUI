@@ -1,15 +1,51 @@
 # VaultUI
 
-Archivo de bibliotecas de interfaz para Roblox. El repositorio conserva los archivos disponibles junto con enlaces de origen y ejemplos de uso cuando la fuente los proporciona.
+A curated archive of Roblox UI libraries with preserved source files and runnable examples.
 
-## Catálogo
+[![Stars](https://img.shields.io/github/stars/Xyraniz/VaultUI?style=for-the-badge&color=gold)](https://github.com/Xyraniz/VaultUI/stargazers)[![Lua](https://img.shields.io/badge/Lua-000080?style=for-the-badge&logo=lua&logoColor=white)](https://www.lua.org/)[![Roblox](https://img.shields.io/badge/Roblox-00A2FF?style=for-the-badge&logo=roblox&logoColor=white)](https://www.roblox.com/)
 
-La colección se consulta desde el [catálogo web de VaultUI](https://xyraniz.github.io/VaultUI/). Las entradas pueden cambiar si el proyecto original desaparece, modifica su licencia o deja de publicar el recurso. VaultUI no reclama la autoría del código de terceros.
+## Explore the collection
 
-## Alcance
+The complete collection, examples, and available showcases are available through the web catalog:
 
-El repositorio es una referencia y un archivo, no un paquete único con una API común. Lee el README de cada carpeta antes de cargar una biblioteca y comprueba que su licencia permita el uso que tienes previsto. Los ejemplos sirven para identificar la forma de carga de cada fuente; no garantizan que el código siga funcionando en todas las versiones de Roblox.
+[**Open VaultUI**](https://xyraniz.github.io/VaultUI/)
 
-## Contribuciones
+VaultUI is intended for developers, scripters, and enthusiasts who want to explore, compare, or prototype with Roblox UI libraries. When available, each entry includes the original source and a runnable usage example.
 
-Las aportaciones deben incluir la procedencia del recurso, conservar los avisos de licencia y evitar presentar código de terceros como propio.
+## Quick start
+
+Libraries can be loaded directly from their preserved source files. Replace the library name and API calls with the library you want to use:
+
+```lua
+local lib = loadstring(game:HttpGet(
+    "https://raw.githubusercontent.com/Xyraniz/VaultUI/main/Libraries/Bacon/source.lua"
+ ))()
+
+local window = lib:CreateWindow("My Hub")
+
+window:Button("Click me", function()
+    print("It works!")
+end)
+```
+
+For the most accurate usage details, refer to the example provided with the selected library.
+
+## Contributing
+
+Contributions are welcome. When adding or updating a library, include an accurate example whenever possible, preserve the original author's attribution, and respect the library's license terms.
+
+If you find a broken link, an outdated source, or another issue, please [open an issue](https://github.com/Xyraniz/VaultUI/issues).
+
+## Attribution and notice
+
+VaultUI is a preservation and reference project. The included libraries belong to their respective authors, and VaultUI does not claim ownership of third-party code. Availability and functionality may change if an original project or public endpoint is removed.
+
+Before using or distributing a library, review its original source, license, and usage terms. Authors who want a library updated or removed can contact [Xyraniz](https://github.com/Xyraniz) through GitHub.
+
+## Links
+
+- [Web catalog](https://xyraniz.github.io/VaultUI/)
+
+- [Repository](https://github.com/Xyraniz/VaultUI)
+
+- [Issue tracker](https://github.com/Xyraniz/VaultUI/issues)
