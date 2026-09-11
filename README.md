@@ -1,26 +1,41 @@
 # VaultUI
 
-A curated archive of Roblox UI libraries with preserved source files and runnable examples.
+**+20 Roblox UI libraries archived in one place, source files, working examples, and previews for each one.**
 
-[![Stars](https://img.shields.io/github/stars/Xyraniz/VaultUI?style=for-the-badge&color=gold)](https://github.com/Xyraniz/VaultUI/stargazers)[![Lua](https://img.shields.io/badge/Lua-000080?style=for-the-badge&logo=lua&logoColor=white)](https://www.lua.org/)[![Roblox](https://img.shields.io/badge/Roblox-00A2FF?style=for-the-badge&logo=roblox&logoColor=white)](https://www.roblox.com/)
+[![Stars](https://img.shields.io/github/stars/Xyraniz/VaultUI?style=for-the-badge&color=gold)](https://github.com/Xyraniz/VaultUI/stargazers)
+[![Lua](https://img.shields.io/badge/Lua-000080?style=for-the-badge&logo=lua&logoColor=white)](https://www.lua.org/)
+[![Roblox](https://img.shields.io/badge/Roblox-00A2FF?style=for-the-badge&logo=roblox&logoColor=white)](https://www.roblox.com/)
+[![Last Updated](https://img.shields.io/badge/last%20updated-August%202026-blue?style=for-the-badge)](https://github.com/Xyraniz/VaultUI/commits/main)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen?style=for-the-badge)](#contributing)
 
-## Explore the collection
+## What this is
 
-The complete collection, examples, and available showcases are available through the web catalog:
+Roblox UI libraries get shared through Discord servers, Pastebin links, and forum threads that go dead after a few months. VaultUI keeps +20 of them in one repository, each with its original `source.lua` when it could be preserved, a runnable `example.lua` built against that library's real API, and showcase in the web, for a quick visual reference before you commit to one
 
-[**Open VaultUI**](https://xyraniz.github.io/VaultUI/)
+It's meant for scripters comparing UI layers before starting a hub, and for anyone who wants a loadstring that still works next year instead of a link that 404s
 
-VaultUI is intended for developers, scripters, and enthusiasts who want to explore, compare, or prototype with Roblox UI libraries. When available, each entry includes the original source and a runnable usage example.
+## Web catalog
+
+— https://xyraniz.github.io/VaultUI/
+
+## Folder layout
+
+Every library lives under `Libraries/<Name>/` with the same two files:
+
+```
+Libraries/<LibraryName>/
+├── source.lua      # preserved original source, when available
+├── example.lua     # working usage sample for that library's API
+```
+
+Not every library ships with `source.lua` — some (Daino, Hook GUI) are loadstring-only rather than missing by accident.
 
 ## Quick start
 
-Libraries can be loaded directly from their preserved source files. Replace the library name and API calls with the library you want to use:
+Load a library straight from its preserved source with `loadstring`. This is BaconLib:
 
 ```lua
-local lib = loadstring(game:HttpGet(
-    "https://raw.githubusercontent.com/Xyraniz/VaultUI/main/Libraries/Bacon/source.lua"
- ))()
-
+local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Xyraniz/VaultUI/main/Libraries/Bacon/source.lua"))()
 local window = lib:CreateWindow("My Hub")
 
 window:Button("Click me", function()
@@ -28,24 +43,18 @@ window:Button("Click me", function()
 end)
 ```
 
-For the most accurate usage details, refer to the example provided with the selected library.
+Swap `Bacon` for any folder name under `Libraries/` and check that library's `example.lua` — constructor names and method signatures differ between them, so BaconLib's API won't necessarily match another library's.
 
 ## Contributing
 
-Contributions are welcome. When adding or updating a library, include an accurate example whenever possible, preserve the original author's attribution, and respect the library's license terms.
+To add a library, open a PR with a new folder under `Libraries/<Name>/` containing:
 
-If you find a broken link, an outdated source, or another issue, please [open an issue](https://github.com/Xyraniz/VaultUI/issues).
+1. `source.lua`, if the original file is redistributable.
+2. An `example.lua` that actually exercises the library's public methods — not a placeholder.
+3. A `showcase.png` at that exact path, so the web shelf and its deploy workflow pick it up without extra configuration.
 
-## Attribution and notice
+check the library before adding it, broken links, dead loadstrings or outdated sources go in [Issues](https://github.com/Xyraniz/VaultUI/issues).
 
-VaultUI is a preservation and reference project. The included libraries belong to their respective authors, and VaultUI does not claim ownership of third-party code. Availability and functionality may change if an original project or public endpoint is removed.
+## A note on staleness
 
-Before using or distributing a library, review its original source, license, and usage terms. Authors who want a library updated or removed can contact [Xyraniz](https://github.com/Xyraniz) through GitHub.
-
-## Links
-
-- [Web catalog](https://xyraniz.github.io/VaultUI/)
-
-- [Repository](https://github.com/Xyraniz/VaultUI)
-
-- [Issue tracker](https://github.com/Xyraniz/VaultUI/issues)
+If you authored one of these libraries and want it removed, credited differently, or updated, open an issue or contact [Xyraniz](https://github.com/Xyraniz) directly.
