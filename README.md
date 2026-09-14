@@ -2,6 +2,8 @@
 
 **+20 Roblox UI libraries archived in one place, source files, working examples, and previews for each one.**
 
+AirFlow is included as a maintained, formatted library entry with a complete example and a visual showcase. Its original public method names and callback behaviour are preserved so existing scripts can adopt the cleaned source without a migration step.
+
 [![Stars](https://img.shields.io/github/stars/Xyraniz/VaultUI?style=for-the-badge&color=gold)](https://github.com/Xyraniz/VaultUI/stargazers)
 [![Lua](https://img.shields.io/badge/Lua-000080?style=for-the-badge&logo=lua&logoColor=white)](https://www.lua.org/)
 [![Roblox](https://img.shields.io/badge/Roblox-00A2FF?style=for-the-badge&logo=roblox&logoColor=white)](https://www.roblox.com/)

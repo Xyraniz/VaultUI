@@ -1,4 +1,7 @@
 const showcaseTable = Object.freeze({
+  airflow: {
+    imageUrl: 'https://i.postimg.cc/j2nkMbkc/attachments-1788854637024-png.png'
+  },
   '0x37': {
     embedUrl: 'https://files.catbox.moe/5buknf.mp4'
   },
