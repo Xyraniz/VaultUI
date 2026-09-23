@@ -2,6 +2,9 @@ const showcaseTable = Object.freeze({
   hirimi: {
     imageUrl: 'https://i.ibb.co/MkxFXGsv/light-theme.png'
   },
+  swin: {
+    imageUrl: 'https://i.postimg.cc/TwHNLT40/image.png'
+  },
   airflow: {
     imageUrl: 'https://i.postimg.cc/j2nkMbkc/attachments-1788854637024-png.png'
   },
