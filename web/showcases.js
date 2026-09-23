@@ -95,6 +95,9 @@ const showcaseTable = Object.freeze({
   lumen: {
     imageUrl: 'https://i.postimg.cc/25b8PfCR/image.png'
   },
+  lumen_modified: {
+    imageUrl: 'https://i.postimg.cc/VLKzktfS/Menu.png'
+  },
   aether: {
     imageUrl: 'https://i.postimg.cc/N07PGKGv/Captura-de-pantalla-2026-09-08-025230.png'
   }
