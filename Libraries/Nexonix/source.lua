@@ -689,7 +689,15 @@ local Library = {
     end
 
     Library.Round = function(Self, Number, Float)
-        local Multiplier = 1 / (Float or 1)
+        Float = tonumber(Float) or 1
+
+        -- A precision of zero means whole numbers. Dividing by zero here
+        -- produces infinity and turns every slider value into NaN.
+        if Float <= 0 then
+            Float = 1
+        end
+
+        local Multiplier = 1 / Float
         return math.floor(Number * Multiplier) / Multiplier
     end
 
@@ -2537,7 +2545,7 @@ local Library = {
                     Parent = Items["MainFrame"].Instance,
                     AnchorPoint = Vector2.new(0.5, 0.5),
                     Position = UDim2.new(0, 0, 0.5, 0),
-                    Size = UDim2.new(0, 65, 1, -120),
+                    Size = UDim2.new(0, 78, 1, -120),
                     BorderSizePixel = 0,
                     BackgroundColor3 = Library.Theme["Inline"]
                 }):AddToTheme({BackgroundColor3 = 'Inline'})
@@ -3400,7 +3408,7 @@ local Library = {
                     Text = "",
                     AutoButtonColor = false,
                     BackgroundTransparency = 1,
-                    Size = UDim2.new(0, 41, 0, 45),
+                    Size = UDim2.new(0, 54, 0, 56),
                     BorderSizePixel = 0,
                     BackgroundColor3 = Library.Theme["Accent"]
                 }):AddToTheme({BackgroundColor3 = 'Accent'})
@@ -3489,7 +3497,7 @@ local Library = {
                     Image = Page.Icon,
                     BackgroundTransparency = 1,
                     Position = UDim2.new(0.5, 0, 0.5, 0),
-                    Size = UDim2.new(0, 22, 0, 22),
+                    Size = UDim2.new(0, 34, 0, 34),
                     BorderSizePixel = 0
                 }):AddToTheme({ImageColor3 = 'Dark Icon'})      
                 
