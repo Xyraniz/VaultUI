@@ -1,4 +1,7 @@
 const showcaseTable = Object.freeze({
+  mario_lib: {
+    embedUrl: 'https://www.youtube.com/embed/8F6dVHEK-t4?si=uoEMiNt34SS08MBw'
+  },
   hirimi: {
     imageUrl: 'https://i.ibb.co/MkxFXGsv/light-theme.png'
   },
